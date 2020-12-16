@@ -60,7 +60,7 @@ if choice == "1":
     inputList = content.split(" ")
     choice = raw_input("Would you like to save your madlib to the inputs folder before filling it?\n")
     if choice == "yes":
-        save_path = 'inputs'
+        save_path = 'inputs' #todo fix this filepath
         name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
         completeName = os.path.join(save_path, name_of_file + ".txt")
         f = open(completeName, "w")
