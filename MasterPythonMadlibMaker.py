@@ -19,6 +19,10 @@ generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
                  '/fic': 'Fictional Character','/act':'Activity','/bod':'Body Part'}
 printable_words = []
+if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
+    os.mkdir(os.path.join(os.getcwd(), "inputs"))
+if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
+    os.mkdir(os.path.join(os.getcwd(), "outputs"))
 
 
 def keywords(ind):
