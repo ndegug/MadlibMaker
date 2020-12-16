@@ -60,7 +60,7 @@ if choice == "1":
     inputList = content.split(" ")
     choice = raw_input("Would you like to save your madlib to the inputs folder before filling it?\n")
     if choice == "yes":
-        save_path = 'inputs' #todo fix this filepath
+        save_path = 'inputs'
         name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
         completeName = os.path.join(save_path, name_of_file + ".txt")
         f = open(completeName, "w")
@@ -143,40 +143,10 @@ for word in inputList:
         elif realkey+regkey[6] in numword_dic.keys():
             new = re.sub(numbered, numword_dic[realkey+regkey[6]], word)
             outlist.append(new)
-
-    # elif re.findall(numbered, word) and str(re.findall(numbered, word)) not in numword_dic.keys():
-    #     #numbered saved
-    #     regkey = str(re.findall(unnumbered, word))
-    #     outlist.append(numword_dic[regkey[2]+regkey[3]+regkey[4]+regkey[5]+regkey[6]])
     else:
         #none, just append
         outlist.append(word)
 
-
-
-
-    # if word[0] == "/" and len(word) == 5:
-    #     if word[4].isdigit and word not in numword_dic.keys() and word[4] not in string.punctuation:
-    #         # numbered, new, no punctuation
-    #         keywords(word[0] + word[1] + word[2] + word[3])
-    #         new = raw_input()
-    #         numword_dic[word] = new
-    #         outlist.append(new)
-    #     elif word[4].isdigit and word in numword_dic.keys() and word[4] not in string.punctuation:
-    #         # numbered, saved, no punctuation
-    #         outlist.append(numword_dic[word])
-    #
-    #     else:
-    #         # punctuation at the end, no number
-    #         keywords(word[0] + word[1] + word[2] + word[3])
-    #         word = raw_input() + word[4]
-    #         outlist.append(word)
-    # elif word[0] == "/" and len(word) == 4:
-    #     keywords(word)
-    #     word = raw_input()
-    #     outlist.append(word)
-    # else:
-    #     outlist.append(word)
 filled = ' '.join(outlist)
 print(filled)
 choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder? \n")
