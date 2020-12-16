@@ -155,7 +155,7 @@ for word in inputList:
 
 
 
-    # if word[0] == "/" and len(word) == 5: #todo: acount for punctuation before, after and double punctuation like ."
+    # if word[0] == "/" and len(word) == 5:
     #     if word[4].isdigit and word not in numword_dic.keys() and word[4] not in string.punctuation:
     #         # numbered, new, no punctuation
     #         keywords(word[0] + word[1] + word[2] + word[3])
