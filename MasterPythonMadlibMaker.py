@@ -28,7 +28,7 @@ if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
 def keywords(ind):
     if ind in generic_words.keys():
         print(generic_words[ind] + ': ')
-    elif ind[1] == "c" and ind[2] == "t" and ind[3].isdigit and ind[3] not in string.punctuation:
+    elif re.findall(customreg, ind):
         print(custom[int(ind[3]) - 1])
     else:
         print(ind, "is not a valid keyword, enter what to fill it with: ")
@@ -55,7 +55,7 @@ if choice == "1":
                 choice = raw_input()
                 custom.append(choice)
             i = i + 1
-    elif choice == "no":
+    elif choice == "no" or choice=="":
         pass
     else:
         print(potato2)
@@ -79,7 +79,7 @@ if choice == "1":
         else:
             print(potato2)
             exit()
-    elif choice == "no":
+    elif choice == "no" or choice == "":
         pass
     else:
         print(potato2)
@@ -124,6 +124,7 @@ else:
 numword_dic = {}
 unnumbered="(/...)"
 numbered="(/...[0-9]+)"
+customreg="(/ct[0-9]+)"
 regkey=""
 realkey=""
 for word in inputList:
@@ -131,6 +132,12 @@ for word in inputList:
         #unnumbered
         regkey = str(re.findall(unnumbered, word))
         keywords(regkey[2]+regkey[3]+regkey[4]+regkey[5])#this is because that stupid re code puts out brakets and quotes for no reason
+        new = raw_input()
+        new = str(re.sub(unnumbered, new, word))
+        outlist.append(new)
+    elif re.findall(customreg, word):
+        regkey = str(re.findall(unnumbered, word))
+        keywords(regkey[2] + regkey[3] + regkey[4] + regkey[5])  # this is because that stupid re code puts out brakets and quotes for no reason
         new = raw_input()
         new = str(re.sub(unnumbered, new, word))
         outlist.append(new)
@@ -162,7 +169,7 @@ if choice == 'yes':
     f.write(filled)
     f.close()
     print("Your filled madlib has been saved to the outputs folder, have a good day!")
-elif choice == 'no':
+elif choice == 'no' or choice == '':
     print("Have a good day!")
 else:
     print(potato2)
