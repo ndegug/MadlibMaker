@@ -1,5 +1,6 @@
 import os
 import string
+import re
 from pip._vendor.distlib.compat import raw_input
 
 custom = []
@@ -38,7 +39,6 @@ choice = raw_input(
     "Welcome to the Madlib Maker\nHere you can compose and fill in madlibs using our specialized syntax.\nTo begin, "
     "please select from the following menu options:\n1. Type madlib \n2. Upload madlib from \"input\" folder.\n3. "
     "Instructions\n")
-print(choice)
 if choice == "1":
     # manual input
     choice = raw_input("Before you do that, would you configure your custom words?\n")
@@ -118,29 +118,65 @@ else:
     print(potato)
     exit()
 numword_dic = {}
+unnumbered="(/...)"
+numbered="(/...[0-9]+)"
+regkey=""
+realkey=""
 for word in inputList:
-    if word[0] == "/" and len(word) == 5: #todo: acount for punctuation before, after and double punctuation like ."
-        if word[4].isdigit and word not in numword_dic.keys() and word[4] not in string.punctuation:
-            # numbered, new, no punctuation
-            keywords(word[0] + word[1] + word[2] + word[3])
+    if re.findall(unnumbered, word) and not re.findall(numbered, word):
+        #unnumbered
+        regkey = str(re.findall(unnumbered, word))
+        keywords(regkey[2]+regkey[3]+regkey[4]+regkey[5])#this is because that stupid re code puts out brakets and quotes for no reason
+        new = raw_input()
+        new = str(re.sub(unnumbered, new, word))
+        outlist.append(new)
+    elif re.findall(numbered, word):
+        regkey = str(re.findall(unnumbered, word))
+        realkey= regkey[2]+regkey[3]+regkey[4]+regkey[5]
+        if realkey+regkey[6] not in numword_dic.keys():
+            #numbered unsaved
+            keywords(realkey)
             new = raw_input()
-            numword_dic[word] = new
+            numword_dic[realkey+regkey[6]] = new
+            new=re.sub(numbered, new, word)
             outlist.append(new)
-        elif word[4].isdigit and word in numword_dic.keys() and word[4] not in string.punctuation:
-            # numbered, saved, no punctuation
-            outlist.append(numword_dic[word])
+        elif realkey+regkey[6] in numword_dic.keys():
+            new = re.sub(numbered, numword_dic[realkey+regkey[6]], word)
+            outlist.append(new)
 
-        else:
-            # punctuation at the end, no number
-            keywords(word[0] + word[1] + word[2] + word[3])
-            word = raw_input() + word[4]
-            outlist.append(word)
-    elif word[0] == "/" and len(word) == 4:
-        keywords(word)
-        word = raw_input()
-        outlist.append(word)
+    # elif re.findall(numbered, word) and str(re.findall(numbered, word)) not in numword_dic.keys():
+    #     #numbered saved
+    #     regkey = str(re.findall(unnumbered, word))
+    #     outlist.append(numword_dic[regkey[2]+regkey[3]+regkey[4]+regkey[5]+regkey[6]])
     else:
+        #none, just append
         outlist.append(word)
+
+
+
+
+    # if word[0] == "/" and len(word) == 5: #todo: acount for punctuation before, after and double punctuation like ."
+    #     if word[4].isdigit and word not in numword_dic.keys() and word[4] not in string.punctuation:
+    #         # numbered, new, no punctuation
+    #         keywords(word[0] + word[1] + word[2] + word[3])
+    #         new = raw_input()
+    #         numword_dic[word] = new
+    #         outlist.append(new)
+    #     elif word[4].isdigit and word in numword_dic.keys() and word[4] not in string.punctuation:
+    #         # numbered, saved, no punctuation
+    #         outlist.append(numword_dic[word])
+    #
+    #     else:
+    #         # punctuation at the end, no number
+    #         keywords(word[0] + word[1] + word[2] + word[3])
+    #         word = raw_input() + word[4]
+    #         outlist.append(word)
+    # elif word[0] == "/" and len(word) == 4:
+    #     keywords(word)
+    #     word = raw_input()
+    #     outlist.append(word)
+    # else:
+    #     outlist.append(word)
 filled = ' '.join(outlist)
 print(filled)
 choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder? \n")
