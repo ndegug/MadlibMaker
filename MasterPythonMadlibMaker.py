@@ -10,7 +10,7 @@ outlist = []
 inputList = []
 
 generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
-                 '/ver': 'Verb', '/vng': 'Verb ending in \"ing\"', '/ved': 'Past tense verb',
+                 '/ver': 'Verb', '/vng': 'Verb ending in \"ing\"', '/ved': 'Past tense verb', '/ves':'Verb ending in \"s\"',
                  '/num': 'Number', '/nam': 'Number', '/cel': 'Celebrity',
                  '/per': 'Person', '/pir': 'Person in room', '/thi': 'Thing',
                  '/pla': 'Place', '/job': 'Job', '/ran': 'Random Word',
@@ -28,8 +28,10 @@ if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
 def keywords(ind):
     if ind in generic_words.keys():
         print(generic_words[ind] + ': ')
-    elif re.findall(customreg, ind):
+    elif re.findall(customreg, ind) and (int(ind[3]) - 1) in custom:
         print(custom[int(ind[3]) - 1])
+    elif re.findall(customreg, ind) and (int(ind[3]) - 1) not in custom:
+        print(ind, "hasn't been configured, what would you like to replace it with?")
     else:
         print(ind, "is not a valid keyword, enter what to fill it with: ")
 
@@ -45,21 +47,6 @@ choice = raw_input(
     "Instructions\n")
 if choice == "1":
     # manual input
-    choice = raw_input("Before you do that, would you configure your custom words?\n")
-    if choice == "yes":
-        print("Enter each of your custom words, one by one, in order of appearance. Enter \"q\" to stop ")
-        i = 1
-        while choice != "q":
-            if choice != "q":
-                print("custom", i)
-                choice = raw_input()
-                custom.append(choice)
-            i = i + 1
-    elif choice == "no" or choice=="":
-        pass
-    else:
-        print(potato2)
-        exit()
     content = raw_input("Enter the madlib below:\n")
     inputList = content.split(" ")
     choice = raw_input("Would you like to save your madlib to the inputs folder before filling it?\n")
@@ -127,6 +114,21 @@ numbered="(/...[0-9]+)"
 customreg="(/ct[0-9]+)"
 regkey=""
 realkey=""
+choice = raw_input("Before you fill your madlib, would you configure your custom words?\n")
+if choice == "yes":
+    print("Enter each of your custom words, one by one, in order of appearance. Enter \"q\" to stop ")
+    i = 1
+    while choice != "q":
+        if choice != "q":
+            print("custom", i)
+            choice = raw_input()
+            custom.append(choice)
+        i = i + 1
+elif choice == "no" or choice=="":
+        pass
+else:
+        print(potato2)
+        exit()
 for word in inputList:
     if re.findall(unnumbered, word) and not re.findall(numbered, word):
         #unnumbered
