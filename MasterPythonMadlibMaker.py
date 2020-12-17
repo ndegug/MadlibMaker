@@ -11,13 +11,13 @@ inputList = []
 
 generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/ver': 'Verb', '/vng': 'Verb ending in \"ing\"', '/ved': 'Past tense verb', '/ves':'Verb ending in \"s\"',
-                 '/num': 'Number', '/nam': 'Number', '/cel': 'Celebrity',
+                 '/num': 'Number', '/nam': 'Name', '/cel': 'Celebrity',
                  '/per': 'Person', '/pir': 'Person in room', '/thi': 'Thing',
                  '/pla': 'Place', '/job': 'Job', '/ran': 'Random Word',
                  '/rex': 'Random Exclamation', '/tvs': 'TV Show', '/mov': 'Movie',
                  '/mtv': "Movie/TV show", '/ins': 'Insult/Insulting name', '/phr': 'Random Phrase',
                  '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
-                 '/fic': 'Fictional Character','/act':'Activity','/bod':'Body Part'}
+                 '/fic': 'Fictional Character','/act':'Activity','/bod':'Body Part', '/flu':'Fluid'}
 printable_words = []
 if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
     os.mkdir(os.path.join(os.getcwd(), "inputs"))
@@ -144,7 +144,8 @@ for word in inputList:
         new = str(re.sub(unnumbered, new, word))
         outlist.append(new)
     elif re.findall(numbered, word):
-        regkey = str(re.findall(unnumbered, word))
+        #numbered
+        regkey = str(re.findall(numbered, word))
         realkey= regkey[2]+regkey[3]+regkey[4]+regkey[5]
         if realkey+regkey[6] not in numword_dic.keys():
             #numbered unsaved
