@@ -1,11 +1,12 @@
 import os
-import string
 import re
 from pip._vendor.distlib.compat import raw_input
 
 custom = []
 
 outlist = []
+
+latlist = []
 
 inputList = []
 
@@ -28,9 +29,9 @@ if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
 def keywords(ind):
     if ind in generic_words.keys():
         print(generic_words[ind] + ': ')
-    elif re.findall(customreg, ind) and (int(ind[3]) - 1) in custom:
+    elif re.findall(customreg, ind) and custom[int(ind[3]) - 1]:
         print(custom[int(ind[3]) - 1])
-    elif re.findall(customreg, ind) and (int(ind[3]) - 1) not in custom:
+    elif re.findall(customreg, ind) and not custom[int(ind[3]) - 1]:
         print(ind, "hasn't been configured, what would you like to replace it with?")
     else:
         print(ind, "is not a valid keyword, enter what to fill it with: ")
@@ -100,7 +101,16 @@ elif choice == "3":
 
         exit()
     elif choice == "3":
-        print("Custom Words")
+        print("Custom words allow you to add your own word categories if they are not already stored in this "
+              "program's databanks.\n If you wanted the program to call out something obscure like \"Baseball player\" "
+              "or \"High school friend\", you can use this feature to do so.\n When questioned whether you wish to "
+              "configure the custom words, type \"yes\" "
+              "and enter these words sequentially. Once your custom words are configured, use the keyword sequence: "
+              "\"/ct1\" where the number indicates which sequential word you want to be called there.\n\n The current "
+              "version of the Maldib Maker does not yet support saved or numbered custom words, as of now they must "
+              "be configured each time the madlib is filled.\n If your Madlib "
+              "requires repeated custom words,it is reccomended you give them names such as \"High school friend ("
+              "1)\" to remind yourself to fill in the same word.")
     else:
         print(potato)
         exit()
@@ -130,21 +140,46 @@ else:
         print(potato2)
         exit()
 for word in inputList:
-    if re.findall(unnumbered, word) and not re.findall(numbered, word):
+    if re.findall(unnumbered, word) and not re.findall(numbered, word) and not re.findall(customreg, word):
         #unnumbered
         regkey = str(re.findall(unnumbered, word))
-        keywords(regkey[2]+regkey[3]+regkey[4]+regkey[5])#this is because that stupid re code puts out brakets and quotes for no reason
+        realkey=regkey[2]+regkey[3]+regkey[4]+regkey[5]
+        keywords(realkey)#this is because that stupid re code puts out brakets and quotes for no reason
         new = raw_input()
         new = str(re.sub(unnumbered, new, word))
         outlist.append(new)
+        # #latex array
+        latword = '$\\underset{'+generic_words[realkey]+'}{\\rule{2.5cm}{0.15mm}}$'
+        #latword
+        print("latword:", latword)
+        final = word.replace(realkey,latword, 1)
+        print(final)
+        latlist.append(final)
     elif re.findall(customreg, word):
+        #custom
         regkey = str(re.findall(unnumbered, word))
-        keywords(regkey[2] + regkey[3] + regkey[4] + regkey[5])  # this is because that stupid re code puts out brakets and quotes for no reason
+        realkey=regkey[2]+regkey[3]+regkey[4]+regkey[5]
+        keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
         new = raw_input()
         new = str(re.sub(unnumbered, new, word))
         outlist.append(new)
+         #latex array
+        if custom[int(regkey[5]) - 1]:
+            latword = '$\\underset{'+custom[int(regkey[5]) - 1]+'}{\\rule{2.5cm}{0.15mm}}$'
+        #latword
+            print("latword:", latword)
+            final = word.replace(realkey,latword, 1)
+            print(final)
+            latlist.append(final)
+        else:
+            latword = '$\\underset{Undefined}{\\rule{2.5cm}{0.15mm}}$'
+            #latword
+            print("latword:", latword)
+            final = word.replace(realkey,latword, 1)
+            print(final)
+            latlist.append(final)
     elif re.findall(numbered, word):
-        #numbered
+        #numbered #todo: fix numbered latex code
         regkey = str(re.findall(numbered, word))
         realkey= regkey[2]+regkey[3]+regkey[4]+regkey[5]
         if realkey+regkey[6] not in numword_dic.keys():
@@ -157,12 +192,21 @@ for word in inputList:
         elif realkey+regkey[6] in numword_dic.keys():
             new = re.sub(numbered, numword_dic[realkey+regkey[6]], word)
             outlist.append(new)
+        # #latex array
+        # new = '$\\underset{' + generic_words[realkey]+' (' + regkey[6]+')}{\\rule{2.5cm}{0.15mm}}$'
+        # new = re.sub(numbered, new, word)
+        # latlist.append(new)
     else:
         #none, just append
         outlist.append(word)
+        # #Latex array
+        latlist.append(word)
 
 filled = ' '.join(outlist)
+latfill = ' '.join(latlist)
+
 print(filled)
+print("latfill:", latfill)
 choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder? \n")
 if choice == 'yes':
     save_path = 'outputs'
@@ -173,8 +217,18 @@ if choice == 'yes':
     f.close()
     print("Your filled madlib has been saved to the outputs folder, have a good day!")
 elif choice == 'no' or choice == '':
-    print("Have a good day!")
+    pass
 else:
     print(potato2)
+choice = raw_input("Would you like to make a physical copy of the madlib?")
+if choice == 'yes':
+    save_path = 'outputs'
+    name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
+    completeName = os.path.join(save_path, name_of_file + ".txt")
+    f = open(completeName, "w")
+    f.write(latfill)
+    f.close()
+    print("Your madlib has been saved to the outputs folder, run it in a latex compiler and save the result as a PDF, "
+          "have a good day!")
 # 3. Output string ist to a text file
 # output name to whatever 'outputs/output1.txt'
