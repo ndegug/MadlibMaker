@@ -19,7 +19,8 @@ generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/mtv': "Movie/TV show", '/ins': 'Insult/Insulting name', '/phr': 'Random Phrase',
                  '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
                  '/fic': 'Fictional Character','/act':'Activity','/bod':'Body Part', '/flu':'Fluid'}
-printable_words = []
+
+printable_words = [] #todo figure out if we need this
 if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
     os.mkdir(os.path.join(os.getcwd(), "inputs"))
 if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
@@ -29,7 +30,7 @@ if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
 def keywords(ind):
     if ind in generic_words.keys():
         print(generic_words[ind] + ': ')
-    elif re.findall(customreg, ind) and custom[int(ind[3]) - 1]:
+    elif re.findall(customreg, ind) and custom[int(ind[3]) - 1]:#todo fix issues with unconfigured custom words
         print(custom[int(ind[3]) - 1])
     elif re.findall(customreg, ind) and not custom[int(ind[3]) - 1]:
         print(ind, "hasn't been configured, what would you like to replace it with?")
@@ -139,7 +140,7 @@ elif choice == "no" or choice=="":
 else:
         print(potato2)
         exit()
-for word in inputList:#todo implement latex spaces in latword
+for word in inputList:
     if re.findall(unnumbered, word) and not re.findall(numbered, word) and not re.findall(customreg, word):
         #unnumbered
         regkey = str(re.findall(unnumbered, word))
@@ -149,10 +150,11 @@ for word in inputList:#todo implement latex spaces in latword
         new = str(re.sub(unnumbered, new, word))
         outlist.append(new)
         # #latex array
-        latword = '$\\underset{'+generic_words[realkey]+'}{\\rule{2.5cm}{0.15mm}}$'
+        latword_sub= generic_words[realkey].replace(" ","\\ ")
+        latword = '$\\underset{'+latword_sub+'}{\\rule{2.5cm}{0.15mm}}$'
         #latword
         print("latword:", latword)
-        final = word.replace(realkey,latword, 1)
+        final = word.replace(realkey, latword, 1)
         print(final)
         latlist.append(final)
     elif re.findall(customreg, word):
@@ -165,7 +167,9 @@ for word in inputList:#todo implement latex spaces in latword
         outlist.append(new)
          #latex array
         if custom[int(regkey[5]) - 1]:
-            latword = '$\\underset{'+custom[int(regkey[5]) - 1]+'}{\\rule{2.5cm}{0.15mm}}$'
+            #saved
+            latword_sub=(custom[int(regkey[5]) - 1]).replace(" ","\\ ")
+            latword = '$\\underset{'+latword_sub+'}{\\rule{2.5cm}{0.15mm}}$'
         #latword
             print("latword:", latword)
             final = word.replace(realkey,latword, 1)
@@ -193,12 +197,13 @@ for word in inputList:#todo implement latex spaces in latword
             new = re.sub(numbered, numword_dic[realkey+regkey[6]], word)
             outlist.append(new)
             # #latex array
-            latword = '$\\underset{' + generic_words[realkey] +' ('+regkey[6]+')}{\\rule{2.5cm}{0.15mm}}$'
-            # latword
-            print("latword:", latword)
-            final = word.replace(realkey, latword, 1)
-            print(final)
-            latlist.append(final)
+        latword_sub=generic_words[realkey].replace(' ','\\ ')
+        latword = '$\\underset{' +  +'\\ ('+regkey[6]+')}{\\rule{2.5cm}{0.15mm}}$'
+        # latword
+        print("latword:", latword)
+        final = word.replace(realkey, latword, 1)
+        print(final)
+        latlist.append(final)
     else:
         #none, just append
         outlist.append(word)
@@ -231,7 +236,9 @@ if choice == 'yes':
     f = open(completeName, "w")
     f.write("\\documentclass{article}\n\\usepackage{amsmath}\n\\begin{document}\n"+latfill+"\n\\end{document}")
     f.close()
-    print("Your madlib has been saved to the outputs folder, run it in a latex compiler and save the result as a PDF, "
+    print("A Latex coded version of your unfilled madlib has been saved to the outputs folder, run it in a latex "
+          "compiler and save the result as a PDF, \nan online compiler can be found here: "
+          "https://latexbase.com/d/653b3e5c-7239-481c-9a98-fe4f42b09a46 \n"
           "have a good day!")
 # 3. Output string ist to a text file
 # output name to whatever 'outputs/output1.txt'
