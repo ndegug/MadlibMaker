@@ -39,6 +39,7 @@ def keywords(ind):
         print(ind, "is not a valid keyword, enter what to fill it with: ")
 
 
+
 potato = "What the hell is wrong with you? I give you a list of options and you decide to make your own?\nThat's not " \
          "how it works you moron! Goodbye!\n "
 potato2 = "What the hell is wrong with you? It's a \"yes\" or \"no\" question and THAT'S what you come up " \
@@ -126,7 +127,7 @@ numbered = "(/...[0-9]+)"
 customreg = "(/ct[0-9]+)"
 regkey = ""
 realkey = ""
-choice = raw_input("Before you fill your madlib, would you configure your custom words?\n")
+choice = raw_input("Wourld you like to configure your custom words?\n")
 if choice == "yes":
     print("Enter each of your custom words, one by one, in order of appearance. Enter \"q\" to stop ")
     i = 1
@@ -141,15 +142,23 @@ elif choice == "no" or choice == "":
 else:
     print(potato2)
     exit()
+choice2=raw_input("Do you wish to:\n1. Fill in your madlib now\n2. Print a physical version\n")
+if choice2 == "1" or choice2 == "2":
+    pass
+else:
+    print("you are here")
+    print(potato2)
+    exit()
 for word in inputList:
     if re.findall(unnumbered, word) and not re.findall(numbered, word) and not re.findall(customreg, word):
         # unnumbered
         regkey = str(re.findall(unnumbered, word))
         realkey = regkey[2] + regkey[3] + regkey[4] + regkey[5]
-        keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
-        new = raw_input()
-        new = str(re.sub(unnumbered, new, word))
-        outlist.append(new)
+        if choice2=="1":
+            keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
+            new = raw_input()
+            new = str(re.sub(unnumbered, new, word))
+            outlist.append(new)
         # #latex array
         latword_sub = generic_words[realkey].replace(" ", "\\ ")
         latword = '$\\underset{' + latword_sub + '}{\\rule{2.5cm}{0.15mm}}$'
@@ -160,10 +169,11 @@ for word in inputList:
         # custom
         regkey = str(re.findall(unnumbered, word))
         realkey = regkey[2] + regkey[3] + regkey[4] + regkey[5]
-        keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
-        new = raw_input()
-        new = str(re.sub(unnumbered, new, word))
-        outlist.append(new)
+        if choice2 == "1":
+            keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
+            new = raw_input()
+            new = str(re.sub(unnumbered, new, word))
+            outlist.append(new)
         # latex array
         if realkey in custom:
             # saved
@@ -183,14 +193,16 @@ for word in inputList:
         realkey = regkey[2] + regkey[3] + regkey[4] + regkey[5]
         if realkey + regkey[6] not in numword_dic.keys():
             # numbered unsaved
-            keywords(realkey)
-            new = raw_input()
-            numword_dic[realkey + regkey[6]] = new
-            new = re.sub(numbered, new, word)
-            outlist.append(new)
+            if choice2 == "1":
+                keywords(realkey)
+                new = raw_input()
+                numword_dic[realkey + regkey[6]] = new
+                new = re.sub(numbered, new, word)
+                outlist.append(new)
         elif realkey + regkey[6] in numword_dic.keys():
-            new = re.sub(numbered, numword_dic[realkey + regkey[6]], word)
-            outlist.append(new)
+            if choice2 == "1":
+                new = re.sub(numbered, numword_dic[realkey + regkey[6]], word)
+                outlist.append(new)
             # #latex array
         latword_sub = generic_words[realkey].replace(' ', '\\ ')
         latword = '$\\underset{' + latword_sub + '\\ (' + regkey[6] + ')}{\\rule{2.5cm}{0.15mm}}$'
@@ -199,30 +211,32 @@ for word in inputList:
         latlist.append(final)
     else:
         # none, just append
-        outlist.append(word)
+        if choice2 =="1":
+            outlist.append(word)
         # #Latex array
         latlist.append(word)
 
 filled = ' '.join(outlist)
 latfill = ' '.join(latlist)
 
-print(filled)
-choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder? \n")
-if choice == 'yes':
-    save_path = 'outputs'
-    name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
-    completeName = os.path.join(save_path, name_of_file + ".txt")
-    f = open(completeName, "w")
-    f.write(filled)
-    f.close()
-    print("Your filled madlib has been saved to the outputs folder, have a good day!")
-elif choice == 'no' or choice == '':
-    pass
-else:
-    print(potato2)
-    exit()
-choice = raw_input("Would you like to make a physical copy of the madlib?\n")
-if choice == 'yes':
+if choice2 == "1":
+    print(filled)
+    choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder? \n")
+    if choice == 'yes':
+        save_path = 'outputs'
+        name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
+        completeName = os.path.join(save_path, name_of_file + ".txt")
+        f = open(completeName, "w")
+        f.write(filled)
+        f.close()
+        print("Your filled madlib has been saved to the outputs folder, have a good day!")
+    elif choice == 'no' or choice == '':
+        pass
+    else:
+        print(potato2)
+        exit()
+    choice = raw_input("Would you like to make a physical copy of the madlib?\n")
+if choice == 'yes' or choice2 == 2:
     save_path = 'outputs'
     name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
     completeName = os.path.join(save_path, name_of_file + ".txt")
