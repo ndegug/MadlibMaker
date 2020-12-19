@@ -238,7 +238,7 @@ if choice == 'yes':
     f.close()
     print("A Latex coded version of your unfilled madlib has been saved to the outputs folder, run it in a latex "
           "compiler and save the result as a PDF, \nan online compiler can be found here: "
-          "https://latexbase.com/d/653b3e5c-7239-481c-9a98-fe4f42b09a46 \n"
+          "https://cocalc.com/doc/latex-editor.html \n"
           "have a good day!")
 # 3. Output string ist to a text file
 # output name to whatever 'outputs/output1.txt'
