@@ -139,7 +139,7 @@ elif choice == "no" or choice=="":
 else:
         print(potato2)
         exit()
-for word in inputList:
+for word in inputList:#todo implement latex spaces in latword
     if re.findall(unnumbered, word) and not re.findall(numbered, word) and not re.findall(customreg, word):
         #unnumbered
         regkey = str(re.findall(unnumbered, word))
@@ -179,7 +179,7 @@ for word in inputList:
             print(final)
             latlist.append(final)
     elif re.findall(numbered, word):
-        #numbered #todo: fix numbered latex code
+        #numbered
         regkey = str(re.findall(numbered, word))
         realkey= regkey[2]+regkey[3]+regkey[4]+regkey[5]
         if realkey+regkey[6] not in numword_dic.keys():
@@ -192,10 +192,13 @@ for word in inputList:
         elif realkey+regkey[6] in numword_dic.keys():
             new = re.sub(numbered, numword_dic[realkey+regkey[6]], word)
             outlist.append(new)
-        # #latex array
-        # new = '$\\underset{' + generic_words[realkey]+' (' + regkey[6]+')}{\\rule{2.5cm}{0.15mm}}$'
-        # new = re.sub(numbered, new, word)
-        # latlist.append(new)
+            # #latex array
+            latword = '$\\underset{' + generic_words[realkey] +' ('+regkey[6]+')}{\\rule{2.5cm}{0.15mm}}$'
+            # latword
+            print("latword:", latword)
+            final = word.replace(realkey, latword, 1)
+            print(final)
+            latlist.append(final)
     else:
         #none, just append
         outlist.append(word)
@@ -220,13 +223,13 @@ elif choice == 'no' or choice == '':
     pass
 else:
     print(potato2)
-choice = raw_input("Would you like to make a physical copy of the madlib?")
+choice = raw_input("Would you like to make a physical copy of the madlib?\n")
 if choice == 'yes':
     save_path = 'outputs'
     name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
     completeName = os.path.join(save_path, name_of_file + ".txt")
     f = open(completeName, "w")
-    f.write(latfill)
+    f.write("\\documentclass{article}\n\\usepackage{amsmath}\n\\begin{document}\n"+latfill+"\n\\end{document}")
     f.close()
     print("Your madlib has been saved to the outputs folder, run it in a latex compiler and save the result as a PDF, "
           "have a good day!")
