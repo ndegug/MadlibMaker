@@ -76,7 +76,8 @@ if choice == "1":
         print(potato2)
         exit()
 elif choice == "2":
-    choice = 'inputs\\' + raw_input("Which file would you like to upload?\n") + ".txt"
+    filename = raw_input("Which file would you like to upload?\n") + ".txt"
+    choice = os.path.join('inputs', filename)
     my_file = open(choice, "r")
     content = my_file.read()
     inputList = content.split(" ")
@@ -236,7 +237,7 @@ if choice2 == "1":
         print(potato2)
         exit()
     choice = raw_input("Would you like to make a physical copy of the madlib?\n")
-if choice == 'yes' or choice2 == 2:
+if choice == 'yes' or choice2 == '2':
     save_path = 'outputs'
     name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
     completeName = os.path.join(save_path, name_of_file + ".txt")
