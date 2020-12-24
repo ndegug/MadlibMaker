@@ -39,7 +39,6 @@ def keywords(ind):
         print(ind, "is not a valid keyword, enter what to fill it with: ")
 
 
-
 potato = "What the hell is wrong with you? I give you a list of options and you decide to make your own?\nThat's not " \
          "how it works you moron! Goodbye!\n "
 potato2 = "What the hell is wrong with you? It's a \"yes\" or \"no\" question and THAT'S what you come up " \
@@ -82,42 +81,49 @@ elif choice == "2":
     content = my_file.read()
     inputList = content.split(" ")
 elif choice == "3":
-    choice = raw_input("Which would you like to learn about: \n1. How to write, upload and save Madlibs\n2. "
-                       "Syntax\n3. Custom Words\n")  # todo finish instructions
-    if choice == "1":
-        print("Here in the Madlib Maker, you can either type your Madlib or upload a file you've already typed.\nFor "
-              "each blank, you must type a keyword specific to the word category you desire.\nThese keywords follow "
-              "the format of 3 letters preceded by a \"/\", for example,\ntyping the keyword \"/adj\" will prompt the "
-              "program to ask the user for an \"Adjective.\"\n See the Syntax section for the full list of "
-              "keywords.\n\nIf you wish to use a word that is not in this program's selection,\nyou may enter it as a "
-              "custom word. These custom words can be\nconfigured before writing the Madlib.\nSee the \"Custom Words\" "
-              "section for further details.")
-    elif choice == "2":
-        print("The default keys and word categories are as follows:")
-        i = 0
-        for pair in generic_words.items():
-            i = i + 1
-            if i < 3:
-                print(pair, end='\t')
-            else:
-                print(pair, end='\n')
-                i = 0
+    while choice != "q":
+        choice = raw_input("Which would you like to learn about: \n1. How to write, upload and save Madlibs\n2. "
+                           "Syntax\n3. Custom Words\nType \"q\" to quit\n") #todo: add inputs and outputs tutorial
+        if choice == "1":
+            print("Here in the Madlib Maker, you can either type your Madlib or upload a file you've already typed.\nFor "
+                  "each blank, you must type a keyword specific to the word category you desire.\nThese keywords follow "
+                  "the format of 3 letters preceded by a \"/\", for example,\ntyping the keyword \"/adj\" will prompt the "
+                  "program to ask the user for an \"Adjective.\"\n See the Syntax section for the full list of "
+                  "keywords.\n You can add a number at the end of any keyword in the databank to repeat it within the "
+                  "same madlib.\n For example, if the input is:\n \"We have a pet /ani1, he's a good /ani1!\" \n and you "
+                  "enter \"dog\" when prompted, the program will fill in both at the same time resulting in:\n \"We have "
+                  "a pet dog, he's a good dog!\n\nIf you wish to use a word that is not in "
+                  "this program's selection,\nyou may enter it as a"
+                  "custom word. These custom words can be\nconfigured before writing the Madlib.\nSee the \"Custom Words\" "
+                  "section for further details.")
+        elif choice == "2":
+            print("The default keys and word categories are as follows:")
+            i = 0
+            for pair in generic_words.items():
+                i = i + 1
+                if i < 3:
+                    print(pair, end='\t')
+                else:
+                    print(pair, end='\n')
+                    i = 0
 
-        exit()
-    elif choice == "3":
-        print("Custom words allow you to add your own word categories if they are not already stored in this "
-              "program's databanks.\n If you wanted the program to call out something obscure like \"Baseball player\" "
-              "or \"High school friend\", you can use this feature to do so.\n When questioned whether you wish to "
-              "configure the custom words, type \"yes\" "
-              "and enter these words sequentially. Once your custom words are configured, use the keyword sequence: "
-              "\"/ct1\" where the number indicates which sequential word you want to be called there.\n\n The current "
-              "version of the Maldib Maker does not yet support saved or numbered custom words, as of now they must "
-              "be configured each time the madlib is filled.\n If your Madlib "
-              "requires repeated custom words,it is reccomended you give them names such as \"High school friend ("
-              "1)\" to remind yourself to fill in the same word.")
-    else:
-        print(potato)
-        exit()
+        elif choice == "3":
+            print("Custom words allow you to add your own word categories if they are not already stored in this "
+                  "program's databanks.\n If you wanted the program to call out something obscure like \"Baseball player\" "
+                  "or \"High school friend\", you can use this feature to do so.\n When questioned whether you wish to "
+                  "configure the custom words, type \"yes\" "
+                  "and enter these words sequentially. Once your custom words are configured, use the keyword sequence: "
+                  "\"/ct1\" where the number indicates which sequential word you want to be called there.\n\n The current "
+                  "version of the Maldib Maker does not yet support saved or numbered custom words, as of now they must "
+                  "be configured each time the madlib is filled.\n If your Madlib "
+                  "requires repeated custom words,it is reccomended you give them names such as \"High school friend ("
+                  "1)\" to remind yourself to fill in the same word.")
+        elif choice == "q":
+            print("I hope these instructions helped, start the program again to give it a try!\n Have a good day!")
+            exit()
+        else:
+            print(potato)
+            exit()
 
 else:
     print(potato)
@@ -136,14 +142,14 @@ if choice == "yes":
         if choice != "q":
             print("custom", i)
             choice = raw_input()
-            custom["/ct"+str(i)]=choice
+            custom["/ct" + str(i)] = choice
         i = i + 1
 elif choice == "no" or choice == "":
     pass
 else:
     print(potato2)
     exit()
-choice2=raw_input("Do you wish to:\n1. Fill in your madlib now\n2. Print a physical version\n")
+choice2 = raw_input("Do you wish to:\n1. Fill in your madlib now\n2. Print a physical version\n")
 if choice2 == "1" or choice2 == "2":
     pass
 else:
@@ -155,7 +161,7 @@ for word in inputList:
         # unnumbered
         regkey = str(re.findall(unnumbered, word))
         realkey = regkey[2] + regkey[3] + regkey[4] + regkey[5]
-        if choice2=="1":
+        if choice2 == "1":
             keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
             new = raw_input()
             new = str(re.sub(unnumbered, new, word))
@@ -212,7 +218,7 @@ for word in inputList:
         latlist.append(final)
     else:
         # none, just append
-        if choice2 =="1":
+        if choice2 == "1":
             outlist.append(word)
         # #Latex array
         latlist.append(word)
