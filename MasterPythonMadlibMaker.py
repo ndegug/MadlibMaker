@@ -1,6 +1,9 @@
 import os
 import re
+
+from pdflatex import PDFLaTeX
 from pip._vendor.distlib.compat import raw_input
+
 
 custom = {}
 
@@ -85,16 +88,22 @@ elif choice == "3":
         choice = raw_input("Which would you like to learn about: \n1. How to write, upload and save Madlibs\n2. "
                            "Syntax\n3. Custom Words\nType \"q\" to quit\n") #todo: add inputs and outputs tutorial
         if choice == "1":
-            print("Here in the Madlib Maker, you can either type your Madlib or upload a file you've already typed.\nFor "
-                  "each blank, you must type a keyword specific to the word category you desire.\nThese keywords follow "
-                  "the format of 3 letters preceded by a \"/\", for example,\ntyping the keyword \"/adj\" will prompt the "
-                  "program to ask the user for an \"Adjective.\"\n See the Syntax section for the full list of "
-                  "keywords.\n You can add a number at the end of any keyword in the databank to repeat it within the "
-                  "same madlib.\n For example, if the input is:\n \"We have a pet /ani1, he's a good /ani1!\" \n and you "
-                  "enter \"dog\" when prompted, the program will fill in both at the same time resulting in:\n \"We have "
-                  "a pet dog, he's a good dog!\n\nIf you wish to use a word that is not in "
-                  "this program's selection,\nyou may enter it as a"
-                  "custom word. These custom words can be\nconfigured before writing the Madlib.\nSee the \"Custom Words\" "
+            print("Here in the Madlib Maker, you can either type your Madlib or upload a file you've already "
+                  "typed.\nFor "
+                  "each blank, you must type a keyword specific to the word category you desire.\nThese keywords "
+                  "follow "
+                  "the format of 3 letters preceded by a \"/\", for example,\ntyping the keyword \"/adj\" will prompt "
+                  "the "
+                  "program to ask the user for an \"Adjective.\"\nSee the Syntax section for the full list of "
+                  "keywords.\nYou can add a number at the end of any keyword in the databank to repeat it within the "
+                  "same madlib.\nFor example, if the input is:\n\"We have a pet /ani1, he's a good /ani1!\"\nand "
+                  "you "
+                  "enter \"dog\" when prompted, the program will fill in both at the same time resulting in:\n\"We "
+                  "have "
+                  "a pet dog, he's a good dog!\"\n\nIf you wish to use a word that is not in "
+                  "this program's selection,\nyou may enter it as a "
+                  "custom word. These custom words can be\nconfigured before writing the Madlib.\nSee the \"Custom "
+                  "Words\" "
                   "section for further details.")
         elif choice == "2":
             print("The default keys and word categories are as follows:")
@@ -109,12 +118,16 @@ elif choice == "3":
 
         elif choice == "3":
             print("Custom words allow you to add your own word categories if they are not already stored in this "
-                  "program's databanks.\n If you wanted the program to call out something obscure like \"Baseball player\" "
+                  "program's databanks.\n If you wanted the program to call out something obscure like \"Baseball "
+                  "player\" "
                   "or \"High school friend\", you can use this feature to do so.\n When questioned whether you wish to "
                   "configure the custom words, type \"yes\" "
-                  "and enter these words sequentially. Once your custom words are configured, use the keyword sequence: "
-                  "\"/ct1\" where the number indicates which sequential word you want to be called there.\n\n The current "
-                  "version of the Maldib Maker does not yet support saved or numbered custom words, as of now they must "
+                  "and enter these words sequentially. Once your custom words are configured, use the keyword "
+                  "sequence: "
+                  "\"/ct1\" where the number indicates which sequential word you want to be called there.\n\n The "
+                  "current "
+                  "version of the Maldib Maker does not yet support saved or numbered custom words, as of now they "
+                  "must "
                   "be configured each time the madlib is filled.\n If your Madlib "
                   "requires repeated custom words,it is reccomended you give them names such as \"High school friend ("
                   "1)\" to remind yourself to fill in the same word.")
@@ -246,10 +259,15 @@ if choice2 == "1":
 if choice == 'yes' or choice2 == '2':
     save_path = 'outputs'
     name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
-    completeName = os.path.join(save_path, name_of_file + ".txt")
+    completeName = os.path.join(save_path, name_of_file + ".tex")
     f = open(completeName, "w")
     f.write("\\documentclass{article}\n\\usepackage{amsmath}\n\\begin{document}\n" + latfill + "\n\\end{document}")
     f.close()
+    #f = open(os.path.join(save_path))
+    pdfl = PDFLaTeX.from_texfile(completeName)
+    pdf, log, completed_process = pdfl.create_pdf(keep_pdf_file=True, keep_log_file=True) # todo find out why this
+    # todo line isnt finding the files it needs despite the fact that I installed pdflatex. sample code found at:
+    # todo https://pypi.org/project/pdflatex/
     print("A Latex coded version of your unfilled madlib has been saved to the outputs folder, run it in a latex "
           "compiler and save the result as a PDF, \nan online compiler can be found here: "
           "https://cocalc.com/doc/latex-editor.html \n"
