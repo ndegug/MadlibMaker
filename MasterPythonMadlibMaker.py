@@ -147,14 +147,18 @@ numbered = "(/...[0-9]+)"
 customreg = "(/ct[0-9]+)"
 regkey = ""
 realkey = ""
+htmlsample= '<span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: ' \
+            'center;"><span style="display: block; padding: 0 0.2em;">______</span><span style="display: block; ' \
+            'font-size: 70%; line-height: 1em; padding: 0 0.2em;"><span style="position: relative; line-height: 1em; ' \
+            'margin-top: -.2em; top: -.2em;"> underscript </span></span></span> '
 choice = raw_input("Wourld you like to configure your custom words?\n")
 if choice == "yes":
     print("Enter each of your custom words, one by one, in order of appearance. Enter \"q\" to stop ")
     i = 1
     while choice != "q":
+        print("custom", i)
+        choice = raw_input()
         if choice != "q":
-            print("custom", i)
-            choice = raw_input()
             custom["/ct" + str(i)] = choice
         i = i + 1
 elif choice == "no" or choice == "":
@@ -180,8 +184,17 @@ for word in inputList:
             new = str(re.sub(unnumbered, new, word))
             outlist.append(new)
         # #latex array
-        latword_sub = generic_words[realkey].replace(" ", "\\ ")
-        latword = '$\\underset{' + latword_sub + '}{\\rule{2.5cm}{0.15mm}}$'
+        #latword_sub = generic_words[realkey].replace(" ", "\\ ")
+        #latword = '$\\underset{' + latword_sub + '}{\\rule{2.5cm}{0.15mm}}$'
+
+        #html equivelent
+
+        latword = htmlsample.replace('underscript', generic_words[realkey])
+        # before <span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: center;">
+        # <span style="display: block; padding: 0 0.2em;">______</span>
+        # <span style="display: block; font-size: 70%; line-height: 1em; padding: 0 0.2em;">
+        # <span style="position: relative; line-height: 1em; margin-top: -.2em; top: -.2em;">underscript</span>
+        # </span></span> after
         # latword
         final = word.replace(realkey, latword, 1)
         latlist.append(final)
@@ -197,14 +210,23 @@ for word in inputList:
         # latex array
         if realkey in custom:
             # saved
-            latword_sub = custom[realkey].replace(" ", "\\ ")
-            latword = '$\\underset{' + latword_sub + '}{\\rule{2.5cm}{0.15mm}}$'
+            #latword_sub = custom[realkey].replace(" ", "\\ ")
+            #latword = '$\\underset{' + latword_sub + '}{\\rule{2.5cm}{0.15mm}}$'
             # latword
+
+            # html equivelent
+
+            latword = htmlsample.replace('underscript', custom[realkey])
+
             final = word.replace(realkey, latword, 1)
             latlist.append(final)
         else:
-            latword = '$\\underset{Undefined}{\\rule{2.5cm}{0.15mm}}$'
-            # latword
+            #latword = '$\\underset{Undefined}{\\rule{2.5cm}{0.15mm}}$'
+
+            # html equivelent
+
+            latword = htmlsample.replace('underscript', 'Undefined')
+
             final = word.replace(realkey, latword, 1)
             latlist.append(final)
     elif re.findall(numbered, word):
@@ -224,9 +246,11 @@ for word in inputList:
                 new = re.sub(numbered, numword_dic[realkey + regkey[6]], word)
                 outlist.append(new)
             # #latex array
-        latword_sub = generic_words[realkey].replace(' ', '\\ ')
-        latword = '$\\underset{' + latword_sub + '\\ (' + regkey[6] + ')}{\\rule{2.5cm}{0.15mm}}$'
-        # latword
+        #latword_sub = generic_words[realkey].replace(' ', '\\ ')
+        #latword = '$\\underset{' + latword_sub + '\\ (' + regkey[6] + ')}{\\rule{2.5cm}{0.15mm}}$'
+                # html equivelent
+
+        latword = htmlsample.replace('underscript', generic_words[realkey])
         final = word.replace(realkey, latword, 1)
         latlist.append(final)
     else:
@@ -259,19 +283,16 @@ if choice2 == "1":
 if choice == 'yes' or choice2 == '2':
     save_path = 'outputs'
     name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
-    completeName = os.path.join(save_path, name_of_file + ".tex")
+    completeName = os.path.join(save_path, name_of_file + ".html")
     f = open(completeName, "w")
-    f.write("\\documentclass{article}\n\\usepackage{amsmath}\n\\begin{document}\n" + latfill + "\n\\end{document}")
+    f.write(latfill)
     f.close()
     #f = open(os.path.join(save_path))
-    pdfl = PDFLaTeX.from_texfile(completeName)
-    pdf, log, completed_process = pdfl.create_pdf(keep_pdf_file=True, keep_log_file=True) # todo find out why this
-    # todo line isnt finding the files it needs despite the fact that I installed pdflatex. sample code found at:
-    # todo https://pypi.org/project/pdflatex/
-    print("A Latex coded version of your unfilled madlib has been saved to the outputs folder, run it in a latex "
-          "compiler and save the result as a PDF, \nan online compiler can be found here: "
-          "https://cocalc.com/doc/latex-editor.html \n"
-          "have a good day!")
+    #pdfl = PDFLaTeX.from_texfile(completeName)
+    #pdf, log, completed_process = pdfl.create_pdf(keep_pdf_file=True, keep_log_file=True)
+    print("An HTML coded version of your unfilled madlib has been saved to the outputs folder, "
+          "drag the file into your browser to view it. Print the file using your respective browser's print feature.\n"
+          "Have a good day!")
 elif choice == 'no' or '':
     print("Have a good day!")
 else:
