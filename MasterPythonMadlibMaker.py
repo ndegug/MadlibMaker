@@ -1,7 +1,6 @@
 import os
 import re
-
-from pdflatex import PDFLaTeX
+import json
 from pip._vendor.distlib.compat import raw_input
 
 custom = {}
@@ -23,7 +22,6 @@ generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
                  '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid'}
 
-printable_words = []  # todo figure out if we need this
 if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
     os.mkdir(os.path.join(os.getcwd(), "inputs"))
 if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
@@ -48,19 +46,41 @@ potato2 = "What the hell is wrong with you? I give you a \"yes\" or \"no\" quest
 
 choice = raw_input(
     "Welcome to the Madlib Maker\nHere you can compose and fill in madlibs using our specialized syntax.\nTo begin, "
-    "please select from the following menu options:\n1. Type madlib \n2. Upload madlib from \"input\" folder.\n3. "
+    "please select from the following menu options:\n1. Type madlib \n2. Use a madlib from the \"inputs\" folder.\n3. "
     "Instructions\n")
 if choice == "1":
     # manual input
     content = raw_input("Enter the madlib below:\n")
     inputList = content.split(" ")
+    choice = raw_input("Would you like to configure your custom words?\n")
+    if choice == "yes":
+        print("Enter each of your custom words, one by one, in order of appearance. Enter \"q\" to stop ")
+        i = 1
+        while choice != "q":
+            print("custom", i)
+            choice = raw_input()
+            if choice != "q":
+                custom["/ct" + str(i)] = choice
+            i = i + 1
+    elif choice == "no" or choice == "":
+        pass
+    else:
+        print(potato2)
+        exit()
     choice = raw_input("Would you like to save your madlib to the inputs folder before filling it?\n")
     if choice == "yes":
         save_path = 'inputs'
         name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
+        #main content file
         completeName = os.path.join(save_path, name_of_file + ".txt")
         f = open(completeName, "w")
         f.write(' '.join(inputList))
+        f.close()
+        #todo add a custom word detector to see if you need a ct file in the first place
+        #custom words file
+        completeName = os.path.join(save_path, name_of_file + "_cts.txt")
+        f = open(completeName, "w")
+        f.write(str(custom).replace("'", "\""))
         f.close()
         choice = raw_input("Your Madlib has been saved under the inputs folder, would you like to fill it in now?\n")
         if choice == "yes":
@@ -77,21 +97,34 @@ if choice == "1":
         print(potato2)
         exit()
 elif choice == "2":
-    filename = raw_input("Which file would you like to upload?\n") + ".txt"
+    #file base name
+    filename = raw_input("Which file would you like to upload?\n")
+    #saving name of custom word file
+    customfile = filename + "_cts.txt"
+    #adding extention to main file name
+    filename = filename + ".txt"
+    #reading main content file
     choice = os.path.join('inputs', filename)
     my_file = open(choice, "r")
     content = my_file.read()
     inputList = content.split(" ")
+    #todo check if custom file exists before trying to open
+    #reading custom file
+    choice = os.path.join('inputs', customfile)
+    with open(choice) as f:
+        data = f.read()
+    custom = json.loads(data)
+    print(custom)
 elif choice == "3":
     while choice != "q":
-        choice = raw_input("Which would you like to learn about: \n1. How to write, upload and save Madlibs\n2. "
-                           "Syntax\n3. Custom Words\nType \"q\" to quit\n")  # todo: add inputs and outputs tutorial
+        choice = raw_input("Which would you like to learn about: \n1. How to write Madlibs\n2. "
+                           "Syntax\n3. Custom Words\n4. Saving and printing madlibs\nType \"q\" to quit\n")  # todo: add inputs and outputs tutorial
         if choice == "1":
             print("Here in the Madlib Maker, you can either type your Madlib or upload a file you've already "
                   "typed.\nFor "
                   "each blank, you must type a keyword specific to the word category you desire.\nThese keywords "
                   "follow "
-                  "the format of 3 letters preceded by a \"/\", for example,\ntyping the keyword \"/adj\" will prompt "
+                  "the syntax of 3 letters preceded by a \"/\", for example,\ntyping the keyword \"/adj\" will prompt "
                   "the "
                   "program to ask the user for an \"Adjective.\"\nSee the Syntax section for the full list of "
                   "keywords.\nYou can add a number at the end of any keyword in the databank to repeat it within the "
@@ -130,6 +163,19 @@ elif choice == "3":
                   "be configured each time the madlib is filled.\n If your Madlib "
                   "requires repeated custom words,it is reccomended you give them names such as \"High school friend ("
                   "1)\" to remind yourself to fill in the same word.")
+        elif choice == "4":
+            print("After writing a madlib, you can save it to the \"inputs\" folder for later use.\nThis is usefull "
+                  "if you have a lengthy madlib that you wish to fill in later or multiple times.\nIf you wish to "
+                  "type a madlib outside of this program, note that the current build accepts text files only and "
+                  "refrain from adding a title/heading "
+                  "as it will be entered later in the program.\nReview the \"Syntax\" section of the instructions for "
+                  "the proper syntax of an input file.\n\nWith a madlib typed or selected, you may chose to fill it "
+                  "within the program or\nprint it as a traditional unfilled maldib on paper.\nOutputs of either "
+                  "nature will be saved to the \"outputs\" folder.\nThe filled madlibs will be saved as a text file "
+                  "while traditional madlibs will be converted into\nan HTML file designed to display the heading and "
+                  "blanks with word categories underneath. Drag this\nHTML file into any web browser to view it in "
+                  "the traditional madlib format, then use the respective \nbrowser's print feature to print a "
+                  "physical copy of the madlib.")
         elif choice == "q":
             print("I hope these instructions helped, start the program again to give it a try!\n Have a good day!")
             exit()
@@ -152,21 +198,7 @@ htmlsample = '<span class="nowrap" style="display: none; display: inline-block; 
              'margin-top: -.2em; top: -.2em;">underscript</span></span></span>'
 htmlhead = '<html><head></head><body><h1> heading </h1><style>h1 {text-align: center;}p.big {  line-height: ' \
            '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
-choice = raw_input("Would you like to configure your custom words?\n")
-if choice == "yes":
-    print("Enter each of your custom words, one by one, in order of appearance. Enter \"q\" to stop ")
-    i = 1
-    while choice != "q":
-        print("custom", i)
-        choice = raw_input()
-        if choice != "q":
-            custom["/ct" + str(i)] = choice
-        i = i + 1
-elif choice == "no" or choice == "":
-    pass
-else:
-    print(potato2)
-    exit()
+
 choice2 = raw_input("Do you wish to:\n1. Fill in your madlib now\n2. Print a physical version\n")
 if choice2 == "1" or choice2 == "2":
     pass
