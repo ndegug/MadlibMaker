@@ -4,7 +4,6 @@ import re
 from pdflatex import PDFLaTeX
 from pip._vendor.distlib.compat import raw_input
 
-
 custom = {}
 
 outlist = []
@@ -43,9 +42,9 @@ def keywords(ind):
 
 
 potato = "What the hell is wrong with you? I give you a list of options and you decide to make your own?\nThat's not " \
-         "how it works you moron! Goodbye!\n "
-potato2 = "What the hell is wrong with you? It's a \"yes\" or \"no\" question and THAT'S what you come up " \
-          "with?\nThat's not how it works you moron! Goodbye!\n "
+         "how it works you moron! Get 'outa here!\n "
+potato2 = "What the hell is wrong with you? I give you a \"yes\" or \"no\" question and THAT'S what you come up " \
+          "with?\nThat's not how it works you moron! Get 'outa here!\n "
 
 choice = raw_input(
     "Welcome to the Madlib Maker\nHere you can compose and fill in madlibs using our specialized syntax.\nTo begin, "
@@ -86,7 +85,7 @@ elif choice == "2":
 elif choice == "3":
     while choice != "q":
         choice = raw_input("Which would you like to learn about: \n1. How to write, upload and save Madlibs\n2. "
-                           "Syntax\n3. Custom Words\nType \"q\" to quit\n") #todo: add inputs and outputs tutorial
+                           "Syntax\n3. Custom Words\nType \"q\" to quit\n")  # todo: add inputs and outputs tutorial
         if choice == "1":
             print("Here in the Madlib Maker, you can either type your Madlib or upload a file you've already "
                   "typed.\nFor "
@@ -147,11 +146,13 @@ numbered = "(/...[0-9]+)"
 customreg = "(/ct[0-9]+)"
 regkey = ""
 realkey = ""
-htmlsample= '<span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: ' \
-            'center;"><span style="display: block; padding: 0 0.2em;">______</span><span style="display: block; ' \
-            'font-size: 70%; line-height: 1em; padding: 0 0.2em;"><span style="position: relative; line-height: 1em; ' \
-            'margin-top: -.2em; top: -.2em;"> underscript </span></span></span> '
-choice = raw_input("Wourld you like to configure your custom words?\n")
+htmlsample = '<span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: ' \
+             'center;"><span style="display: block; padding: 0 0.2em;">__________</span><span style="display: block; ' \
+             'font-size: 70%; line-height: 1em; padding: 0 0.2em;"><span style="position: relative; line-height: 1em; ' \
+             'margin-top: -.2em; top: -.2em;">underscript</span></span></span>'
+htmlhead = '<html><head></head><body><h1> heading </h1><style>h1 {text-align: center;}p.big {  line-height: ' \
+           '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
+choice = raw_input("Would you like to configure your custom words?\n")
 if choice == "yes":
     print("Enter each of your custom words, one by one, in order of appearance. Enter \"q\" to stop ")
     i = 1
@@ -184,10 +185,10 @@ for word in inputList:
             new = str(re.sub(unnumbered, new, word))
             outlist.append(new)
         # #latex array
-        #latword_sub = generic_words[realkey].replace(" ", "\\ ")
-        #latword = '$\\underset{' + latword_sub + '}{\\rule{2.5cm}{0.15mm}}$'
+        # latword_sub = generic_words[realkey].replace(" ", "\\ ")
+        # latword = '$\\underset{' + latword_sub + '}{\\rule{2.5cm}{0.15mm}}$'
 
-        #html equivelent
+        # html equivelent
 
         latword = htmlsample.replace('underscript', generic_words[realkey])
         # before <span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: center;">
@@ -210,8 +211,8 @@ for word in inputList:
         # latex array
         if realkey in custom:
             # saved
-            #latword_sub = custom[realkey].replace(" ", "\\ ")
-            #latword = '$\\underset{' + latword_sub + '}{\\rule{2.5cm}{0.15mm}}$'
+            # latword_sub = custom[realkey].replace(" ", "\\ ")
+            # latword = '$\\underset{' + latword_sub + '}{\\rule{2.5cm}{0.15mm}}$'
             # latword
 
             # html equivelent
@@ -221,7 +222,7 @@ for word in inputList:
             final = word.replace(realkey, latword, 1)
             latlist.append(final)
         else:
-            #latword = '$\\underset{Undefined}{\\rule{2.5cm}{0.15mm}}$'
+            # latword = '$\\underset{Undefined}{\\rule{2.5cm}{0.15mm}}$'
 
             # html equivelent
 
@@ -246,9 +247,9 @@ for word in inputList:
                 new = re.sub(numbered, numword_dic[realkey + regkey[6]], word)
                 outlist.append(new)
             # #latex array
-        #latword_sub = generic_words[realkey].replace(' ', '\\ ')
-        #latword = '$\\underset{' + latword_sub + '\\ (' + regkey[6] + ')}{\\rule{2.5cm}{0.15mm}}$'
-                # html equivelent
+        # latword_sub = generic_words[realkey].replace(' ', '\\ ')
+        # latword = '$\\underset{' + latword_sub + '\\ (' + regkey[6] + ')}{\\rule{2.5cm}{0.15mm}}$'
+        # html equivelent
 
         latword = htmlsample.replace('underscript', generic_words[realkey])
         final = word.replace(realkey, latword, 1)
@@ -281,15 +282,14 @@ if choice2 == "1":
         exit()
     choice = raw_input("Would you like to make a physical copy of the madlib?\n")
 if choice == 'yes' or choice2 == '2':
+    head = raw_input("What would you like to title this madlib?\n")
+    latfill = htmlhead.replace('heading', head, 1) + latfill + ' </p></body></html>'
     save_path = 'outputs'
-    name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
+    name_of_file = raw_input("What do you wish to name the file? (do not type the extension):\n")
     completeName = os.path.join(save_path, name_of_file + ".html")
     f = open(completeName, "w")
     f.write(latfill)
     f.close()
-    #f = open(os.path.join(save_path))
-    #pdfl = PDFLaTeX.from_texfile(completeName)
-    #pdf, log, completed_process = pdfl.create_pdf(keep_pdf_file=True, keep_log_file=True)
     print("An HTML coded version of your unfilled madlib has been saved to the outputs folder, "
           "drag the file into your browser to view it. Print the file using your respective browser's print feature.\n"
           "Have a good day!")
@@ -298,5 +298,3 @@ elif choice == 'no' or '':
 else:
     print(potato2)
     exit()
-# 3. Output string ist to a text file
-# output name to whatever 'outputs/output1.txt'
