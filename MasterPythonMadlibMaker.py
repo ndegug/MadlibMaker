@@ -1,6 +1,7 @@
 import os
 import re
 import json
+
 from pip._vendor.distlib.compat import raw_input
 
 custom = {}
@@ -13,7 +14,7 @@ inputList = []
 
 generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/ver': 'Verb', '/vng': 'Verb ending in \"ing\"', '/ved': 'Past tense verb',
-                 '/ves': 'Verb ending in \"s\"',
+                 '/ves': 'Verb ending in \"s\"', '/adv': 'adverb',
                  '/num': 'Number', '/nam': 'Name', '/cel': 'Celebrity',
                  '/per': 'Person', '/pir': 'Person in room', '/thi': 'Thing',
                  '/pla': 'Place', '/job': 'Job', '/ran': 'Random Word',
@@ -21,7 +22,9 @@ generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/mtv': "Movie/TV show", '/ins': 'Insult/Insulting name', '/phr': 'Random Phrase',
                  '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
                  '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid'}
-
+unnumbered = "(/...)"
+numbered = "(/...[0-9]+)"
+customreg = "(/ct[0-9]+)"
 if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
     os.mkdir(os.path.join(os.getcwd(), "inputs"))
 if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
@@ -39,6 +42,21 @@ def keywords(ind):
         print(ind, "is not a valid keyword, enter what to fill it with: ")
 
 
+def cust_config():
+    ch = ''
+    print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to "
+          "stop ")
+    i = 1
+    while ch != "q":
+        print("custom", i)
+        ch = raw_input()
+        if ch != "q":
+            custom["/ct" + str(i)] = ch
+        i = i + 1
+
+
+# todo add numbered CTs?
+
 potato = "What the hell is wrong with you? I give you a list of options and you decide to make your own?\nThat's not " \
          "how it works you moron! Get 'outa here!\n "
 potato2 = "What the hell is wrong with you? I give you a \"yes\" or \"no\" question and THAT'S what you come up " \
@@ -52,36 +70,27 @@ if choice == "1":
     # manual input
     content = raw_input("Enter the madlib below:\n")
     inputList = content.split(" ")
-    choice = raw_input("Would you like to configure your custom words?\n")
-    if choice == "yes":
-        print("Enter each of your custom words, one by one, in order of appearance. Enter \"q\" to stop ")
-        i = 1
-        while choice != "q":
-            print("custom", i)
-            choice = raw_input()
-            if choice != "q":
-                custom["/ct" + str(i)] = choice
-            i = i + 1
-    elif choice == "no" or choice == "":
-        pass
+    if re.search(customreg, str(inputList)) is not None:
+        cust_config()
     else:
-        print(potato2)
-        exit()
+        pass
     choice = raw_input("Would you like to save your madlib to the inputs folder before filling it?\n")
     if choice == "yes":
         save_path = 'inputs'
         name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
-        #main content file
+        # main content file
         completeName = os.path.join(save_path, name_of_file + ".txt")
         f = open(completeName, "w")
         f.write(' '.join(inputList))
         f.close()
-        #todo add a custom word detector to see if you need a ct file in the first place
-        #custom words file
-        completeName = os.path.join(save_path, name_of_file + "_cts.txt")
-        f = open(completeName, "w")
-        f.write(str(custom).replace("'", "\""))
-        f.close()
+        # custom words file
+        if re.search(customreg, str(inputList)) is not None:
+            completeName = os.path.join(save_path, name_of_file + "_cts.txt")
+            f = open(completeName, "w")
+            f.write(str(custom))
+            f.close()
+        else:
+            pass
         choice = raw_input("Your Madlib has been saved under the inputs folder, would you like to fill it in now?\n")
         if choice == "yes":
             print("")
@@ -97,38 +106,41 @@ if choice == "1":
         print(potato2)
         exit()
 elif choice == "2":
-    #file base name
+    # file base name
     filename = raw_input("Which file would you like to upload?\n")
-    #saving name of custom word file
+    # saving name of custom word file
     customfile = filename + "_cts.txt"
-    #adding extention to main file name
+    # adding extention to main file name
     filename = filename + ".txt"
-    #reading main content file
+    # reading main content file
     choice = os.path.join('inputs', filename)
     my_file = open(choice, "r")
     content = my_file.read()
     inputList = content.split(" ")
-    #todo check if custom file exists before trying to open
-    #reading custom file
-    choice = os.path.join('inputs', customfile)
-    with open(choice) as f:
-        data = f.read()
-    custom = json.loads(data)
-    print(custom)
+    if os.path.exists(os.path.join('inputs', customfile)):
+        choice = os.path.join('inputs', customfile)
+        with open(choice) as f:
+            data = f.read()
+        custom = json.loads(data.replace("\'","\""))
+        f.close()
+    else:
+        pass
+
 elif choice == "3":
     while choice != "q":
         choice = raw_input("Which would you like to learn about: \n1. How to write Madlibs\n2. "
-                           "Syntax\n3. Custom Words\n4. Saving and printing madlibs\nType \"q\" to quit\n")  # todo: add inputs and outputs tutorial
+                           "Syntax\n3. Custom Words\n4. Saving and printing madlibs\nType \"q\" to quit\n")
         if choice == "1":
-            print("Here in the Madlib Maker, you can either type your Madlib or upload a file you've already "
+            print("Here in the Madlib Maker, you can write a Madlib directly or process a file you've already "
                   "typed.\nFor "
                   "each blank, you must type a keyword specific to the word category you desire.\nThese keywords "
-                  "follow "
+                  "typically follow "
                   "the syntax of 3 letters preceded by a \"/\", for example,\ntyping the keyword \"/adj\" will prompt "
                   "the "
                   "program to ask the user for an \"Adjective.\"\nSee the Syntax section for the full list of "
-                  "keywords.\nYou can add a number at the end of any keyword in the databank to repeat it within the "
-                  "same madlib.\nFor example, if the input is:\n\"We have a pet /ani1, he's a good /ani1!\"\nand "
+                  "keywords.\nYou can add a number at the end of any keyword in the program's dictionary to repeat it "
+                  "within\nthe "
+                  "same madlib.\n\nFor example, if the input is:\n\"We have a pet /ani1, he's a good /ani1!\"\nand "
                   "you "
                   "enter \"dog\" when prompted, the program will fill in both at the same time resulting in:\n\"We "
                   "have "
@@ -136,7 +148,7 @@ elif choice == "3":
                   "this program's selection,\nyou may enter it as a "
                   "custom word. These custom words can be\nconfigured before writing the Madlib.\nSee the \"Custom "
                   "Words\" "
-                  "section for further details.")
+                  "section for further details.\n")
         elif choice == "2":
             print("The default keys and word categories are as follows:")
             i = 0
@@ -147,22 +159,23 @@ elif choice == "3":
                 else:
                     print(pair, end='\n')
                     i = 0
+            print("\n")
 
         elif choice == "3":
             print("Custom words allow you to add your own word categories if they are not already stored in this "
-                  "program's databanks.\n If you wanted the program to call out something obscure like \"Baseball "
+                  "program's databanks.\nIf you wanted the program to call out something obscure like \"Baseball "
                   "player\" "
-                  "or \"High school friend\", you can use this feature to do so.\n When questioned whether you wish to "
+                  "or \"High school friend\", you can use this feature to do so.\nWhen questioned whether you wish to "
                   "configure the custom words, type \"yes\" "
-                  "and enter these words sequentially. Once your custom words are configured, use the keyword "
+                  "and enter these words sequentially. Once your custom words are configured,\nuse the keyword "
                   "sequence: "
-                  "\"/ct1\" where the number indicates which sequential word you want to be called there.\n\n The "
+                  "\"/ct1\" where the number indicates which sequential word you want to be called there.\n\nThe "
                   "current "
                   "version of the Maldib Maker does not yet support saved or numbered custom words, as of now they "
                   "must "
-                  "be configured each time the madlib is filled.\n If your Madlib "
+                  "be configured each time the madlib is filled.\nIf your Madlib "
                   "requires repeated custom words,it is reccomended you give them names such as \"High school friend ("
-                  "1)\" to remind yourself to fill in the same word.")
+                  "1)\" to remind yourself to fill in the same word.\n")
         elif choice == "4":
             print("After writing a madlib, you can save it to the \"inputs\" folder for later use.\nThis is usefull "
                   "if you have a lengthy madlib that you wish to fill in later or multiple times.\nIf you wish to "
@@ -187,9 +200,7 @@ else:
     print(potato)
     exit()
 numword_dic = {}
-unnumbered = "(/...)"
-numbered = "(/...[0-9]+)"
-customreg = "(/ct[0-9]+)"
+
 regkey = ""
 realkey = ""
 htmlsample = '<span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: ' \
@@ -216,19 +227,7 @@ for word in inputList:
             new = raw_input()
             new = str(re.sub(unnumbered, new, word))
             outlist.append(new)
-        # #latex array
-        # latword_sub = generic_words[realkey].replace(" ", "\\ ")
-        # latword = '$\\underset{' + latword_sub + '}{\\rule{2.5cm}{0.15mm}}$'
-
-        # html equivelent
-
-        latword = htmlsample.replace('underscript', generic_words[realkey])
-        # before <span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: center;">
-        # <span style="display: block; padding: 0 0.2em;">______</span>
-        # <span style="display: block; font-size: 70%; line-height: 1em; padding: 0 0.2em;">
-        # <span style="position: relative; line-height: 1em; margin-top: -.2em; top: -.2em;">underscript</span>
-        # </span></span> after
-        # latword
+        latword = htmlsample.replace('underscript', generic_words[realkey]) #todo fix condition of html trying to process invalid keys
         final = word.replace(realkey, latword, 1)
         latlist.append(final)
     elif re.findall(customreg, word):
@@ -243,19 +242,11 @@ for word in inputList:
         # latex array
         if realkey in custom:
             # saved
-            # latword_sub = custom[realkey].replace(" ", "\\ ")
-            # latword = '$\\underset{' + latword_sub + '}{\\rule{2.5cm}{0.15mm}}$'
-            # latword
-
-            # html equivelent
-
             latword = htmlsample.replace('underscript', custom[realkey])
 
             final = word.replace(realkey, latword, 1)
             latlist.append(final)
         else:
-            # latword = '$\\underset{Undefined}{\\rule{2.5cm}{0.15mm}}$'
-
             # html equivelent
 
             latword = htmlsample.replace('underscript', 'Undefined')
@@ -278,11 +269,6 @@ for word in inputList:
             if choice2 == "1":
                 new = re.sub(numbered, numword_dic[realkey + regkey[6]], word)
                 outlist.append(new)
-            # #latex array
-        # latword_sub = generic_words[realkey].replace(' ', '\\ ')
-        # latword = '$\\underset{' + latword_sub + '\\ (' + regkey[6] + ')}{\\rule{2.5cm}{0.15mm}}$'
-        # html equivelent
-
         latword = htmlsample.replace('underscript', generic_words[realkey])
         final = word.replace(realkey, latword, 1)
         latlist.append(final)
@@ -312,8 +298,7 @@ if choice2 == "1":
     else:
         print(potato2)
         exit()
-    choice = raw_input("Would you like to make a physical copy of the madlib?\n")
-if choice == 'yes' or choice2 == '2':
+elif choice2 == '2':
     head = raw_input("What would you like to title this madlib?\n")
     latfill = htmlhead.replace('heading', head, 1) + latfill + ' </p></body></html>'
     save_path = 'outputs'
@@ -325,7 +310,7 @@ if choice == 'yes' or choice2 == '2':
     print("An HTML coded version of your unfilled madlib has been saved to the outputs folder, "
           "drag the file into your browser to view it. Print the file using your respective browser's print feature.\n"
           "Have a good day!")
-elif choice == 'no' or '':
+elif choice == 'no' or choice == '':
     print("Have a good day!")
 else:
     print(potato2)
