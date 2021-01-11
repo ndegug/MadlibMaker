@@ -21,7 +21,8 @@ generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/rex': 'Random Exclamation', '/tvs': 'TV Show', '/mov': 'Movie',
                  '/mtv': "Movie/TV show", '/ins': 'Insult/Insulting name', '/phr': 'Random Phrase',
                  '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
-                 '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid'}
+                 '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid',
+                 '/emo': 'Emotion', '/noi': 'noise'}
 unnumbered = "(/...)"
 numbered = "(/...[0-9]+)"
 customreg = "(/ct[0-9]+)"
@@ -29,6 +30,23 @@ if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
     os.mkdir(os.path.join(os.getcwd(), "inputs"))
 if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
     os.mkdir(os.path.join(os.getcwd(), "outputs"))
+
+
+def invalid_html(ch, RK):
+    if ch == 0:
+        ch = raw_input(realkey + ' is not a valid key, did you want it to be?')
+    elif ch == 1:
+        ch = raw_input(realkey + ' is not configured, did you mean to do it?')
+    if ch == 'yes':
+        new = raw_input('What is the word\'s category?')
+        latword = htmlsample.replace('underscript', new)
+        final = word.replace(RK, latword, 1)
+        latlist.append(final)
+    elif ch == 'no' or ch == '':
+        latlist.append(word)
+    else:
+        print(potato)
+        exit()
 
 
 def keywords(ind):
@@ -107,7 +125,7 @@ if choice == "1":
         exit()
 elif choice == "2":
     # file base name
-    filename = raw_input("Which file would you like to upload?\n")
+    filename = raw_input("Which file would you like to upload? (type the name with no extension)\n")
     # saving name of custom word file
     customfile = filename + "_cts.txt"
     # adding extention to main file name
@@ -121,7 +139,7 @@ elif choice == "2":
         choice = os.path.join('inputs', customfile)
         with open(choice) as f:
             data = f.read()
-        custom = json.loads(data.replace("\'","\""))
+        custom = json.loads(data.replace("\'", "\""))
         f.close()
     else:
         pass
@@ -163,7 +181,7 @@ elif choice == "3":
 
         elif choice == "3":
             print("Custom words allow you to add your own word categories if they are not already stored in this "
-                  "program's databanks.\nIf you wanted the program to call out something obscure like \"Baseball "
+                  "program's dictionary.\nIf you wanted the program to call out something obscure like \"Baseball "
                   "player\" "
                   "or \"High school friend\", you can use this feature to do so.\nWhen questioned whether you wish to "
                   "configure the custom words, type \"yes\" "
@@ -174,7 +192,7 @@ elif choice == "3":
                   "version of the Maldib Maker does not yet support saved or numbered custom words, as of now they "
                   "must "
                   "be configured each time the madlib is filled.\nIf your Madlib "
-                  "requires repeated custom words,it is reccomended you give them names such as \"High school friend ("
+                  "requires repeated custom words,it is recommended you give them names such as \"High school friend ("
                   "1)\" to remind yourself to fill in the same word.\n")
         elif choice == "4":
             print("After writing a madlib, you can save it to the \"inputs\" folder for later use.\nThis is usefull "
@@ -227,9 +245,12 @@ for word in inputList:
             new = raw_input()
             new = str(re.sub(unnumbered, new, word))
             outlist.append(new)
-        latword = htmlsample.replace('underscript', generic_words[realkey]) #todo fix condition of html trying to process invalid keys
-        final = word.replace(realkey, latword, 1)
-        latlist.append(final)
+        elif choice2 == "2" and realkey in generic_words.keys():
+            latword = htmlsample.replace('underscript', generic_words[realkey])
+            final = word.replace(realkey, latword, 1)
+            latlist.append(final)
+        elif choice2 == "2" and realkey not in generic_words.keys():
+            invalid_html(0, realkey)
     elif re.findall(customreg, word):
         # custom
         regkey = str(re.findall(unnumbered, word))
@@ -240,12 +261,13 @@ for word in inputList:
             new = str(re.sub(unnumbered, new, word))
             outlist.append(new)
         # latex array
-        if realkey in custom:
+        elif choice2 == "2" and realkey in custom:
             # saved
             latword = htmlsample.replace('underscript', custom[realkey])
-
             final = word.replace(realkey, latword, 1)
             latlist.append(final)
+        elif choice2 == "2" and realkey not in custom:
+            invalid_html(1, realkey)
         else:
             # html equivelent
 
@@ -257,7 +279,7 @@ for word in inputList:
         # numbered
         regkey = str(re.findall(numbered, word))
         realkey = regkey[2] + regkey[3] + regkey[4] + regkey[5]
-        if realkey + regkey[6] not in numword_dic.keys():
+        if choice2 == "1" and realkey + regkey[6] not in numword_dic.keys():
             # numbered unsaved
             if choice2 == "1":
                 keywords(realkey)
@@ -265,13 +287,16 @@ for word in inputList:
                 numword_dic[realkey + regkey[6]] = new
                 new = re.sub(numbered, new, word)
                 outlist.append(new)
-        elif realkey + regkey[6] in numword_dic.keys():
+        elif choice2 == "1" and realkey + regkey[6] in generic_words.keys():
             if choice2 == "1":
                 new = re.sub(numbered, numword_dic[realkey + regkey[6]], word)
                 outlist.append(new)
-        latword = htmlsample.replace('underscript', generic_words[realkey])
-        final = word.replace(realkey, latword, 1)
-        latlist.append(final)
+        elif choice2 == "2" and realkey in generic_words.keys():
+            latword = htmlsample.replace('underscript', generic_words[realkey] + regkey[6])
+            final = word.replace(realkey + regkey[6], latword, 1)
+            latlist.append(final)
+        elif choice2 == "2" and realkey not in generic_words.keys():
+            invalid_html(0, realkey)
     else:
         # none, just append
         if choice2 == "1":
