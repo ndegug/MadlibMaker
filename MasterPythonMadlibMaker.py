@@ -19,7 +19,7 @@ generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/per': 'Person', '/pir': 'Person in room', '/thi': 'Thing',
                  '/pla': 'Place', '/job': 'Job', '/ran': 'Random Word',
                  '/rex': 'Random Exclamation', '/tvs': 'TV Show', '/mov': 'Movie',
-                 '/mtv': "Movie/TV show", '/ins': 'Insult/Insulting name', '/phr': 'Random Phrase',
+                 '/mtv': "Movie/TV show", '/ins': 'Insulting name', '/phr': 'Random Phrase',
                  '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
                  '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid',
                  '/emo': 'Emotion', '/noi': 'noise'}
@@ -109,7 +109,7 @@ if choice == "1":
             f.close()
         else:
             pass
-        choice = raw_input("Your Madlib has been saved under the inputs folder, would you like to fill it in now?\n")
+        choice = raw_input("Your Madlib has been saved under the inputs folder, would you like to process it in now?\n")
         if choice == "yes":
             print("")
         elif choice == "no":
