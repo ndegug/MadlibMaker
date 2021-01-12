@@ -65,7 +65,7 @@ def cust_config():
     print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to "
           "stop ")
     i = 1
-    while ch != "q":
+    while ch != "q":#todo break when custom word of number i is not found, break before asking for another
         print("custom", i)
         ch = raw_input()
         if ch != "q":
@@ -123,7 +123,7 @@ if choice == "1":
     else:
         print(potato2)
         exit()
-elif choice == "2":
+elif choice == "2":#todo repeat config function if ct file is not found in this option
     # file base name
     filename = raw_input("Which file would you like to upload? (type the name with no extension)\n")
     # saving name of custom word file
@@ -235,7 +235,7 @@ else:
     print("you are here")
     print(potato2)
     exit()
-for word in inputList:
+for word in inputList:#todo fix function not reading double digit custom words
     if re.findall(unnumbered, word) and not re.findall(numbered, word) and not re.findall(customreg, word):
         # unnumbered
         regkey = str(re.findall(unnumbered, word))
