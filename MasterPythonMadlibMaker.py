@@ -22,7 +22,7 @@ generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/mtv': "Movie/TV show", '/ins': 'Insulting name', '/phr': 'Random Phrase',
                  '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
                  '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid',
-                 '/emo': 'Emotion', '/noi': 'noise'}
+                 '/emo': 'Emotion', '/noi': 'noise', '/eve': 'Event'}
 unnumbered = "(/...)"
 numbered = "(/...[0-9]+)"
 customreg = "(/ct[0-9]+)"
@@ -50,6 +50,11 @@ def invalid_html(ch, RK):
 
 
 def keywords(ind):
+    print(ind)
+    base = re.findall(unnumbered, ind)
+    print(base)
+    ind = ''.join(base)
+    print(ind)
     if ind in generic_words.keys():
         print(generic_words[ind] + ': ')
     elif re.findall(customreg, ind) and ind in custom:
@@ -65,12 +70,13 @@ def cust_config():
     print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to "
           "stop ")
     i = 1
-    while ch != "q":#todo break when custom word of number i is not found, break before asking for another
+    tempreg ="(/ct1+)"
+    while re.findall(tempreg, content):
         print("custom", i)
         ch = raw_input()
-        if ch != "q":
-            custom["/ct" + str(i)] = ch
+        custom["/ct" + str(i)] = ch
         i = i + 1
+        tempreg="(/ct"+str(i)+"+)"
 
 
 # todo add numbered CTs?
@@ -123,7 +129,7 @@ if choice == "1":
     else:
         print(potato2)
         exit()
-elif choice == "2":#todo repeat config function if ct file is not found in this option
+elif choice == "2":  # todo repeat config function if ct file is not found in this option
     # file base name
     filename = raw_input("Which file would you like to upload? (type the name with no extension)\n")
     # saving name of custom word file
@@ -235,11 +241,11 @@ else:
     print("you are here")
     print(potato2)
     exit()
-for word in inputList:#todo fix function not reading double digit custom words
+for word in inputList:  # todo fix html array as did the filling functions
     if re.findall(unnumbered, word) and not re.findall(numbered, word) and not re.findall(customreg, word):
         # unnumbered
-        regkey = str(re.findall(unnumbered, word))
-        realkey = regkey[2] + regkey[3] + regkey[4] + regkey[5]
+        regkey = re.findall(unnumbered, word)
+        realkey = ''.join(regkey)
         if choice2 == "1":
             keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
             new = raw_input()
@@ -253,8 +259,8 @@ for word in inputList:#todo fix function not reading double digit custom words
             invalid_html(0, realkey)
     elif re.findall(customreg, word):
         # custom
-        regkey = str(re.findall(unnumbered, word))
-        realkey = regkey[2] + regkey[3] + regkey[4] + regkey[5]
+        regkey = re.findall(customreg, word)
+        realkey = ''.join(regkey)  # todo change all key compilers to this sequence
         if choice2 == "1":
             keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
             new = raw_input()
@@ -277,23 +283,23 @@ for word in inputList:#todo fix function not reading double digit custom words
             latlist.append(final)
     elif re.findall(numbered, word):
         # numbered
-        regkey = str(re.findall(numbered, word))
-        realkey = regkey[2] + regkey[3] + regkey[4] + regkey[5]
-        if choice2 == "1" and realkey + regkey[6] not in numword_dic.keys():
+        regkey = re.findall(numbered, word)
+        realkey = ''.join(regkey)
+        if choice2 == "1" and realkey not in numword_dic.keys():
             # numbered unsaved
             if choice2 == "1":
                 keywords(realkey)
                 new = raw_input()
-                numword_dic[realkey + regkey[6]] = new
+                numword_dic[realkey] = new
                 new = re.sub(numbered, new, word)
                 outlist.append(new)
-        elif choice2 == "1" and realkey + regkey[6] in generic_words.keys():
+        elif choice2 == "1" and realkey in numword_dic.keys():
             if choice2 == "1":
-                new = re.sub(numbered, numword_dic[realkey + regkey[6]], word)
+                new = re.sub(numbered, numword_dic[realkey], word)
                 outlist.append(new)
         elif choice2 == "2" and realkey in generic_words.keys():
-            latword = htmlsample.replace('underscript', generic_words[realkey] + regkey[6])
-            final = word.replace(realkey + regkey[6], latword, 1)
+            latword = htmlsample.replace('underscript', generic_words[realkey])
+            final = word.replace(realkey, latword, 1)
             latlist.append(final)
         elif choice2 == "2" and realkey not in generic_words.keys():
             invalid_html(0, realkey)
