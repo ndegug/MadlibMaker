@@ -131,7 +131,7 @@ if choice == "1":
         exit()
 elif choice == "2":  # todo repeat config function if ct file is not found in this option
     # file base name
-    filename = raw_input("Which file would you like to upload? (type the name with no extension)\n")
+    filename = raw_input("Which file would you like to process? (type the name with no extension)\n")
     # saving name of custom word file
     customfile = filename + "_cts.txt"
     # adding extention to main file name
@@ -238,7 +238,6 @@ choice2 = raw_input("Do you wish to:\n1. Fill in your madlib now\n2. Print a phy
 if choice2 == "1" or choice2 == "2":
     pass
 else:
-    print("you are here")
     print(potato2)
     exit()
 for word in inputList:  # todo fix html array as did the filling functions
@@ -284,24 +283,27 @@ for word in inputList:  # todo fix html array as did the filling functions
     elif re.findall(numbered, word):
         # numbered
         regkey = re.findall(numbered, word)
+        regkeyb = re.findall(unnumbered, word)
         realkey = ''.join(regkey)
+        base=''.join(regkeyb)
+        regnum = re.findall(r'\d+', realkey)
+        num = ''.join(regnum)
         if choice2 == "1" and realkey not in numword_dic.keys():
             # numbered unsaved
-            if choice2 == "1":
-                keywords(realkey)
-                new = raw_input()
-                numword_dic[realkey] = new
-                new = re.sub(numbered, new, word)
-                outlist.append(new)
+
+            keywords(realkey)
+            new = raw_input()
+            numword_dic[realkey] = new
+            new = re.sub(numbered, new, word)
+            outlist.append(new)
         elif choice2 == "1" and realkey in numword_dic.keys():
-            if choice2 == "1":
-                new = re.sub(numbered, numword_dic[realkey], word)
-                outlist.append(new)
-        elif choice2 == "2" and realkey in generic_words.keys():
-            latword = htmlsample.replace('underscript', generic_words[realkey])
+            new = re.sub(numbered, numword_dic[realkey], word)
+            outlist.append(new)
+        elif choice2 == "2" and base in generic_words.keys():
+            latword = htmlsample.replace('underscript', generic_words[base] + ' (' + str(num) + ')')
             final = word.replace(realkey, latword, 1)
             latlist.append(final)
-        elif choice2 == "2" and realkey not in generic_words.keys():
+        elif choice2 == "2" and base not in generic_words.keys():
             invalid_html(0, realkey)
     else:
         # none, just append
@@ -325,7 +327,7 @@ if choice2 == "1":
         f.close()
         print("Your filled madlib has been saved to the outputs folder, have a good day!")
     elif choice == 'no' or choice == '':
-        pass
+        print("Have a good day!")
     else:
         print(potato2)
         exit()
