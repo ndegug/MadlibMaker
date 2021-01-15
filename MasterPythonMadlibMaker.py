@@ -50,13 +50,10 @@ def invalid_html(ch, RK):
 
 
 def keywords(ind):
-    print(ind)
     base = re.findall(unnumbered, ind)
-    print(base)
-    ind = ''.join(base)
-    print(ind)
-    if ind in generic_words.keys():
-        print(generic_words[ind] + ': ')
+    base = ''.join(base)
+    if base in generic_words.keys():
+        print(generic_words[base] + ': ')
     elif re.findall(customreg, ind) and ind in custom:
         print(custom[ind] + ':')
     elif re.findall(customreg, ind) and ind not in custom:
@@ -66,11 +63,10 @@ def keywords(ind):
 
 
 def cust_config():
-    ch = ''
     print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to "
           "stop ")
     i = 1
-    tempreg ="(/ct1+)"
+    tempreg ="(/ct1+)" #variable regular expression
     while re.findall(tempreg, content):
         print("custom", i)
         ch = raw_input()
@@ -240,7 +236,7 @@ if choice2 == "1" or choice2 == "2":
 else:
     print(potato2)
     exit()
-for word in inputList:  # todo fix html array as did the filling functions
+for word in inputList:
     if re.findall(unnumbered, word) and not re.findall(numbered, word) and not re.findall(customreg, word):
         # unnumbered
         regkey = re.findall(unnumbered, word)
@@ -259,7 +255,7 @@ for word in inputList:  # todo fix html array as did the filling functions
     elif re.findall(customreg, word):
         # custom
         regkey = re.findall(customreg, word)
-        realkey = ''.join(regkey)  # todo change all key compilers to this sequence
+        realkey = ''.join(regkey)
         if choice2 == "1":
             keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
             new = raw_input()
