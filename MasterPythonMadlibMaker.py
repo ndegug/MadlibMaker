@@ -22,15 +22,27 @@ generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/mtv': "Movie/TV show", '/ins': 'Insulting name', '/phr': 'Random Phrase',
                  '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
                  '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid',
-                 '/emo': 'Emotion', '/noi': 'noise', '/eve': 'Event'}
+                 '/emo': 'Emotion', '/noi': 'noise', '/eve': 'Event', '/fos': 'Plural food'}
 unnumbered = "(/...)"
 numbered = "(/...[0-9]+)"
 customreg = "(/ct[0-9]+)"
+numcustcom = ".+\([0-9]+\)"
+numcustreg = "(/ct[0-9]+_[0-9]+)"
+tail = "(_[0-9])"
+
 if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
     os.mkdir(os.path.join(os.getcwd(), "inputs"))
 if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
     os.mkdir(os.path.join(os.getcwd(), "outputs"))
 
+def quote_convert(text):
+    text=text.replace('\u2018\u2018', '"')
+    text=text.replace('\u2019\u2019', '"')
+    text=text.replace('\u2018', "\'")
+    text=text.replace('\u2019', "\'")
+    text=text.replace('\u201C', '"')
+    text=text.replace('\u201D', '"')
+    return text
 
 def invalid_html(ch, RK):
     if ch == 0:
@@ -75,7 +87,7 @@ def cust_config():
         tempreg="(/ct"+str(i)+"+)"
 
 
-# todo add numbered CTs?
+
 
 potato = "What the hell is wrong with you? I give you a list of options and you decide to make your own?\nThat's not " \
          "how it works you moron! Get 'outa here!\n "
@@ -143,9 +155,10 @@ elif choice == "2":  # todo repeat config function if ct file is not found in th
             data = f.read()
         custom = json.loads(data.replace("\'", "\""))
         f.close()
+    elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
+        cust_config()
     else:
         pass
-
 elif choice == "3":
     while choice != "q":
         choice = raw_input("Which would you like to learn about: \n1. How to write Madlibs\n2. "
@@ -220,7 +233,7 @@ else:
     print(potato)
     exit()
 numword_dic = {}
-
+numcust_dic = {}
 regkey = ""
 realkey = ""
 htmlsample = '<span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: ' \
@@ -230,9 +243,12 @@ htmlsample = '<span class="nowrap" style="display: none; display: inline-block; 
 htmlhead = '<html><head></head><body><h1> heading </h1><style>h1 {text-align: center;}p.big {  line-height: ' \
            '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
 
-choice2 = raw_input("Do you wish to:\n1. Fill in your madlib now\n2. Print a physical version\n")
+choice2 = raw_input("Do you wish to:\n1. Fill in your madlib now\n2. Print a physical version\n3. Quit\n")
 if choice2 == "1" or choice2 == "2":
     pass
+elif choice2 == "3":
+    print("Have a good day!")
+    exit()
 else:
     print(potato2)
     exit()
@@ -252,7 +268,7 @@ for word in inputList:
             latlist.append(final)
         elif choice2 == "2" and realkey not in generic_words.keys():
             invalid_html(0, realkey)
-    elif re.findall(customreg, word):
+    elif re.findall(customreg, word) and not re.findall(numcustreg, word):
         # custom
         regkey = re.findall(customreg, word)
         realkey = ''.join(regkey)
@@ -276,6 +292,36 @@ for word in inputList:
 
             final = word.replace(realkey, latword, 1)
             latlist.append(final)
+    elif re.findall(numcustreg, word):
+        #numberded custom
+
+        regkey = re.findall(numcustreg, word)
+        realkey = ''.join(regkey)
+
+        base= re.findall(customreg, word)
+        base=''.join(base)
+
+        tailkey= re.findall(tail, word)
+        tailkey=''.join(tailkey)
+        regnum = re.findall(r'\d+', tailkey)
+        num = ''.join(regnum)
+
+        if choice2 == "1" and realkey not in numcust_dic:
+            #numbered cust unsaved
+            keywords(base)
+            new = raw_input()
+            numcust_dic[realkey] = new
+            new = re.sub(numcustreg, new, word)
+            outlist.append(new)
+        elif choice2 == "1" and realkey in numcust_dic:
+            #numbered cust saved
+            new = re.sub(numcustreg, numcust_dic[realkey], word)
+            outlist.append(new)
+        elif choice2 == "2":
+            latword = htmlsample.replace('underscript', custom[base] + ' (' + str(num) + ')')
+            final = word.replace(realkey, latword, 1)
+            latlist.append(final)
+
     elif re.findall(numbered, word):
         # numbered
         regkey = re.findall(numbered, word)
@@ -308,9 +354,12 @@ for word in inputList:
         # #Latex array
         latlist.append(word)
 
+    #todo: test numbered custom words
+
 filled = ' '.join(outlist)
 latfill = ' '.join(latlist)
-
+filled=quote_convert(filled)
+latfill = quote_convert(latfill)
 if choice2 == "1":
     print(filled)
     choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder? \n")
