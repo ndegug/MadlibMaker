@@ -195,20 +195,19 @@ elif choice == "3":
             print("\n")
 
         elif choice == "3":
-            print("Custom words allow you to add your own word categories if they are not already stored in this "
+            print("Custom words allow you to add your own word categories if they are not already stored in this "#todo clean up the spaces after returns
                   "program's dictionary.\nIf you wanted the program to call out something obscure like \"Baseball "
                   "player\" "
                   "or \"High school friend\", you can use this feature to do so.\nWhen questioned whether you wish to "
                   "configure the custom words, type \"yes\" "
                   "and enter these words sequentially. Once your custom words are configured,\nuse the keyword "
                   "sequence: "
-                  "\"/ct1\" where the number indicates which sequential word you want to be called there.\n\nThe "
-                  "current "
-                  "version of the Maldib Maker does not yet support saved or numbered custom words, as of now they "
-                  "must "
-                  "be configured each time the madlib is filled.\nIf your Madlib "
-                  "requires repeated custom words,it is recommended you give them names such as \"High school friend ("
-                  "1)\" to remind yourself to fill in the same word.\n")
+                  "\"/ct1\" where the number indicates which sequential word you want to be called there.\n\nIf you "
+                  "want a specific custom word entry to automatically entered several times, use a numbered\n custom "
+                  "word key such as:\"/ct1_1.\" This key will be interperated as a numbered word (see the \"How\n to "
+                  "write Maldibs\" instructions section "
+                  "for more details) and any word that is used to replace it will then replace all other\nwords "
+                  "with that same key")
         elif choice == "4":
             print("After writing a madlib, you can save it to the \"inputs\" folder for later use.\nThis is usefull "
                   "if you have a lengthy madlib that you wish to fill in later or multiple times.\nIf you wish to "
