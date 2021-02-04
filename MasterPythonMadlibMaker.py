@@ -79,7 +79,7 @@ def cust_config():
           "stop ")
     i = 1
     tempreg ="(/ct1+)" #variable regular expression
-    while re.findall(tempreg, content):
+    while re.findall(tempreg, content):#todo account for people who use unconfigured doubles
         print("custom", i)
         ch = raw_input()
         custom["/ct" + str(i)] = ch
@@ -137,7 +137,7 @@ if choice == "1":
     else:
         print(potato2)
         exit()
-elif choice == "2":  # todo repeat config function if ct file is not found in this option
+elif choice == "2":
     # file base name
     filename = raw_input("Which file would you like to process? (type the name with no extension)\n")
     # saving name of custom word file
