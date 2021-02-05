@@ -22,7 +22,7 @@ generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/mtv': "Movie/TV show", '/ins': 'Insulting name', '/phr': 'Random Phrase',
                  '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
                  '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid',
-                 '/emo': 'Emotion', '/noi': 'noise', '/eve': 'Event', '/fos': 'Plural food'}
+                 '/emo': 'Emotion', '/noi': 'noise', '/eve': 'Event', '/fos': 'Plural food', '/fur': 'Furniture'}
 unnumbered = "(/...)"
 numbered = "(/...[0-9]+)"
 customreg = "(/ct[0-9]+)"
@@ -157,6 +157,10 @@ elif choice == "2":
         f.close()
     elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
         cust_config()
+        completeName = os.path.join('inputs', filename + "_cts.txt")#todo implement custom wirte into cust_config
+        f = open(completeName, "w")
+        f.write(str(custom))
+        f.close()
     else:
         pass
 elif choice == "3":
