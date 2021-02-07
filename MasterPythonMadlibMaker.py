@@ -35,14 +35,16 @@ if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
 if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
     os.mkdir(os.path.join(os.getcwd(), "outputs"))
 
+
 def quote_convert(text):
-    text=text.replace('\u2018\u2018', '"')
-    text=text.replace('\u2019\u2019', '"')
-    text=text.replace('\u2018', "\'")
-    text=text.replace('\u2019', "\'")
-    text=text.replace('\u201C', '"')
-    text=text.replace('\u201D', '"')
+    text = text.replace('\u2018\u2018', '"')
+    text = text.replace('\u2019\u2019', '"')
+    text = text.replace('\u2018', "\'")
+    text = text.replace('\u2019', "\'")
+    text = text.replace('\u201C', '"')
+    text = text.replace('\u201D', '"')
     return text
+
 
 def invalid_html(ch, RK):
     if ch == 0:
@@ -74,29 +76,43 @@ def keywords(ind):
         print(ind, "is not a valid keyword, enter what to fill it with: ")
 
 
+def file_write(name_of_file, ch):
+    if ch == 0:  # normal write
+        completeName = os.path.join(save_path, name_of_file + ".txt")
+        f = open(completeName, "w")
+        f.write(' '.join(inputList))
+        f.close()
+    elif ch == 1:  # custom write
+        completeName = os.path.join('inputs', name_of_file + "_cts.txt")
+        f = open(completeName, "w")
+        f.write(str(custom))
+        f.close()
+    else:#todo add output write
+        print("custom write bug, please report to github page")
+        exit()
+
+
 def cust_config():
     print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to "
           "stop ")
     i = 1
-    tempreg ="(/ct1+)" #variable regular expression
-    while re.findall(tempreg, content):#todo account for people who use unconfigured doubles
+    tempreg = "(/ct1+)"  # variable regular expression
+    while re.findall(tempreg, content):  # todo account for people who use unconfigured doubles
         print("custom", i)
         ch = raw_input()
         custom["/ct" + str(i)] = ch
         i = i + 1
-        tempreg="(/ct"+str(i)+"+)"
-
-
+        tempreg = "(/ct" + str(i) + "+)"
 
 
 potato = "What the hell is wrong with you? I give you a list of options and you decide to make your own?\nThat's not " \
-         "how it works you moron! Get 'outa here!\n "
+         "how it works you moron! Get 'outa here!\n"
 potato2 = "What the hell is wrong with you? I give you a \"yes\" or \"no\" question and THAT'S what you come up " \
-          "with?\nThat's not how it works you moron! Get 'outa here!\n "
+          "with?\nThat's not how it works you moron! Get 'outa here!\n"
 
 choice = raw_input(
     "Welcome to the Madlib Maker\nHere you can compose and fill in madlibs using our specialized syntax.\nTo begin, "
-    "please select from the following menu options:\n1. Type madlib \n2. Use a madlib from the \"inputs\" folder.\n3. "
+    "please select from the following menu options:\n1. Type madlib\n2. Use a madlib from the \"inputs\" folder.\n3. "
     "Instructions\n")
 if choice == "1":
     # manual input
@@ -109,18 +125,12 @@ if choice == "1":
     choice = raw_input("Would you like to save your madlib to the inputs folder before filling it?\n")
     if choice == "yes":
         save_path = 'inputs'
-        name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
+        filename = raw_input("What do you wish to name the file? (do not type the extension): ")
         # main content file
-        completeName = os.path.join(save_path, name_of_file + ".txt")
-        f = open(completeName, "w")
-        f.write(' '.join(inputList))
-        f.close()
+        file_write(filename, 0)
         # custom words file
         if re.search(customreg, str(inputList)) is not None:
-            completeName = os.path.join(save_path, name_of_file + "_cts.txt")
-            f = open(completeName, "w")
-            f.write(str(custom))
-            f.close()
+            file_write(filename, 1)
         else:
             pass
         choice = raw_input("Your Madlib has been saved under the inputs folder, would you like to process it in now?\n")
@@ -157,17 +167,14 @@ elif choice == "2":
         f.close()
     elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
         cust_config()
-        completeName = os.path.join('inputs', filename + "_cts.txt")#todo implement custom wirte into cust_config
-        f = open(completeName, "w")
-        f.write(str(custom))
-        f.close()
+        file_write(filename, 1)
     else:
         pass
 elif choice == "3":
     while choice != "q":
-        choice = raw_input("Which would you like to learn about: \n1. How to write Madlibs\n2. "
+        choice = raw_input("Which would you like to learn about:\n1. How to write Madlibs\n2. "
                            "Syntax\n3. Custom Words\n4. Saving and printing madlibs\nType \"q\" to quit\n")
-        if choice == "1":
+        if choice == "1":#todo add a "process pre-made file" instructions
             print("Here in the Madlib Maker, you can write a Madlib directly or process a file you've already "
                   "typed.\nFor "
                   "each blank, you must type a keyword specific to the word category you desire.\nThese keywords "
@@ -199,19 +206,20 @@ elif choice == "3":
             print("\n")
 
         elif choice == "3":
-            print("Custom words allow you to add your own word categories if they are not already stored in this "#todo clean up the spaces after returns
-                  "program's dictionary.\nIf you wanted the program to call out something obscure like \"Baseball "
-                  "player\" "
-                  "or \"High school friend\", you can use this feature to do so.\nWhen questioned whether you wish to "
-                  "configure the custom words, type \"yes\" "
-                  "and enter these words sequentially. Once your custom words are configured,\nuse the keyword "
-                  "sequence: "
-                  "\"/ct1\" where the number indicates which sequential word you want to be called there.\n\nIf you "
-                  "want a specific custom word entry to automatically entered several times, use a numbered\n custom "
-                  "word key such as:\"/ct1_1.\" This key will be interperated as a numbered word (see the \"How\n to "
-                  "write Maldibs\" instructions section "
-                  "for more details) and any word that is used to replace it will then replace all other\nwords "
-                  "with that same key")
+            print(
+                "Custom words allow you to add your own word categories if they are not already stored in this "
+                "program's dictionary.\nIf you wanted the program to call out something obscure like \"Baseball "
+                "player\" "
+                "or \"High school friend\", you can use this feature to do so.\nWhen questioned whether you wish to "
+                "configure the custom words, type \"yes\""
+                "and enter these words sequentially. Once your custom words are configured,\nuse the keyword "
+                "sequence: "
+                "\"/ct1\" where the number indicates which sequential word you want to be called there.\n\nIf you "
+                "want a specific custom word entry to automatically entered several times, use a numbered\ncustom "
+                "word key such as:\"/ct1_1.\" This key will be interperated as a numbered word (see the \"How\nto "
+                "write Maldibs\" instructions section "
+                "for more details) and any word that is used to replace it will then replace all other\nwords "
+                "with that same key")
         elif choice == "4":
             print("After writing a madlib, you can save it to the \"inputs\" folder for later use.\nThis is usefull "
                   "if you have a lengthy madlib that you wish to fill in later or multiple times.\nIf you wish to "
@@ -221,12 +229,12 @@ elif choice == "3":
                   "the proper syntax of an input file.\n\nWith a madlib typed or selected, you may chose to fill it "
                   "within the program or\nprint it as a traditional unfilled maldib on paper.\nOutputs of either "
                   "nature will be saved to the \"outputs\" folder.\nThe filled madlibs will be saved as a text file "
-                  "while traditional madlibs will be converted into\nan HTML file designed to display the heading and "
-                  "blanks with word categories underneath. Drag this\nHTML file into any web browser to view it in "
-                  "the traditional madlib format, then use the respective \nbrowser's print feature to print a "
+                  "while traditional madlibs will be converted into\nHTML files designed to display the heading and "
+                  "blanks with word categories underneath. Drag the\nHTML file into any web browser to view it in "
+                  "the traditional madlib format, then use the respective\nbrowser's print feature to print a "
                   "physical copy of the madlib.")
         elif choice == "q":
-            print("I hope these instructions helped, start the program again to give it a try!\n Have a good day!")
+            print("I hope these instructions helped, start the program again to give it a try!\nHave a good day!")
             exit()
         else:
             print(potato)
@@ -296,28 +304,28 @@ for word in inputList:
             final = word.replace(realkey, latword, 1)
             latlist.append(final)
     elif re.findall(numcustreg, word):
-        #numberded custom
+        # numberded custom
 
         regkey = re.findall(numcustreg, word)
         realkey = ''.join(regkey)
 
-        base= re.findall(customreg, word)
-        base=''.join(base)
+        base = re.findall(customreg, word)
+        base = ''.join(base)
 
-        tailkey= re.findall(tail, word)
-        tailkey=''.join(tailkey)
+        tailkey = re.findall(tail, word)
+        tailkey = ''.join(tailkey)
         regnum = re.findall(r'\d+', tailkey)
         num = ''.join(regnum)
 
         if choice2 == "1" and realkey not in numcust_dic:
-            #numbered cust unsaved
+            # numbered cust unsaved
             keywords(base)
             new = raw_input()
             numcust_dic[realkey] = new
             new = re.sub(numcustreg, new, word)
             outlist.append(new)
         elif choice2 == "1" and realkey in numcust_dic:
-            #numbered cust saved
+            # numbered cust saved
             new = re.sub(numcustreg, numcust_dic[realkey], word)
             outlist.append(new)
         elif choice2 == "2":
@@ -330,7 +338,7 @@ for word in inputList:
         regkey = re.findall(numbered, word)
         regkeyb = re.findall(unnumbered, word)
         realkey = ''.join(regkey)
-        base=''.join(regkeyb)
+        base = ''.join(regkeyb)
         regnum = re.findall(r'\d+', realkey)
         num = ''.join(regnum)
         if choice2 == "1" and realkey not in numword_dic.keys():
@@ -357,19 +365,17 @@ for word in inputList:
         # #Latex array
         latlist.append(word)
 
-    #todo: test numbered custom words
-
 filled = ' '.join(outlist)
 latfill = ' '.join(latlist)
-filled=quote_convert(filled)
+filled = quote_convert(filled)
 latfill = quote_convert(latfill)
 if choice2 == "1":
     print(filled)
-    choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder? \n")
+    choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder?\n")
     if choice == 'yes':
         save_path = 'outputs'
-        name_of_file = raw_input("What do you wish to name the file? (do not type the extension): ")
-        completeName = os.path.join(save_path, name_of_file + ".txt")
+        filename = raw_input("What do you wish to name the file? (do not type the extension): ")
+        completeName = os.path.join(save_path, filename + ".txt")
         f = open(completeName, "w")
         f.write(filled)
         f.close()
@@ -383,8 +389,8 @@ elif choice2 == '2':
     head = raw_input("What would you like to title this madlib?\n")
     latfill = htmlhead.replace('heading', head, 1) + latfill + ' </p></body></html>'
     save_path = 'outputs'
-    name_of_file = raw_input("What do you wish to name the file? (do not type the extension):\n")
-    completeName = os.path.join(save_path, name_of_file + ".html")
+    filename = raw_input("What do you wish to name the file? (do not type the extension):\n")
+    completeName = os.path.join(save_path, filename + ".html")
     f = open(completeName, "w")
     f.write(latfill)
     f.close()
