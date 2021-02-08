@@ -95,14 +95,24 @@ def file_write(name_of_file, ch):
 def cust_config():
     print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to "
           "stop ")
-    i = 1
-    tempreg = "(/ct1+)"  # variable regular expression
-    while re.findall(tempreg, content):  # todo account for people who use unconfigured doubles
-        print("custom", i)
-        ch = raw_input()
-        custom["/ct" + str(i)] = ch
-        i = i + 1
-        tempreg = "(/ct" + str(i) + "+)"
+
+    for word in inputList:
+        if re.findall(customreg, word):
+            regkey = re.findall(customreg, word)
+            realkey = ''.join(regkey)
+            if realkey not in custom:
+                base = re.findall(customreg, word)
+                base = ''.join(base)
+                regnum = re.findall(r'\d+', base)
+                num = ''.join(regnum)
+                print("Custom "+str(num))
+                ch = raw_input()
+                custom[realkey] = ch
+            else:
+                pass
+        else:
+            pass
+
 
 
 potato = "What the hell is wrong with you? I give you a list of options and you decide to make your own?\nThat's not " \
@@ -286,7 +296,7 @@ for word in inputList:
         if choice2 == "1":
             keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
             new = raw_input()
-            new = str(re.sub(unnumbered, new, word))
+            new = str(re.sub(customreg, new, word))
             outlist.append(new)
         # latex array
         elif choice2 == "2" and realkey in custom:
