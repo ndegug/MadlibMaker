@@ -87,6 +87,16 @@ def file_write(name_of_file, ch):
         f = open(completeName, "w")
         f.write(str(custom))
         f.close()
+    elif ch == 2: # text file output write
+        completeName = os.path.join(save_path, name_of_file + ".txt")
+        f = open(completeName, "w")
+        f.write(filled)
+        f.close()
+    elif ch== 3: # HTML output write
+        completeName = os.path.join("outputs", name_of_file + ".html")
+        f = open(completeName, "w")
+        f.write(latfill)
+        f.close()
     else:#todo add output write
         print("custom write bug, please report to github page")
         exit()
@@ -385,10 +395,7 @@ if choice2 == "1":
     if choice == 'yes':
         save_path = 'outputs'
         filename = raw_input("What do you wish to name the file? (do not type the extension): ")
-        completeName = os.path.join(save_path, filename + ".txt")
-        f = open(completeName, "w")
-        f.write(filled)
-        f.close()
+        file_write(filename, 2)
         print("Your filled madlib has been saved to the outputs folder, have a good day!")
     elif choice == 'no' or choice == '':
         print("Have a good day!")
@@ -400,10 +407,7 @@ elif choice2 == '2':
     latfill = htmlhead.replace('heading', head, 1) + latfill + ' </p></body></html>'
     save_path = 'outputs'
     filename = raw_input("What do you wish to name the file? (do not type the extension):\n")
-    completeName = os.path.join(save_path, filename + ".html")
-    f = open(completeName, "w")
-    f.write(latfill)
-    f.close()
+    file_write(filename, 3)
     print("An HTML coded version of your unfilled madlib has been saved to the outputs folder, "
           "drag the file into your browser to view it. Print the file using your respective browser's print feature.\n"
           "Have a good day!")
