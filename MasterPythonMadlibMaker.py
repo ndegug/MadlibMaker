@@ -77,8 +77,8 @@ def keywords(ind):
 
 
 def file_write(name_of_file, ch):
-    if ch == 0:  # normal write
-        completeName = os.path.join(save_path, name_of_file + ".txt")
+    if ch == 0:  # input file write
+        completeName = os.path.join('inputs', name_of_file + ".txt")
         f = open(completeName, "w")
         f.write(' '.join(inputList))
         f.close()
@@ -88,12 +88,12 @@ def file_write(name_of_file, ch):
         f.write(str(custom))
         f.close()
     elif ch == 2: # text file output write
-        completeName = os.path.join(save_path, name_of_file + ".txt")
+        completeName = os.path.join('outputs', name_of_file + ".txt")
         f = open(completeName, "w")
         f.write(filled)
         f.close()
     elif ch== 3: # HTML output write
-        completeName = os.path.join("outputs", name_of_file + ".html")
+        completeName = os.path.join('outputs', name_of_file + ".html")
         f = open(completeName, "w")
         f.write(latfill)
         f.close()
@@ -144,7 +144,6 @@ if choice == "1":
         pass
     choice = raw_input("Would you like to save your madlib to the inputs folder before filling it?\n")
     if choice == "yes":
-        save_path = 'inputs'
         filename = raw_input("What do you wish to name the file? (do not type the extension): ")
         # main content file
         file_write(filename, 0)
@@ -393,7 +392,6 @@ if choice2 == "1":
     print(filled)
     choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder?\n")
     if choice == 'yes':
-        save_path = 'outputs'
         filename = raw_input("What do you wish to name the file? (do not type the extension): ")
         file_write(filename, 2)
         print("Your filled madlib has been saved to the outputs folder, have a good day!")
@@ -405,7 +403,6 @@ if choice2 == "1":
 elif choice2 == '2':
     head = raw_input("What would you like to title this madlib?\n")
     latfill = htmlhead.replace('heading', head, 1) + latfill + ' </p></body></html>'
-    save_path = 'outputs'
     filename = raw_input("What do you wish to name the file? (do not type the extension):\n")
     file_write(filename, 3)
     print("An HTML coded version of your unfilled madlib has been saved to the outputs folder, "
