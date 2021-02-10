@@ -76,30 +76,11 @@ def keywords(ind):
         print(ind, "is not a valid keyword, enter what to fill it with: ")
 
 
-def file_write(name_of_file, ch):
-    if ch == 0:  # input file write
-        completeName = os.path.join('inputs', name_of_file + ".txt")
-        f = open(completeName, "w")
-        f.write(' '.join(inputList))
-        f.close()
-    elif ch == 1:  # custom write
-        completeName = os.path.join('inputs', name_of_file + "_cts.txt")
-        f = open(completeName, "w")
-        f.write(str(custom))
-        f.close()
-    elif ch == 2: # text file output write
-        completeName = os.path.join('outputs', name_of_file + ".txt")
-        f = open(completeName, "w")
-        f.write(filled)
-        f.close()
-    elif ch== 3: # HTML output write
-        completeName = os.path.join('outputs', name_of_file + ".html")
-        f = open(completeName, "w")
-        f.write(latfill)
-        f.close()
-    else:
-        print("custom write bug, please report to github page")
-        exit()
+def file_write(content, name_of_file, path, ext):
+    completeName = os.path.join(path, name_of_file + ext)
+    f = open(completeName, "w")
+    f.write(content)
+    f.close()
 
 
 def cust_config():
@@ -115,14 +96,13 @@ def cust_config():
                 base = ''.join(base)
                 regnum = re.findall(r'\d+', base)
                 num = ''.join(regnum)
-                print("Custom "+str(num))
+                print("Custom " + str(num))
                 ch = raw_input()
                 custom[realkey] = ch
             else:
                 pass
         else:
             pass
-
 
 
 potato = "What the hell is wrong with you? I give you a list of options and you decide to make your own?\nThat's not " \
@@ -136,8 +116,8 @@ choice = raw_input(
     "Instructions\n")
 if choice == "1":
     # manual input
-    content = raw_input("Enter the madlib below:\n")
-    inputList = content.split(" ")
+    cont = raw_input("Enter the madlib below:\n")
+    inputList = cont.split(" ")
     if re.search(customreg, str(inputList)) is not None:
         cust_config()
     else:
@@ -146,10 +126,10 @@ if choice == "1":
     if choice == "yes":
         filename = raw_input("What do you wish to name the file? (do not type the extension): ")
         # main content file
-        file_write(filename, 0)
+        file_write(' '.join(inputList), filename, 'inputs', '.txt')
         # custom words file
         if re.search(customreg, str(inputList)) is not None:
-            file_write(filename, 1)
+            file_write(str(custom), filename, 'inputs', '_cts.txt')
         else:
             pass
         choice = raw_input("Your Madlib has been saved under the inputs folder, would you like to process it in now?\n")
@@ -171,13 +151,11 @@ elif choice == "2":
     filename = raw_input("Which file would you like to process? (type the name with no extension)\n")
     # saving name of custom word file
     customfile = filename + "_cts.txt"
-    # adding extention to main file name
-    filename = filename + ".txt"
     # reading main content file
-    choice = os.path.join('inputs', filename)
+    choice = os.path.join('inputs', filename + ".txt")
     my_file = open(choice, "r")
-    content = my_file.read()
-    inputList = content.split(" ")
+    cont = my_file.read()
+    inputList = cont.split(" ")
     if os.path.exists(os.path.join('inputs', customfile)):
         choice = os.path.join('inputs', customfile)
         with open(choice) as f:
@@ -186,14 +164,14 @@ elif choice == "2":
         f.close()
     elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
         cust_config()
-        file_write(filename, 1)
+        file_write(str(custom), filename, 'inputs', '_cts.txt')
     else:
         pass
 elif choice == "3":
     while choice != "q":
         choice = raw_input("Which would you like to learn about:\n1. How to write Madlibs\n2. "
                            "Syntax\n3. Custom Words\n4. Saving and printing madlibs\nType \"q\" to quit\n")
-        if choice == "1":#todo add a "process pre-made file" instructions
+        if choice == "1":  # todo add a "process pre-made file" instructions
             print("Here in the Madlib Maker, you can write a Madlib directly or process a file you've already "
                   "typed.\nFor "
                   "each blank, you must type a keyword specific to the word category you desire.\nThese keywords "
@@ -393,7 +371,7 @@ if choice2 == "1":
     choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder?\n")
     if choice == 'yes':
         filename = raw_input("What do you wish to name the file? (do not type the extension): ")
-        file_write(filename, 2)
+        file_write(filled, filename, 'outputs', '.txt')
         print("Your filled madlib has been saved to the outputs folder, have a good day!")
     elif choice == 'no' or choice == '':
         print("Have a good day!")
@@ -404,7 +382,7 @@ elif choice2 == '2':
     head = raw_input("What would you like to title this madlib?\n")
     latfill = htmlhead.replace('heading', head, 1) + latfill + ' </p></body></html>'
     filename = raw_input("What do you wish to name the file? (do not type the extension):\n")
-    file_write(filename, 3)
+    file_write(latfill, filename, 'outputs', '.html')
     print("An HTML coded version of your unfilled madlib has been saved to the outputs folder, "
           "drag the file into your browser to view it. Print the file using your respective browser's print feature.\n"
           "Have a good day!")
