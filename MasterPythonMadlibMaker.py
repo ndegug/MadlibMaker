@@ -97,7 +97,7 @@ def file_write(name_of_file, ch):
         f = open(completeName, "w")
         f.write(latfill)
         f.close()
-    else:#todo add output write
+    else:
         print("custom write bug, please report to github page")
         exit()
 
