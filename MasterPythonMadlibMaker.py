@@ -1,34 +1,14 @@
 import os
-import re
 import json
+from MadlibMakerHelpers import *
 
 from pip._vendor.distlib.compat import raw_input
-
-custom = {}
 
 outlist = []
 
 latlist = []
 
 inputList = []
-
-generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
-                 '/ver': 'Verb', '/vng': 'Verb ending in \"ing\"', '/ved': 'Past tense verb',
-                 '/ves': 'Verb ending in \"s\"', '/adv': 'adverb',
-                 '/num': 'Number', '/nam': 'Name', '/cel': 'Celebrity',
-                 '/per': 'Person', '/pir': 'Person in room', '/thi': 'Thing',
-                 '/pla': 'Place', '/job': 'Job', '/ran': 'Random Word',
-                 '/rex': 'Random Exclamation', '/tvs': 'TV Show', '/mov': 'Movie',
-                 '/mtv': "Movie/TV show", '/ins': 'Insulting name', '/phr': 'Random Phrase',
-                 '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
-                 '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid',
-                 '/emo': 'Emotion', '/noi': 'noise', '/eve': 'Event', '/fos': 'Plural food', '/fur': 'Furniture'}
-unnumbered = "(/...)"
-numbered = "(/...[0-9]+)"
-customreg = "(/ct[0-9]+)"
-numcustcom = ".+\([0-9]+\)"
-numcustreg = "(/ct[0-9]+_[0-9]+)"
-tail = "(_[0-9])"
 
 if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
     os.mkdir(os.path.join(os.getcwd(), "inputs"))
@@ -44,23 +24,6 @@ def quote_convert(text):
     text = text.replace('\u201C', '"')
     text = text.replace('\u201D', '"')
     return text
-
-
-def invalid_html(ch, RK):
-    if ch == 0:
-        ch = raw_input(realkey + ' is not a valid key, did you want it to be?')
-    elif ch == 1:
-        ch = raw_input(realkey + ' is not configured, did you mean to do it?')
-    if ch == 'yes':
-        new = raw_input('What is the word\'s category?')
-        latword = htmlsample.replace('underscript', new)
-        final = word.replace(RK, latword, 1)
-        latlist.append(final)
-    elif ch == 'no' or ch == '':
-        latlist.append(word)
-    else:
-        print(potato)
-        exit()
 
 
 def keywords(ind):
@@ -104,11 +67,6 @@ def cust_config():
         else:
             pass
 
-
-potato = "What the hell is wrong with you? I give you a list of options and you decide to make your own?\nThat's not " \
-         "how it works you moron! Get 'outa here!\n"
-potato2 = "What the hell is wrong with you? I give you a \"yes\" or \"no\" question and THAT'S what you come up " \
-          "with?\nThat's not how it works you moron! Get 'outa here!\n"
 
 choice = raw_input(
     "Welcome to the Madlib Maker\nHere you can compose and fill in madlibs using our specialized syntax.\nTo begin, "
@@ -240,14 +198,11 @@ elif choice == "3":
 else:
     print(potato)
     exit()
-numword_dic = {}
-numcust_dic = {}
+
+
 regkey = ""
 realkey = ""
-htmlsample = '<span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: ' \
-             'center;"><span style="display: block; padding: 0 0.2em;">__________</span><span style="display: block; ' \
-             'font-size: 70%; line-height: 1em; padding: 0 0.2em;"><span style="position: relative; line-height: 1em; ' \
-             'margin-top: -.2em; top: -.2em;">underscript</span></span></span>'
+
 htmlhead = '<html><head></head><body><h1> heading </h1><style>h1 {text-align: center;}p.big {  line-height: ' \
            '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
 
@@ -268,14 +223,14 @@ for word in inputList:
         if choice2 == "1":
             keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
             new = raw_input()
-            new = str(re.sub(unnumbered, new, word))
+            new = re.sub(unnumbered, new, word)
             outlist.append(new)
         elif choice2 == "2" and realkey in generic_words.keys():
             latword = htmlsample.replace('underscript', generic_words[realkey])
             final = word.replace(realkey, latword, 1)
             latlist.append(final)
         elif choice2 == "2" and realkey not in generic_words.keys():
-            invalid_html(0, realkey)
+            latlist.append(invalid_html(0, realkey, word))
     elif re.findall(customreg, word) and not re.findall(numcustreg, word):
         # custom
         regkey = re.findall(customreg, word)
@@ -283,7 +238,7 @@ for word in inputList:
         if choice2 == "1":
             keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
             new = raw_input()
-            new = str(re.sub(customreg, new, word))
+            new = re.sub(customreg, new, word)
             outlist.append(new)
         # latex array
         elif choice2 == "2" and realkey in custom:
@@ -292,7 +247,7 @@ for word in inputList:
             final = word.replace(realkey, latword, 1)
             latlist.append(final)
         elif choice2 == "2" and realkey not in custom:
-            invalid_html(1, realkey)
+            latlist.append(invalid_html(1, realkey, word))
         else:
             # html equivelent
 
@@ -314,16 +269,16 @@ for word in inputList:
         regnum = re.findall(r'\d+', tailkey)
         num = ''.join(regnum)
 
-        if choice2 == "1" and realkey not in numcust_dic:
+        if choice2 == "1" and realkey not in numword_dic:
             # numbered cust unsaved
             keywords(base)
             new = raw_input()
-            numcust_dic[realkey] = new
+            numword_dic[realkey] = new
             new = re.sub(numcustreg, new, word)
             outlist.append(new)
-        elif choice2 == "1" and realkey in numcust_dic:
+        elif choice2 == "1" and realkey in numword_dic:
             # numbered cust saved
-            new = re.sub(numcustreg, numcust_dic[realkey], word)
+            new = re.sub(numcustreg, numword_dic[realkey], word)
             outlist.append(new)
         elif choice2 == "2":
             latword = htmlsample.replace('underscript', custom[base] + ' (' + str(num) + ')')
@@ -354,7 +309,7 @@ for word in inputList:
             final = word.replace(realkey, latword, 1)
             latlist.append(final)
         elif choice2 == "2" and base not in generic_words.keys():
-            invalid_html(0, realkey)
+            latlist.append(invalid_html(0, realkey, word))
     else:
         # none, just append
         if choice2 == "1":
