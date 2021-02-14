@@ -53,17 +53,27 @@ def invalid_html(ch, RK, wrd):
 #keyword say and replace function
 
 
-def keyword_convert(ind, wrd):
+def keyword_convert(ind, wrd, ca):
     base = re.findall(unnumbered, wrd)
     base = ''.join(base)
-    if base in generic_words.keys() and ind not in numword_dic.keys():
-        print(generic_words[base] + ': ')
-    elif ind in numword_dic.keys():
+    if ca == 0:
+        print(generic_words[ind] + ': ')
+    elif ca == 1:
+        print(generic_words[base]+ ': ')
+        new = raw_input()
+        numword_dic[ind] = new
+        return re.sub(ind, new, wrd)
+    elif ca == 2:
         new = numword_dic[ind]
         return re.sub(ind, new, wrd)
-    elif re.findall(customreg, ind) and ind in custom:
-        print(custom[ind] + ':')
-    elif re.findall(customreg, ind) and ind not in custom:
+    elif ca == 3:
+        print(custom[base] + ':')
+    elif ca == 4:
+        print(custom[base] + ': ')
+        new = raw_input()
+        numword_dic[ind] = new
+        return re.sub(ind, new, wrd)
+    elif ca == 5:
         print(ind, "hasn't been configured, what would you like to replace it with?")
     else:
         print(ind, "is not a valid keyword, enter what to fill it with: ")

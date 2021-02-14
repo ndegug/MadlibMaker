@@ -220,11 +220,10 @@ for word in inputList:
         # unnumbered
         regkey = re.findall(unnumbered, word)
         realkey = ''.join(regkey)
-        if choice2 == "1":
-            keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
-            new = raw_input()
-            new = re.sub(unnumbered, new, word)
-            outlist.append(new)
+        if choice2 == "1" and realkey in generic_words:
+            outlist.append(keyword_convert(realkey, word, 0))
+        elif choice2 == "1" and realkey not in generic_words:
+            outlist.append(keyword_convert(realkey, word, 6))
         elif choice2 == "2" and realkey in generic_words.keys():
             latword = htmlsample.replace('underscript', generic_words[realkey])
             final = word.replace(realkey, latword, 1)
@@ -235,12 +234,11 @@ for word in inputList:
         # custom
         regkey = re.findall(customreg, word)
         realkey = ''.join(regkey)
-        if choice2 == "1":
-            keywords(realkey)  # this is because that stupid re code puts out brakets and quotes for no reason
-            new = raw_input()
-            new = re.sub(customreg, new, word)
-            outlist.append(new)
+        if choice2 == "1" and realkey in custom:
+            outlist.append(keyword_convert(realkey, word, 3))
         # latex array
+        elif choice2 == "1" and realkey not in custom:
+            outlist.append(keyword_convert(realkey, word, 5))
         elif choice2 == "2" and realkey in custom:
             # saved
             latword = htmlsample.replace('underscript', custom[realkey])
@@ -271,15 +269,13 @@ for word in inputList:
 
         if choice2 == "1" and realkey not in numword_dic:
             # numbered cust unsaved
-            keywords(base)
-            new = raw_input()
-            numword_dic[realkey] = new
-            new = re.sub(numcustreg, new, word)
-            outlist.append(new)
+            outlist.append(keyword_convert(realkey, word, 4))
         elif choice2 == "1" and realkey in numword_dic:
             # numbered cust saved
-            new = re.sub(numcustreg, numword_dic[realkey], word)
-            outlist.append(new)
+            outlist.append(keyword_convert(realkey, word, 2))
+        elif choice2 == "1" and base not in custom:
+            # numbered cust saved
+            outlist.append(keyword_convert(realkey, word, 5))
         elif choice2 == "2":
             latword = htmlsample.replace('underscript', custom[base] + ' (' + str(num) + ')')
             final = word.replace(realkey, latword, 1)
@@ -293,17 +289,13 @@ for word in inputList:
         base = ''.join(regkeyb)
         regnum = re.findall(r'\d+', realkey)
         num = ''.join(regnum)
-        if choice2 == "1" and realkey not in numword_dic.keys():
+        if choice2 == "1" and realkey not in numword_dic.keys() and base in generic_words.keys():
             # numbered unsaved
-
-            keywords(realkey)
-            new = raw_input()
-            numword_dic[realkey] = new
-            new = re.sub(numbered, new, word)
-            outlist.append(new)
+            outlist.append(keyword_convert(realkey, word, 1))
+        elif choice2 == "1" and realkey not in numword_dic.keys() and base not in generic_words.keys():
+            outlist.append(keyword_convert(realkey, word, 6))#invalid
         elif choice2 == "1" and realkey in numword_dic.keys():
-            new = re.sub(numbered, numword_dic[realkey], word)
-            outlist.append(new)
+            outlist.append(keyword_convert(realkey, word, 2))#numbered saved
         elif choice2 == "2" and base in generic_words.keys():
             latword = htmlsample.replace('underscript', generic_words[base] + ' (' + str(num) + ')')
             final = word.replace(realkey, latword, 1)
