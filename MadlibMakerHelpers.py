@@ -94,6 +94,8 @@ def file_write(content, name_of_file, path, ext):
 
 
 def file_read():#todo: find out why read files result in blank madlibs
+    global custom
+    global inputList
     filename = raw_input("Which file would you like to process? (type the name with no extension)\n")
     # saving name of custom word file
     customfile = filename + "_cts.txt"
@@ -134,7 +136,6 @@ def keyword_convert(ind, wrd, ca):
     elif ca == 3:
         print(custom[base] + ':')
     elif ca == 4:
-        print(base)
         print(custom[base] + ': ')
         new = raw_input()
         numword_dic[ind] = new

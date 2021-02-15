@@ -1,5 +1,3 @@
-import os
-
 from MadlibMakerHelpers import *
 
 from pip._vendor.distlib.compat import raw_input
@@ -8,16 +6,10 @@ outlist = []
 
 latlist = []
 
-
-
 if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
     os.mkdir(os.path.join(os.getcwd(), "inputs"))
 if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
     os.mkdir(os.path.join(os.getcwd(), "outputs"))
-
-
-
-
 
 choice = raw_input(
     "Welcome to the Madlib Maker\nHere you can compose and fill in madlibs using our specialized syntax.\nTo begin, "
@@ -58,6 +50,8 @@ if choice == "1":
 elif choice == "2":
     # file base name
     file_read()
+    from MadlibMakerHelpers import inputList
+    from MadlibMakerHelpers import custom
     # filename = raw_input("Which file would you like to process? (type the name with no extension)\n")
     # # saving name of custom word file
     # customfile = filename + "_cts.txt"
@@ -151,7 +145,6 @@ else:
     print(potato)
     exit()
 
-
 regkey = ""
 realkey = ""
 
@@ -167,7 +160,6 @@ elif choice2 == "3":
 else:
     print(potato2)
     exit()
-print(custom)
 for word in inputList:
     if re.findall(unnumbered, word) and not re.findall(numbered, word) and not re.findall(customreg, word):
         # unnumbered
@@ -246,9 +238,9 @@ for word in inputList:
             # numbered unsaved
             outlist.append(keyword_convert(realkey, word, 1))
         elif choice2 == "1" and realkey not in numword_dic.keys() and base not in generic_words.keys():
-            outlist.append(keyword_convert(realkey, word, 6))#invalid
+            outlist.append(keyword_convert(realkey, word, 6))  # invalid
         elif choice2 == "1" and realkey in numword_dic.keys():
-            outlist.append(keyword_convert(realkey, word, 2))#numbered saved
+            outlist.append(keyword_convert(realkey, word, 2))  # numbered saved
         elif choice2 == "2" and base in generic_words.keys():
             latword = htmlsample.replace('underscript', generic_words[base] + ' (' + str(num) + ')')
             final = word.replace(realkey, latword, 1)
