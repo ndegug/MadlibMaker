@@ -93,7 +93,7 @@ def file_write(content, name_of_file, path, ext):
     f.close()
 
 
-def file_read():#todo: find out why read files result in blank madlibs
+def file_read():
     global custom
     global inputList
     filename = raw_input("Which file would you like to process? (type the name with no extension)\n")
@@ -108,7 +108,7 @@ def file_read():#todo: find out why read files result in blank madlibs
         choice = os.path.join('inputs', customfile)
         with open(choice) as f:
             data = f.read()
-        custom = json.loads(data.replace("\'", "\""))#todo: find out why "custom" isn't being recognised despite it being at the top of this file
+        custom = json.loads(data.replace("\'", "\""))
         f.close()
     elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
         cust_config()
