@@ -1,5 +1,5 @@
 import os
-import json
+
 from MadlibMakerHelpers import *
 
 from pip._vendor.distlib.compat import raw_input
@@ -8,7 +8,7 @@ outlist = []
 
 latlist = []
 
-inputList = []
+
 
 if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
     os.mkdir(os.path.join(os.getcwd(), "inputs"))
@@ -16,56 +16,7 @@ if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
     os.mkdir(os.path.join(os.getcwd(), "outputs"))
 
 
-def quote_convert(text):
-    text = text.replace('\u2018\u2018', '"')
-    text = text.replace('\u2019\u2019', '"')
-    text = text.replace('\u2018', "\'")
-    text = text.replace('\u2019', "\'")
-    text = text.replace('\u201C', '"')
-    text = text.replace('\u201D', '"')
-    return text
 
-
-def keywords(ind):
-    base = re.findall(unnumbered, ind)
-    base = ''.join(base)
-    if base in generic_words.keys():
-        print(generic_words[base] + ': ')
-    elif re.findall(customreg, ind) and ind in custom:
-        print(custom[ind] + ':')
-    elif re.findall(customreg, ind) and ind not in custom:
-        print(ind, "hasn't been configured, what would you like to replace it with?")
-    else:
-        print(ind, "is not a valid keyword, enter what to fill it with: ")
-
-
-def file_write(content, name_of_file, path, ext):
-    completeName = os.path.join(path, name_of_file + ext)
-    f = open(completeName, "w")
-    f.write(content)
-    f.close()
-
-
-def cust_config():
-    print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to "
-          "stop ")
-
-    for word in inputList:
-        if re.findall(customreg, word):
-            regkey = re.findall(customreg, word)
-            realkey = ''.join(regkey)
-            if realkey not in custom:
-                base = re.findall(customreg, word)
-                base = ''.join(base)
-                regnum = re.findall(r'\d+', base)
-                num = ''.join(regnum)
-                print("Custom " + str(num))
-                ch = raw_input()
-                custom[realkey] = ch
-            else:
-                pass
-        else:
-            pass
 
 
 choice = raw_input(
@@ -106,25 +57,26 @@ if choice == "1":
         exit()
 elif choice == "2":
     # file base name
-    filename = raw_input("Which file would you like to process? (type the name with no extension)\n")
-    # saving name of custom word file
-    customfile = filename + "_cts.txt"
-    # reading main content file
-    choice = os.path.join('inputs', filename + ".txt")
-    my_file = open(choice, "r")
-    cont = my_file.read()
-    inputList = cont.split(" ")
-    if os.path.exists(os.path.join('inputs', customfile)):
-        choice = os.path.join('inputs', customfile)
-        with open(choice) as f:
-            data = f.read()
-        custom = json.loads(data.replace("\'", "\""))
-        f.close()
-    elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
-        cust_config()
-        file_write(str(custom), filename, 'inputs', '_cts.txt')
-    else:
-        pass
+    file_read()
+    # filename = raw_input("Which file would you like to process? (type the name with no extension)\n")
+    # # saving name of custom word file
+    # customfile = filename + "_cts.txt"
+    # # reading main content file
+    # choice = os.path.join('inputs', filename + ".txt")
+    # my_file = open(choice, "r")
+    # cont = my_file.read()
+    # inputList = cont.split(" ")
+    # if os.path.exists(os.path.join('inputs', customfile)):
+    #     choice = os.path.join('inputs', customfile)
+    #     with open(choice) as f:
+    #         data = f.read()
+    #     custom = json.loads(data.replace("\'", "\""))
+    #     f.close()
+    # elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
+    #     cust_config()
+    #     file_write(str(custom), filename, 'inputs', '_cts.txt')
+    # else:
+    #     pass
 elif choice == "3":
     while choice != "q":
         choice = raw_input("Which would you like to learn about:\n1. How to write Madlibs\n2. "
@@ -215,6 +167,7 @@ elif choice2 == "3":
 else:
     print(potato2)
     exit()
+print(custom)
 for word in inputList:
     if re.findall(unnumbered, word) and not re.findall(numbered, word) and not re.findall(customreg, word):
         # unnumbered

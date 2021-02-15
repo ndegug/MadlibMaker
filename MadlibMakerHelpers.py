@@ -1,5 +1,12 @@
 from past.builtins import raw_input
 import re
+import os
+import json
+
+custom = {}
+inputList = []
+numword_dic = {}
+
 potato = "What the hell is wrong with you? I give you a list of options and you decide to make your own?\nThat's not " \
          "how it works you moron! Get 'outa here!\n"
 potato2 = "What the hell is wrong with you? I give you a \"yes\" or \"no\" question and THAT'S what you come up " \
@@ -29,12 +36,18 @@ numcustcom = ".+\([0-9]+\)"
 numcustreg = "(/ct[0-9]+_[0-9]+)"
 tail = "(_[0-9])"
 
-custom = {}
 
-numword_dic = {}
+def quote_convert(text):
+    text = text.replace('\u2018\u2018', '"')
+    text = text.replace('\u2019\u2019', '"')
+    text = text.replace('\u2018', "\'")
+    text = text.replace('\u2019', "\'")
+    text = text.replace('\u201C', '"')
+    text = text.replace('\u201D', '"')
+    return text
+
 
 def invalid_html(ch, RK, wrd):
-
     if ch == 0:
         ch = raw_input(RK + ' is not a valid key, did you want it to be?')
     elif ch == 1:
@@ -50,7 +63,59 @@ def invalid_html(ch, RK, wrd):
         print(potato2)
         exit()
 
-#keyword say and replace function
+
+def cust_config():
+    print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to "
+          "stop ")
+
+    for word in inputList:
+        if re.findall(customreg, word):
+            regkey = re.findall(customreg, word)
+            realkey = ''.join(regkey)
+            if realkey not in custom:
+                base = re.findall(customreg, word)
+                base = ''.join(base)
+                regnum = re.findall(r'\d+', base)
+                num = ''.join(regnum)
+                print("Custom " + str(num))
+                ch = raw_input()
+                custom[realkey] = ch
+            else:
+                pass
+        else:
+            pass
+
+
+def file_write(content, name_of_file, path, ext):
+    completeName = os.path.join(path, name_of_file + ext)
+    f = open(completeName, "w")
+    f.write(content)
+    f.close()
+
+
+def file_read():#todo: find out why read files result in blank madlibs
+    filename = raw_input("Which file would you like to process? (type the name with no extension)\n")
+    # saving name of custom word file
+    customfile = filename + "_cts.txt"
+    # reading main content file
+    choice = os.path.join('inputs', filename + ".txt")
+    my_file = open(choice, "r")
+    cont = my_file.read()
+    inputList = cont.split(" ")
+    if os.path.exists(os.path.join('inputs', customfile)):
+        choice = os.path.join('inputs', customfile)
+        with open(choice) as f:
+            data = f.read()
+        custom = json.loads(data.replace("\'", "\""))#todo: find out why "custom" isn't being recognised despite it being at the top of this file
+        f.close()
+    elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
+        cust_config()
+        file_write(str(custom), filename, 'inputs', '_cts.txt')
+    else:
+        pass
+
+
+# keyword say and replace function
 
 
 def keyword_convert(ind, wrd, ca):
@@ -59,7 +124,7 @@ def keyword_convert(ind, wrd, ca):
     if ca == 0:
         print(generic_words[ind] + ': ')
     elif ca == 1:
-        print(generic_words[base]+ ': ')
+        print(generic_words[base] + ': ')
         new = raw_input()
         numword_dic[ind] = new
         return re.sub(ind, new, wrd)
@@ -69,6 +134,7 @@ def keyword_convert(ind, wrd, ca):
     elif ca == 3:
         print(custom[base] + ':')
     elif ca == 4:
+        print(base)
         print(custom[base] + ': ')
         new = raw_input()
         numword_dic[ind] = new
@@ -79,4 +145,3 @@ def keyword_convert(ind, wrd, ca):
         print(ind, "is not a valid keyword, enter what to fill it with: ")
     new = raw_input()
     return re.sub(ind, new, wrd)
-
