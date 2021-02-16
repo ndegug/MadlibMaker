@@ -8,7 +8,7 @@ Master file should pip install nessicary libraries and folders. It is reccomende
 
 ## Usage
 
-Download and run the Master program file, instructions are available in menu option "3." See issues tab for known bugs and how to avoid them before they are resolved.
+Download and run the MasterPythonMadlibMaker program file, instructions are available in menu option "3." See issues tab for known bugs and how to avoid them before they are resolved.
 
 Reccomended Python version 3.7 or later.
 
