@@ -64,27 +64,6 @@ def invalid_html(ch, RK, wrd):
         exit()
 
 
-def cust_config():
-    print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to "
-          "stop ")
-
-    for word in inputList:
-        if re.findall(customreg, word):
-            regkey = re.findall(customreg, word)
-            realkey = ''.join(regkey)
-            if realkey not in custom:
-                base = re.findall(customreg, word)
-                base = ''.join(base)
-                regnum = re.findall(r'\d+', base)
-                num = ''.join(regnum)
-                print("Custom " + str(num))
-                ch = raw_input()
-                custom[realkey] = ch
-            else:
-                pass
-        else:
-            pass
-
 
 def file_write(content, name_of_file, path, ext):
     completeName = os.path.join(path, name_of_file + ext)
