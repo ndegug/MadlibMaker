@@ -1,7 +1,6 @@
 from MadlibMakerHelpers import *
 from long_strings import *
-from pip._vendor.distlib.compat import raw_input
-
+from past.builtins import raw_input
 outlist = []
 
 latlist = []

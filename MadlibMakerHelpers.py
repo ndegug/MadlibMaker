@@ -1,7 +1,9 @@
-from past.builtins import raw_input
+
 import re
 import os
 import json
+
+from past.builtins import raw_input
 
 custom = {}
 inputList = []
@@ -43,7 +45,9 @@ def quote_convert(text):
     text = text.replace('\u2018', "\'")
     text = text.replace('\u2019', "\'")
     text = text.replace('\u201C', '"')
+    text = text.replace('\u201c', '"')
     text = text.replace('\u201D', '"')
+    text = text.replace('\u201d', '"')
     return text
 
 
