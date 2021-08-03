@@ -45,9 +45,7 @@ def quote_convert(text):
     text = text.replace('\u2018', "\'")
     text = text.replace('\u2019', "\'")
     text = text.replace('\u201C', '"')
-    text = text.replace('\u201c', '"')
     text = text.replace('\u201D', '"')
-    text = text.replace('\u201d', '"')
     return text
 
 
@@ -74,7 +72,25 @@ def file_write(content, name_of_file, path, ext):
     f = open(completeName, "w")
     f.write(content)
     f.close()
-
+def cust_config():
+    print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to "
+          "stop ")
+    for word in inputList:
+        if re.findall(customreg, word):
+            regkey = re.findall(customreg, word)
+            realkey = ''.join(regkey)
+            if realkey not in custom:
+                base = re.findall(customreg, word)
+                base = ''.join(base)
+                regnum = re.findall(r'\d+', base)
+                num = ''.join(regnum)
+                print("Custom " + str(num))
+                ch = raw_input()
+                custom[realkey] = ch
+            else:
+                pass
+        else:
+            pass
 
 def file_read():
     global custom
