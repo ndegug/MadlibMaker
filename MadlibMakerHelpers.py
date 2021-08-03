@@ -45,7 +45,10 @@ def quote_convert(text):
     text = text.replace('\u2018', "\'")
     text = text.replace('\u2019', "\'")
     text = text.replace('\u201C', '"')
+    text = text.replace('\u201c', '"')
     text = text.replace('\u201D', '"')
+    text = text.replace('\u201d', '"')
+# todo: fix endquotes not reading
     return text
 
 
@@ -72,10 +75,10 @@ def file_write(content, name_of_file, path, ext):
     f = open(completeName, "w")
     f.write(content)
     f.close()
-def cust_config():
+def cust_config(inlist):
     print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to "
           "stop ")
-    for word in inputList:
+    for word in inlist:
         if re.findall(customreg, word):
             regkey = re.findall(customreg, word)
             realkey = ''.join(regkey)
@@ -110,7 +113,7 @@ def file_read():
         custom = json.loads(data.replace("\'", "\""))
         f.close()
     elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
-        cust_config()
+        cust_config(inputList)
         file_write(str(custom), filename, 'inputs', '_cts.txt')
     else:
         pass

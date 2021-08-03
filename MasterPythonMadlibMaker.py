@@ -2,59 +2,21 @@ from MadlibMakerHelpers import *
 from long_strings import *
 from past.builtins import raw_input
 outlist = []
-#custom = {}
+
 latlist = []
 
 if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
     os.mkdir(os.path.join(os.getcwd(), "inputs"))
 if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
     os.mkdir(os.path.join(os.getcwd(), "outputs"))
-# def cust_config():
-#     print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to "
-#           "stop ")
-#     for word in inputList:
-#         if re.findall(customreg, word):
-#             regkey = re.findall(customreg, word)
-#             realkey = ''.join(regkey)
-#             if realkey not in custom:
-#                 base = re.findall(customreg, word)
-#                 base = ''.join(base)
-#                 regnum = re.findall(r'\d+', base)
-#                 num = ''.join(regnum)
-#                 print("Custom " + str(num))
-#                 ch = raw_input()
-#                 custom[realkey] = ch
-#             else:
-#                 pass
-#         else:
-#             pass
-# def file_read():
-#     filename = raw_input("Which file would you like to process? (type the name with no extension)\n")
-#     # saving name of custom word file
-#     customfile = filename + "_cts.txt"
-#     # reading main content file
-#     choice = os.path.join('inputs', filename + ".txt")
-#     my_file = open(choice, "r")
-#     cont = my_file.read()
-#     inputList = cont.split(" ")
-#     if os.path.exists(os.path.join('inputs', customfile)):
-#         choice = os.path.join('inputs', customfile)
-#         with open(choice) as f:
-#             data = f.read()
-#         custom = json.loads(data.replace("\'", "\""))
-#         f.close()
-#     elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
-#         cust_config()
-#         file_write(str(custom), filename, 'inputs', '_cts.txt')
-#     else:
-#         pass
+
 choice = raw_input(welcome)
 if choice == "1":
     # manual input
     cont = raw_input("Enter the madlib below:\n")
     inputList = cont.split(" ")
     if re.search(customreg, str(inputList)) is not None:
-        cust_config()
+        cust_config(inputList)
     else:
         pass
     choice = raw_input("Would you like to save your madlib to the inputs folder before filling it?\n")
