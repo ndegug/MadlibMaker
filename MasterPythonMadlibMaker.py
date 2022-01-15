@@ -43,9 +43,9 @@ if choice == "1":
     else:
         print(potato2)
         exit()
-elif choice == "2":
+elif choice == "2": #read saved madlib file
     # file base name
-    file_read()
+    file_read()#todo pass list, dont import
     from MadlibMakerHelpers import inputList
     from MadlibMakerHelpers import custom
 elif choice == "3":

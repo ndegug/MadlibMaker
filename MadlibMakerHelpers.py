@@ -2,7 +2,7 @@
 import re
 import os
 import json
-
+import textract
 from past.builtins import raw_input
 
 custom = {}
@@ -40,14 +40,21 @@ tail = "(_[0-9])"
 
 
 def quote_convert(text):
-    text = text.replace('\u2018\u2018', '"')
-    text = text.replace('\u2019\u2019', '"')
-    text = text.replace('\u2018', "\'")
-    text = text.replace('\u2019', "\'")
-    text = text.replace('\u201C', '"')
-    text = text.replace('\u201c', '"')
-    text = text.replace('\u201D', '"')
-    text = text.replace('\u201d', '"')
+    # text = text.replace('\u2018\u2018', '"')
+    # text = text.replace('\u2019\u2019', '"')
+    # text = text.replace('E2 80 9C', '"')
+    # text = text.replace('\u2018', "\'")
+    # text = text.replace('\u2019', "\'")
+    # text = text.replace('\u201C', '"')
+    # text = text.replace('\u201c', '"')
+    # text = text.replace('\u201D', '"')
+    # text = text.replace('\u201d', '"')
+    #todo: remove if no character issues
+
+    text = text.replace("\\xe2\\x80\\x9c", '"')
+    text = text.replace("\\xe2\\x80\\x9d", '"')
+    text = text.replace('\\xe2\\x80\\x98', "\'")
+    text = text.replace('\\xe2\\x80\\x99', "\'")
 # todo: fix endquotes not reading
     return text
 
@@ -98,14 +105,39 @@ def cust_config(inlist):
 def file_read():
     global custom
     global inputList
-    filename = raw_input("Which file would you like to process? (type the name with no extension)\n")
+    filename = raw_input("Which file would you like to process? (include extension)\n")
     # saving name of custom word file
-    customfile = filename + "_cts.txt"
-    # reading main content file
-    choice = os.path.join('inputs', filename + ".txt")
-    my_file = open(choice, "r")
-    cont = my_file.read()
+    # # reading main content file
+    # choice = os.path.join('inputs', filename + ".txt")
+    # my_file = open(choice, "r")
+    # cont = my_file.read()
+    if re.search("\.docx$", filename):
+        # docx file
+        customfile = filename.replace('.docx', '_cts.txt')
+        cont = textract.process("inputs/" + filename)
+        #todo: remove supplement for the replacement function, replace with function call
+        text = str(cont)
+        text = text.replace("\\xe2\\x80\\x9c", '"')
+        text = text.replace("\\xe2\\x80\\x9d", '"')
+        text = text.replace('\\xe2\\x80\\x98', "\'")
+        text = text.replace('\\xe2\\x80\\x99', "\'")
+        cont = text
+    elif re.search("\.txt$", filename):
+        customfile = filename.replace('.txt', '_cts.txt')
+        print(customfile)
+        # reading main content file
+        choice = os.path.join('inputs', filename)
+        my_file = open(choice, "r")
+        cont = my_file.read()
+    else:
+        cont=''
+        customfile =''
+        print("file invalid")
+        print(potato)
+        quit()
+
     inputList = cont.split(" ")
+    #inputList = quote_convert(inputList)
     if os.path.exists(os.path.join('inputs', customfile)):
         choice = os.path.join('inputs', customfile)
         with open(choice) as f:
