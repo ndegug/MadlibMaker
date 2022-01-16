@@ -40,22 +40,10 @@ tail = "(_[0-9])"
 
 
 def quote_convert(text):
-    # text = text.replace('\u2018\u2018', '"')
-    # text = text.replace('\u2019\u2019', '"')
-    # text = text.replace('E2 80 9C', '"')
-    # text = text.replace('\u2018', "\'")
-    # text = text.replace('\u2019', "\'")
-    # text = text.replace('\u201C', '"')
-    # text = text.replace('\u201c', '"')
-    # text = text.replace('\u201D', '"')
-    # text = text.replace('\u201d', '"')
-    #todo: remove if no character issues
-
     text = text.replace("\\xe2\\x80\\x9c", '"')
     text = text.replace("\\xe2\\x80\\x9d", '"')
     text = text.replace('\\xe2\\x80\\x98', "\'")
     text = text.replace('\\xe2\\x80\\x99', "\'")
-# todo: fix endquotes not reading
     return text
 
 
@@ -115,10 +103,10 @@ def file_read():
         # docx file
         customfile = filename.replace('.docx', '_cts.txt')
         base_name=filename.replace('.docx', '')
-        #print(customfile)
-        cont = textract.process("inputs/" + filename) #todo: evaluate mysterious apostrophy at end of content extracted
-        print(str(cont))
-        cont = quote_convert(str(cont))
+        cont = textract.process("inputs/" + filename)
+        cont = quote_convert(str(cont))#converts all instances of curly punctuaton in word
+        cont = cont[2:len(cont)-1] #temporary solution that removes the body markers from word
+        #todo: find and extract body rather than just remove start and finish
     elif re.search("\.txt$", filename):
         customfile = filename.replace('.txt', '_cts.txt')
         base_name = filename.replace('.txt', '')
