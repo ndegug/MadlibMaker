@@ -38,8 +38,8 @@ instruct3 = (
     "with that same key")
 instruct4 = ("After writing a madlib, you can save it to the \"inputs\" folder for later use.\nThis is usefull "
              "if you have a lengthy madlib that you wish to fill in later or multiple times.\nIf you wish to "
-             "type a madlib outside of this program, note that the current build accepts text files only and "
-             "refrain from adding a title/heading "
+             "type a madlib outside of this program, note that the current build accepts text and docx files only and "
+             "refrain from adding a title/heading in word"
              "as it will be entered later in the program.\nReview the \"Syntax\" section of the instructions for "
              "the proper syntax of an input file.\n\nWith a madlib typed or selected, you may chose to fill it "
              "within the program or\nprint it as a traditional unfilled maldib on paper.\nOutputs of either "
