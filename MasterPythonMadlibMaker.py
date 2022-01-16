@@ -1,16 +1,18 @@
 from MadlibMakerHelpers import *
 from long_strings import *
 from past.builtins import raw_input
-outlist = []
 
-latlist = []
+outlist = []  # array of plain text filled madlib output
 
+latlist = []  # array of each word in the HTML print (formally Latex)
+
+# create input and output folders
 if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
     os.mkdir(os.path.join(os.getcwd(), "inputs"))
 if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
     os.mkdir(os.path.join(os.getcwd(), "outputs"))
 
-choice = raw_input(welcome)
+choice = raw_input(welcome)  # welcome and first decision
 if choice == "1":
     # manual input
     cont = raw_input("Enter the madlib below:\n")
@@ -43,9 +45,9 @@ if choice == "1":
     else:
         print(potato2)
         exit()
-elif choice == "2": #read saved madlib file
+elif choice == "2":  # read saved madlib file
     # file base name
-    file_read()#todo pass list, dont import
+    file_read()  # todo pass list, dont import
     from MadlibMakerHelpers import inputList
     from MadlibMakerHelpers import custom
 elif choice == "3":
@@ -191,8 +193,8 @@ for word in inputList:
 
 filled = ' '.join(outlist)
 latfill = ' '.join(latlist)
-filled = quote_convert(filled)
-latfill = quote_convert(latfill)
+# filled = quote_convert(filled)
+# latfill = quote_convert(latfill)
 if choice2 == "1":
     print(filled)
     choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder?\n")

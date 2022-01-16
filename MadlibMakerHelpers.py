@@ -114,17 +114,14 @@ def file_read():
     if re.search("\.docx$", filename):
         # docx file
         customfile = filename.replace('.docx', '_cts.txt')
-        cont = textract.process("inputs/" + filename)
-        #todo: remove supplement for the replacement function, replace with function call
-        text = str(cont)
-        text = text.replace("\\xe2\\x80\\x9c", '"')
-        text = text.replace("\\xe2\\x80\\x9d", '"')
-        text = text.replace('\\xe2\\x80\\x98', "\'")
-        text = text.replace('\\xe2\\x80\\x99', "\'")
-        cont = text
+        base_name=filename.replace('.docx', '')
+        #print(customfile)
+        cont = textract.process("inputs/" + filename) #todo: evaluate mysterious apostrophy at end of content extracted
+        print(str(cont))
+        cont = quote_convert(str(cont))
     elif re.search("\.txt$", filename):
         customfile = filename.replace('.txt', '_cts.txt')
-        print(customfile)
+        base_name = filename.replace('.txt', '')
         # reading main content file
         choice = os.path.join('inputs', filename)
         my_file = open(choice, "r")
@@ -132,6 +129,7 @@ def file_read():
     else:
         cont=''
         customfile =''
+        base_name=''
         print("file invalid")
         print(potato)
         quit()
@@ -146,7 +144,7 @@ def file_read():
         f.close()
     elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
         cust_config(inputList)
-        file_write(str(custom), filename, 'inputs', '_cts.txt')
+        file_write(str(custom), base_name, 'inputs', '_cts.txt')
     else:
         pass
 
