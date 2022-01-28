@@ -1,6 +1,6 @@
 welcome = (
-    "Welcome to the Madlib Maker\nHere you can compose and fill in madlibs using our specialized syntax.\nTo begin, "
-    "please select from the following menu options:\n1. Type madlib\n2. Use a madlib from the \"inputs\" folder.\n3. "
+    "Welcome to the Madlib Maker\nHere you can compose and fill in madlibs using our specialized syntax.\n")
+makeSelection = ( "Please select from the following menu options:\n1. Type madlib\n2. Use a madlib from the \"inputs\" folder.\n3. "
     "Instructions\n")
 instruct0 = ("Which would you like to learn about:\n1. How to write Madlibs\n2. "
              "Syntax\n3. Custom Words\n4. Saving and printing madlibs\nType \"q\" to quit\n")
