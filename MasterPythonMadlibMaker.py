@@ -102,6 +102,19 @@ def fillInMadlib(userMadlib, custom):
             else:
                 outlist.append(keyword_convert(realkey, word, 6, None))
 
+        elif re.findall(customreg, word) and not re.findall(numcustreg, word):
+            # custom
+            regkey = re.findall(customreg, word)
+            realkey = ''.join(regkey)
+            if realkey in custom:
+                outlist.append(keyword_convert(realkey, word, 3, custom))
+            # latex array
+            elif realkey not in custom:
+                outlist.append(keyword_convert(realkey, word, 5, custom))
+
+
+        # html equivelent
+
         elif re.findall(numcustreg, word):
             # numberded custom
 
@@ -163,7 +176,7 @@ def printCleanColumns(inputWords):
     print("\n")
 
 # Returns manually entered madlib
-def enterMadlibManual():
+def enterMadlibManual(): #todo: manual input not configuring custom words beyond 1 and saving without asking
     print("User has selected to manually enter madlib")
     cont = raw_input("Enter the madlib below:\n")
     inputList = cont.split(" ")
@@ -203,7 +216,7 @@ def madlibMainMenuHandler(choice, userMadlib, custom):
     if choice == "1":
         print("Fill in")
         filledMadlib = fillInMadlib(userMadlib, custom)
-        print(filledMadlib)
+        print(' '.join(filledMadlib)) #todo: optimize the double join?
         choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder?\n")
         if choice == 'yes':
             filename = raw_input("What do you wish to name the file? (do not type the extension): ")
@@ -255,6 +268,7 @@ def instructionsMenuHandler():
 def welcomeMenuHandler(choice):
     userMadlib=""
     print("User selects:",choice)
+    base_name = ""
     if choice =="1":
         print("Manual")
         userMadlib = enterMadlibManual()
@@ -301,8 +315,9 @@ def main():
         print("Your madlib:",' '.join(filledMadlib))
 
 def test():
-    madlib = ['nick', 'is', 'a', '/adj', 'man']
-    fillInMadlib(madlib)
+    madlib = ['there', 'is', 'a', '/ct1_1', 'in', 'the', '/ct2,', 'the', '/ct1_1', 'is', 'coming', 'for', 'the', '/ct2']
+    #fillInMadlib(madlib)
+    cust_config(madlib)
 
 
 if __name__ == "__main__":
