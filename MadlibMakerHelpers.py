@@ -85,7 +85,7 @@ def cust_config(inlist):
                 base = ''.join(base)
                 regnum = re.findall(r'\d+', base)
                 num = ''.join(regnum)
-                print("Cutsom " + str(num))
+                print("Custom " + str(num))
                 ch = raw_input()
                 custom[realkey] = ch
             else:

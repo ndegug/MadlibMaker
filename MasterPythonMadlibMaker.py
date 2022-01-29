@@ -3,7 +3,7 @@ from long_strings import *
 from past.builtins import raw_input
 
 custom = {}
-def customWordsFilter(inputList, base_name):
+def customWordsFilter(inputList, base_name, saveFileOverride):
     # inputList = quote_convert(inputList)
     customfile = base_name + "_cts.txt"
     if os.path.exists(os.path.join('inputs', customfile)):
@@ -14,7 +14,8 @@ def customWordsFilter(inputList, base_name):
         f.close()
     elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
         custom = cust_config(inputList)
-        file_write(str(custom), base_name, 'inputs', '_cts.txt')
+        if saveFileOverride:
+            file_write(str(custom), base_name, 'inputs', '_cts.txt')
     else:
         custom = None
     return custom
@@ -267,11 +268,21 @@ def instructionsMenuHandler():
 # menuHandler returns the unprocessed user madlib or empty string to retry
 def welcomeMenuHandler(choice):
     userMadlib=""
+    save_manual_file=True
     print("User selects:",choice)
     base_name = ""
     if choice =="1":
         print("Manual")
         userMadlib = enterMadlibManual()
+        savequest=raw_input("Would you like to save?")
+        if savequest=="yes":
+            base_name=raw_input("File name (without extention)")
+            file_write(' '.join(userMadlib),base_name,'inputs', '.txt')
+        elif savequest=="no":
+            save_manual_file=False
+        else:
+            print(potato)
+            exit()
     elif choice == "2":
         print("From file")
         filename = input("Enter a madlib filename with extension:")
@@ -284,7 +295,7 @@ def welcomeMenuHandler(choice):
         print("invalid entry")
         userMadlib = ""
     if userMadlib is not "":
-        custom = customWordsFilter(userMadlib,base_name)
+        custom = customWordsFilter(userMadlib,base_name,save_manual_file)
     return userMadlib, custom
 
 # Madlib maker main execution
