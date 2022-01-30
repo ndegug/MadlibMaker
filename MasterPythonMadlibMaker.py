@@ -3,6 +3,8 @@ from long_strings import *
 from past.builtins import raw_input
 
 custom = {}
+
+
 def customWordsFilter(inputList, base_name, saveFileOverride):
     # inputList = quote_convert(inputList)
     customfile = base_name + "_cts.txt"
@@ -23,7 +25,7 @@ def customWordsFilter(inputList, base_name, saveFileOverride):
 
 def createHtmlMadlib(userMadlib):
     print("create madlib html")
-    latlist=[]
+    latlist = []
     for word in userMadlib:
         if re.findall(unnumbered, word) and not re.findall(numbered, word) and not re.findall(customreg, word):
             # unnumbered
@@ -165,6 +167,7 @@ def fillInMadlib(userMadlib, custom):
 def hasCustomWords(userMadlib):
     return False
 
+
 def printCleanColumns(inputWords):
     i = 0
     for pair in inputWords.items():
@@ -176,24 +179,26 @@ def printCleanColumns(inputWords):
             i = 0
     print("\n")
 
+
 # Returns manually entered madlib
-def enterMadlibManual(): #todo: manual input not configuring custom words beyond 1 and saving without asking
+def enterMadlibManual():
     print("User has selected to manually enter madlib")
     cont = raw_input("Enter the madlib below:\n")
     inputList = cont.split(" ")
     return inputList
 
+
 # Returns file generated madlib
 def enterMadlibFile(filename):
-    custom=None
+    custom = None
     if re.search("\.docx$", filename):
         # docx file
         customfile = filename.replace('.docx', '_cts.txt')
-        base_name=filename.replace('.docx', '')
+        base_name = filename.replace('.docx', '')
         cont = textract.process("inputs/" + filename)
-        cont = quote_convert(str(cont))#converts all instances of curly punctuaton in word
-        cont = cont[2:len(cont)-1] #temporary solution that removes the body markers from word
-        #todo: find and extract body rather than just remove start and finish
+        cont = quote_convert(str(cont))  # converts all instances of curly punctuaton in word
+        cont = cont[2:len(cont) - 1]  # temporary solution that removes the body markers from word
+        # todo: find and extract body rather than just remove start and finish
     elif re.search("\.txt$", filename):
         customfile = filename.replace('.txt', '_cts.txt')
         base_name = filename.replace('.txt', '')
@@ -202,22 +207,23 @@ def enterMadlibFile(filename):
         my_file = open(choice, "r")
         cont = my_file.read()
     else:
-        cont=''
-        customfile =''
-        base_name=''
+        cont = ''
+        customfile = ''
+        base_name = ''
         print("file invalid")
         print(potato)
         quit()
     inputList = cont.split(" ")
     return inputList
 
+
 def madlibMainMenuHandler(choice, userMadlib, custom):
-    print("user choice:",choice)
-    filledMadlib=None
+    print("user choice:", choice)
+    filledMadlib = None
     if choice == "1":
         print("Fill in")
         filledMadlib = fillInMadlib(userMadlib, custom)
-        print(' '.join(filledMadlib)) #todo: optimize the double join?
+        print(' '.join(filledMadlib))
         choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder?\n")
         if choice == 'yes':
             filename = raw_input("What do you wish to name the file? (do not type the extension): ")
@@ -246,6 +252,7 @@ def madlibMainMenuHandler(choice, userMadlib, custom):
         print("Invalid instruction choice:", choice, "Please try again...")
     return filledMadlib
 
+
 def instructionsMenuHandler():
     choice = ""
     while choice != "q":
@@ -262,30 +269,31 @@ def instructionsMenuHandler():
         elif choice == "q":
             return
         else:
-            #print(potato)
-            print("Invalid instruction choice:",choice,"Please try again...")
+            # print(potato)
+            print("Invalid instruction choice:", choice, "Please try again...")
+
 
 # menuHandler returns the unprocessed user madlib or empty string to retry
 def welcomeMenuHandler(choice):
-    userMadlib=""
-    save_manual_file=True
-    print("User selects:",choice)
+    custom={}
+    save_manual_file = True
+    print("User selects:", choice)
     base_name = ""
-    if choice =="1":
+    if choice == "1":
         print("Manual")
         userMadlib = enterMadlibManual()
-        savequest=raw_input("Would you like to save?")
-        if savequest=="yes":
-            base_name=raw_input("File name (without extention)")
-            file_write(' '.join(userMadlib),base_name,'inputs', '.txt')
-        elif savequest=="no":
-            save_manual_file=False
+        savequest = raw_input("Would you like to save?\n")
+        if savequest == "yes":
+            base_name = raw_input("Enter your desired filename (without extention)\:\n")
+            file_write(' '.join(userMadlib), base_name, 'inputs', '.txt')
+        elif savequest == "no":
+            save_manual_file = False
         else:
             print(potato)
             exit()
     elif choice == "2":
         print("From file")
-        filename = input("Enter a madlib filename with extension:")
+        filename = input("Enter a madlib filename with the extension:\n")
         base_name = os.path.splitext(filename)[0]
         userMadlib = enterMadlibFile(filename)
     elif choice == "3":
@@ -295,8 +303,9 @@ def welcomeMenuHandler(choice):
         print("invalid entry")
         userMadlib = ""
     if userMadlib is not "":
-        custom = customWordsFilter(userMadlib,base_name,save_manual_file)
+        custom = customWordsFilter(userMadlib, base_name, save_manual_file)
     return userMadlib, custom
+
 
 # Madlib maker main execution
 def main():
@@ -323,14 +332,15 @@ def main():
     choice2 = raw_input("Do you wish to:\n1. Fill in your madlib now\n2. Print a physical version\n3. Quit\n")
     filledMadlib = madlibMainMenuHandler(choice2, userMadlib, custom)
     if filledMadlib is not None:
-        print("Your madlib:",' '.join(filledMadlib))
+        print("Your madlib:", ' '.join(filledMadlib))
 
-def test():
+
+def test():  # todo delete useless functions
     madlib = ['there', 'is', 'a', '/ct1_1', 'in', 'the', '/ct2,', 'the', '/ct1_1', 'is', 'coming', 'for', 'the', '/ct2']
-    #fillInMadlib(madlib)
+    # fillInMadlib(madlib)
     cust_config(madlib)
 
 
 if __name__ == "__main__":
     main()
-    #test()
+    # test()
