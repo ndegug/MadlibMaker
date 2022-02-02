@@ -6,7 +6,6 @@ custom = {}
 
 
 def customWordsFilter(inputList, base_name, saveFileOverride):
-    # inputList = quote_convert(inputList)
     customfile = base_name + "_cts.txt"
     if os.path.exists(os.path.join('inputs', customfile)):
         choice = os.path.join('inputs', customfile)
@@ -193,12 +192,12 @@ def enterMadlibFile(filename):
     custom = None
     if re.search("\.docx$", filename):
         # docx file
-        customfile = filename.replace('.docx', '_cts.txt')
+        customfile = filename.replace('.docx', '_cts.txt') #todo: investigate greyed variables
         base_name = filename.replace('.docx', '')
         cont = textract.process("inputs/" + filename)
         cont = quote_convert(str(cont))  # converts all instances of curly punctuaton in word
         cont = cont[2:len(cont) - 1]  # temporary solution that removes the body markers from word
-        # todo: find and extract body rather than just remove start and finish
+
     elif re.search("\.txt$", filename):
         customfile = filename.replace('.txt', '_cts.txt')
         base_name = filename.replace('.txt', '')
@@ -243,7 +242,8 @@ def madlibMainMenuHandler(choice, userMadlib, custom):
         filename = raw_input("What do you wish to name the file? (do not type the extension):\n")
         file_write(latfill, filename, 'outputs', '.html')
         print("An HTML coded version of your unfilled madlib has been saved to the outputs folder, "
-              "drag the file into your browser to view it. Print the file using your respective browser's print feature.\n"
+              "drag the file into your browser to view it. Print the file using your respective browser's print "
+              "feature.\n "
               "Have a good day!")
     elif choice == "3":
         print("quit")
@@ -258,14 +258,16 @@ def instructionsMenuHandler():
     while choice != "q":
         choice = raw_input(instruct0)
         if choice == "1":  # todo add a "process pre-made file" instructions
-            print(instruct1)
+            print(instruct1) # How to write madlibs
         elif choice == "2":
             print("The default keys and word categories are as follows:")
-            printCleanColumns(generic_words)
+            printCleanColumns(generic_words) # generic words list
         elif choice == "3":
-            print(instruct3)
+            print(instruct3) # custom words
         elif choice == "4":
-            print(instruct4)
+            print(instruct4) # outputs
+        elif choice == "5":
+            print(instruct5) # outputs
         elif choice == "q":
             return
         else:
@@ -334,13 +336,6 @@ def main():
     if filledMadlib is not None:
         print("Your madlib:", ' '.join(filledMadlib))
 
-
-def test():  # todo delete useless functions
-    madlib = ['there', 'is', 'a', '/ct1_1', 'in', 'the', '/ct2,', 'the', '/ct1_1', 'is', 'coming', 'for', 'the', '/ct2']
-    # fillInMadlib(madlib)
-    cust_config(madlib)
-
-
-if __name__ == "__main__":
+if __name__ == "__main__": #executes the main fucntion
     main()
     # test()

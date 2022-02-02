@@ -45,8 +45,9 @@ tail = "(_[0-9])"
 def quote_convert(text):
     text = text.replace("\\xe2\\x80\\x9c", '"')
     text = text.replace("\\xe2\\x80\\x9d", '"')
-    text = text.replace('\\xe2\\x80\\x98', "\'")
-    text = text.replace('\\xe2\\x80\\x99', "\'")
+    text = text.replace('\\xe2\\x80\\x98', "'")
+    text = text.replace('\\xe2\\x80\\x99', "'")
+    text = text.replace('\\xe2\\x80\\xa6', "...")
     return text
 
 
@@ -99,19 +100,13 @@ def file_read():
     global custom
     global inputList
     filename = raw_input("Which file would you like to process? (include extension)\n")
-    # saving name of custom word file
-    # # reading main content file
-    # choice = os.path.join('inputs', filename + ".txt")
-    # my_file = open(choice, "r")
-    # cont = my_file.read()
     if re.search("\.docx$", filename):
         # docx file
         customfile = filename.replace('.docx', '_cts.txt')
         base_name=filename.replace('.docx', '')
         cont = textract.process("inputs/" + filename)
-        cont = quote_convert(str(cont))#converts all instances of curly punctuaton in word
-        cont = cont[2:len(cont)-1] #temporary solution that removes the body markers from word
-        #todo: find and extract body rather than just remove start and finish
+        cont = quote_convert(str(cont))# converts all instances of curly punctuaton in word
+        cont = cont[2:len(cont)-1] # temporary solution that removes the body markers from word
     elif re.search("\.txt$", filename):
         customfile = filename.replace('.txt', '_cts.txt')
         base_name = filename.replace('.txt', '')
@@ -128,7 +123,6 @@ def file_read():
         quit()
 
     inputList = cont.split(" ")
-    #inputList = quote_convert(inputList)
     if os.path.exists(os.path.join('inputs', customfile)):
         choice = os.path.join('inputs', customfile)
         with open(choice) as f:

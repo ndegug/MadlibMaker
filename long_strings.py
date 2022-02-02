@@ -1,9 +1,10 @@
 welcome = (
     "Welcome to the Madlib Maker\nHere you can compose and fill in madlibs using our specialized syntax.\n")
-makeSelection = ( "Please select from the following menu options:\n1. Type madlib\n2. Use a madlib from the \"inputs\" folder.\n3. "
+makeSelection = (
+    "Please select from the following menu options:\n1. Type madlib\n2. Use a madlib from the \"inputs\" folder.\n3. "
     "Instructions\n")
 instruct0 = ("Which would you like to learn about:\n1. How to write Madlibs\n2. "
-             "Syntax\n3. Custom Words\n4. Saving and printing madlibs\nType \"q\" to quit\n")
+             "Syntax\n3. Using premade madlibs\n4. Custom Words\n5. Saving and printing madlibs\nType \"q\" to return to the menu.\n")
 instruct1 = ("Here in the Madlib Maker, you can write a Madlib directly or process a file you've already "
              "typed.\nFor "
              "each blank, you must type a keyword specific to the word category you desire.\nThese keywords "
@@ -23,6 +24,14 @@ instruct1 = ("Here in the Madlib Maker, you can write a Madlib directly or proce
              "Words\" "
              "section for further details.\n")
 instruct3 = (
+    "Valid input files can be made from within or outside this program, simply type\nyour madlib with the supported "
+    "keywords into a supported file and move said file into the \"inputs\"\nfolder that was created when you first "
+    "ran the program.\n\nIf you have perchance received a madlib from a firend, ensure that you transfer "
+    "any\nassociated custom file of the same name to the inputs folder. Custom files have the same filename as the "
+    "madlib\nas the madlib for which it was creted but have the extension \"_cts.txt\".\n\nThis program currently "
+    "supports txt and docx files.\n\nWARNING: Do not copy/paste your madlib from the .docx file to the text file "
+    "unlesss you have turned\ncurly punctuation and other unsupported characters off.")
+instruct4 = (
     "Custom words allow you to add your own word categories if they are not already stored in this "
     "program's dictionary.\nIf you wanted the program to call out something obscure like \"Baseball "
     "player\" "
@@ -36,7 +45,7 @@ instruct3 = (
     "write Maldibs\" instructions section "
     "for more details) and any word that is used to replace it will then replace all other\nwords "
     "with that same key")
-instruct4 = ("After writing a madlib, you can save it to the \"inputs\" folder for later use.\nThis is usefull "
+instruct5 = ("After writing a madlib, you can save it to the \"inputs\" folder for later use.\nThis is usefull "
              "if you have a lengthy madlib that you wish to fill in later or multiple times.\nIf you wish to "
              "type a madlib outside of this program, note that the current build accepts text and docx files only and "
              "refrain from adding a title/heading in word"
@@ -48,3 +57,4 @@ instruct4 = ("After writing a madlib, you can save it to the \"inputs\" folder f
              "blanks with word categories underneath. Drag the\nHTML file into any web browser to view it in "
              "the traditional madlib format, then use the respective\nbrowser's print feature to print a "
              "physical copy of the madlib.")
+
