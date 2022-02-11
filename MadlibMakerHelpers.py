@@ -1,4 +1,3 @@
-
 import re
 import os
 import json
@@ -22,7 +21,8 @@ htmlsample = '<span class="nowrap" style="display: none; display: inline-block; 
              'font-size: 70%; line-height: 1em; padding: 0 0.2em;"><span style="position: relative; line-height: 1em; ' \
              'margin-top: -.2em; top: -.2em;">underscript</span></span></span>'
 
-generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
+generic_words = { # reminder: do not add any keywords that are the same as ignored words
+                 '/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/ver': 'Verb', '/vng': 'Verb ending in \"ing\"', '/ved': 'Past tense verb',
                  '/ves': 'Verb ending in \"s\"', '/adv': 'adverb',
                  '/num': 'Number', '/nam': 'Name', '/cel': 'Celebrity',
@@ -33,6 +33,7 @@ generic_words = {'/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
                  '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid',
                  '/emo': 'Emotion', '/noi': 'noise', '/eve': 'Event', '/fos': 'Plural food', '/fur': 'Furniture'}
+ignored_words = ['/her', '/she', '/She']  # words that resemble generic words that will be ignored
 
 unnumbered = "(/...)"
 numbered = "(/...[0-9]+)"
@@ -68,12 +69,13 @@ def invalid_html(ch, RK, wrd):
         exit()
 
 
-
 def file_write(content, name_of_file, path, ext):
     completeName = os.path.join(path, name_of_file + ext)
     f = open(completeName, "w")
     f.write(content)
     f.close()
+
+
 def cust_config(inlist):
     print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to "
           "stop ")
@@ -96,6 +98,7 @@ def cust_config(inlist):
 
     return custom
 
+
 def file_read():
     global custom
     global inputList
@@ -103,10 +106,10 @@ def file_read():
     if re.search("\.docx$", filename):
         # docx file
         customfile = filename.replace('.docx', '_cts.txt')
-        base_name=filename.replace('.docx', '')
+        base_name = filename.replace('.docx', '')
         cont = textract.process("inputs/" + filename)
-        cont = quote_convert(str(cont))# converts all instances of curly punctuaton in word
-        cont = cont[2:len(cont)-1] # temporary solution that removes the body markers from word
+        cont = quote_convert(str(cont))  # converts all instances of curly punctuaton in word
+        cont = cont[2:len(cont) - 1]  # temporary solution that removes the body markers from word
     elif re.search("\.txt$", filename):
         customfile = filename.replace('.txt', '_cts.txt')
         base_name = filename.replace('.txt', '')
@@ -115,9 +118,9 @@ def file_read():
         my_file = open(choice, "r")
         cont = my_file.read()
     else:
-        cont=''
-        customfile =''
-        base_name=''
+        cont = ''
+        customfile = ''
+        base_name = ''
         print("file invalid")
         print(potato)
         quit()
@@ -142,26 +145,33 @@ def file_read():
 def keyword_convert(ind, wrd, ca, custom):
     base = re.findall(unnumbered, wrd)
     base = ''.join(base)
-    if ca == 0:
+    if ca == 0:  # Generic word unnumbered
         print(generic_words[ind] + ': ')
-    elif ca == 1:
+        new = raw_input()
+    elif ca == 1:  # generic word numbered unsaved
         print(generic_words[base] + ': ')
         new = raw_input()
-        numword_dic[ind] = new
-        return re.sub(ind, new, wrd)
-    elif ca == 2:
-        new = numword_dic[ind]
-        return re.sub(ind, new, wrd)
+        numword_dic[ind] = new  # saves entry for numbered word
+        # return re.sub(ind, new, wrd)
+    elif ca == 2:  # Numbered word previously saved
+        new = numword_dic[ind]  # pulls word directly from numbered words dictionary
+        # return re.sub(ind, new, wrd)
     elif ca == 3:
         print(custom[base] + ':')
+        new = raw_input()
     elif ca == 4:
         print(custom[base] + ': ')
         new = raw_input()
         numword_dic[ind] = new
-        return re.sub(ind, new, wrd)
+        # return re.sub(ind, new, wrd)
     elif ca == 5:
         print(ind, "hasn't been configured, what would you like to replace it with?")
+        new = raw_input()
+    elif ca == 6: # invalid numbered word
+        print(ind, "is not a valid keyword, enter what to fill it with: ")
+        new = raw_input()
+        numword_dic[ind] = new  # saves entry for numbered word
     else:
         print(ind, "is not a valid keyword, enter what to fill it with: ")
-    new = raw_input()
-    return re.sub(ind, new, wrd)
+        new = raw_input()
+    return re.sub(ind, new, wrd)  # todo inspect for issues "return statement" changes introduces

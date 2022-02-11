@@ -35,6 +35,8 @@ def createHtmlMadlib(userMadlib):
                 latword = htmlsample.replace('underscript', generic_words[realkey])
                 final = word.replace(realkey, latword, 1)
                 latlist.append(final)
+            elif realkey in ignored_words:
+                latlist.append(word)
             elif realkey not in generic_words.keys():
                 latlist.append(invalid_html(0, realkey, word))
         elif re.findall(customreg, word) and not re.findall(numcustreg, word):
@@ -101,6 +103,8 @@ def fillInMadlib(userMadlib, custom):
             realkey = ''.join(regkey)
             if realkey in generic_words:
                 outlist.append(keyword_convert(realkey, word, 0, None))
+            elif realkey in ignored_words:
+                outlist.append(word)
             else:
                 outlist.append(keyword_convert(realkey, word, 6, None))
 
@@ -138,8 +142,11 @@ def fillInMadlib(userMadlib, custom):
                 # numbered cust saved
                 strIdx = 2
             elif base not in custom:
-                # numbered cust saved
+                # numbered cust unsaved
                 strIdx = 5
+            else:
+                # others
+                strIdx = 6
             outlist.append(keyword_convert(realkey, word, strIdx, custom))
 
         elif re.findall(numbered, word):
@@ -161,10 +168,6 @@ def fillInMadlib(userMadlib, custom):
             # none, just append
             outlist.append(word)
     return outlist
-
-
-def hasCustomWords(userMadlib):
-    return False
 
 
 def printCleanColumns(inputWords):
