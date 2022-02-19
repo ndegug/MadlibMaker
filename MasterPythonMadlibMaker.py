@@ -114,7 +114,7 @@ def fillInMadlib(userMadlib, custom):
             realkey = ''.join(regkey)
             if realkey in custom:
                 outlist.append(keyword_convert(realkey, word, 3, custom))
-            # latex array
+            # HTML array
             elif realkey not in custom:
                 outlist.append(keyword_convert(realkey, word, 5, custom))
 
@@ -220,7 +220,7 @@ def enterMadlibFile(filename):
 
 
 def madlibMainMenuHandler(choice, userMadlib, custom):
-    print("user choice:", choice)
+    #print("user choice:", choice)
     filledMadlib = None
     if choice == "1":
         print("Fill in")
@@ -249,7 +249,7 @@ def madlibMainMenuHandler(choice, userMadlib, custom):
               "feature.\n "
               "Have a good day!")
     elif choice == "3":
-        print("quit")
+        print("Have a good day!")
     else:
         # print(potato)
         print("Invalid instruction choice:", choice, "Please try again...")
@@ -282,10 +282,10 @@ def instructionsMenuHandler():
 def welcomeMenuHandler(choice):
     custom={}
     save_manual_file = True
-    print("User selects:", choice)
+    # print("User selects:", choice)
     base_name = ""
     if choice == "1":
-        print("Manual")
+        # print("Manual input")
         userMadlib = enterMadlibManual()
         savequest = raw_input("Would you like to save?\n")
         if savequest == "yes":
@@ -297,7 +297,7 @@ def welcomeMenuHandler(choice):
             print(potato)
             exit()
     elif choice == "2":
-        print("From file")
+        # print("From file")
         filename = input("Enter a madlib filename with the extension:\n")
         base_name = os.path.splitext(filename)[0]
         userMadlib = enterMadlibFile(filename)
@@ -305,8 +305,10 @@ def welcomeMenuHandler(choice):
         instructionsMenuHandler()
         userMadlib = ""
     else:
-        print("invalid entry")
+        # print("invalid entry")
         userMadlib = ""
+        print(potato)
+        exit()
     if userMadlib is not "":
         custom = customWordsFilter(userMadlib, base_name, save_manual_file)
     return userMadlib, custom
@@ -330,14 +332,14 @@ def main():
         userMadlibAndCustom = welcomeMenuHandler(choice)
         custom = userMadlibAndCustom[1]
         userMadlib = userMadlibAndCustom[0]
-    print("User's madlib is:", userMadlib)
+    # print("User's unfilled madlib is:", userMadlib)
     # At this point we have an unprocessed user madlib regardless of where it came from
 
     # Save and quit, play or print
     choice2 = raw_input("Do you wish to:\n1. Fill in your madlib now\n2. Print a physical version\n3. Quit\n")
-    filledMadlib = madlibMainMenuHandler(choice2, userMadlib, custom)
-    if filledMadlib is not None:
-        print("Your madlib:", ' '.join(filledMadlib))
+    madlibMainMenuHandler(choice2, userMadlib, custom)
+    # if filledMadlib is not None:
+    #     print("Your madlib:", ' '.join(filledMadlib))
 
 if __name__ == "__main__": #executes the main fucntion
     main()

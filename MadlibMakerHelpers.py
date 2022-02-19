@@ -43,7 +43,7 @@ numcustreg = "(/ct[0-9]+_[0-9]+)"
 tail = "(_[0-9])"
 
 
-def quote_convert(text):
+def quote_convert(text): #todo: quotes in MCM word madlib have an extra backslash
     text = text.replace("\\xe2\\x80\\x9c", '"')
     text = text.replace("\\xe2\\x80\\x9d", '"')
     text = text.replace('\\xe2\\x80\\x98', "'")
@@ -142,7 +142,7 @@ def file_read():
 # keyword say and replace function
 
 
-def keyword_convert(ind, wrd, ca, custom):
+def keyword_convert(ind, wrd, ca, custom):#todo: verify all numbered keys 10 and over
     base = re.findall(unnumbered, wrd)
     base = ''.join(base)
     if ca == 0:  # Generic word unnumbered
@@ -157,9 +157,13 @@ def keyword_convert(ind, wrd, ca, custom):
         new = numword_dic[ind]  # pulls word directly from numbered words dictionary
         # return re.sub(ind, new, wrd)
     elif ca == 3:
+        base = re.findall(customreg, wrd)
+        base = ''.join(base)
         print(custom[base] + ':')
         new = raw_input()
     elif ca == 4:
+        base = re.findall(customreg, wrd)
+        base = ''.join(base)
         print(custom[base] + ': ')
         new = raw_input()
         numword_dic[ind] = new
