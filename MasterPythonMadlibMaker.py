@@ -206,7 +206,7 @@ def enterMadlibFile(filename):
         base_name = filename.replace('.txt', '')
         # reading main content file
         choice = os.path.join('inputs', filename)
-        my_file = open(choice, "r")
+        my_file = open(choice, "r", encoding="utf8") # new comma case
         cont = my_file.read()
     else:
         cont = ''

@@ -48,7 +48,7 @@ def quote_convert(text): #todo: quotes in MCM word madlib have an extra backslas
     text = text.replace("\\xe2\\x80\\x9d", '"')
     text = text.replace('\\xe2\\x80\\x98', "'")
     text = text.replace('\\xe2\\x80\\x99', "'")
-    text = text.replace('\\xe2\\x80\\xa6', "...")
+    text = text.replace('\\xe2\\x80\\xa6', "...") #todo resolve space syntax in "steven madlib 1 mlm.docx"
     return text
 
 
