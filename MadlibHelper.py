@@ -70,14 +70,7 @@ def checkForCustomWords(madlib):
 def quoteConverter(text):
 
     #print(text)
-    text = text.replace('\u2018\u2018', '"')
-    text = text.replace('\u2019\u2019', '"')
-    text = text.replace('\u2018', "\'")
-    text = text.replace('\u2019', "\'")
-    text = text.replace('\u201C', '"')
-    text = text.replace('\u201c', '"')
-    text = text.replace('\u201D', '"')
-    text = text.replace('\u201d', '"')
+    print('\\\\xc2\\\\xa0')
 
     return text
 
@@ -85,16 +78,16 @@ def quoteConverter(text):
 # Main function
 def main():
     # Test 1
-    d = doesFileExist('wordquotetest.docx')
-    print("Test 1 Result: ", d)
+    #d = doesFileExist('wordquotetest.docx')
+    #print("Test 1 Result: ", d)
 
     # Test 2
-    c = readCustomFile('customtestin')
-    print("Test 2 Result: ", c)
+  #  c = readCustomFile('customtestin')
+    #print("Test 2 Result: ", c)
 
     # Test 3
-    g = checkForCustomWords("")
-    print("Test 3 Result: ", g)
+   # g = checkForCustomWords("")
+    #print("Test 3 Result: ", g)
 
     # Test 4
     h = quoteConverter("“Go /ct1_1! Shouted Mackey.”")
