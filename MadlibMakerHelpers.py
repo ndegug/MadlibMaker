@@ -11,10 +11,10 @@ numword_dic = {}
 htmlhead = '<html><head></head><body><h1> heading </h1><style>h1 {text-align: center;}p.big {  line-height: ' \
            '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
 
-potato = "What the hell is wrong with you? I give you a list of options and you decide to make your own?\nThat's not " \
-         "how it works you moron! Get 'outa here!\n"
-potato2 = "What the hell is wrong with you? I give you a \"yes\" or \"no\" question and THAT'S what you come up " \
-          "with?\nThat's not how it works you moron! Get 'outa here!\n"
+potato = "We're sorry, but that command is invalid. You cannot make up an answer.\nThat's not " \
+         "how it works, sorry!\n"
+potato2 = "You were asked a \"yes\" or \"no\" question and ignored the options " \
+          "\nThis will not be tolerated, goodbye!\n"
 
 htmlsample = '<span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: ' \
              'center;"><span style="display: block; padding: 0 0.2em;">__________</span><span style="display: block; ' \
