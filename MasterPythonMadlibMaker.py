@@ -90,7 +90,7 @@ def createHtmlMadlib(userMadlib):
                 latlist.append(invalid_html(0, realkey, word))
         else:
             # none, just append
-            # #Latex array
+            # #Latex array todo: rename all latex referances to HTML
             latlist.append(word)
     return latlist
 
@@ -106,7 +106,7 @@ def fillInMadlib(userMadlib, custom):
             elif realkey in ignored_words:
                 outlist.append(word)
             else:
-                outlist.append(keyword_convert(realkey, word, 6, None))
+                outlist.append(keyword_convert(realkey, word, 6, None)) #todo: Should prompt invalid key, investigate if this should force edge case 7 instead of 6
 
         elif re.findall(customreg, word) and not re.findall(numcustreg, word):
             # custom
@@ -225,6 +225,7 @@ def madlibMainMenuHandler(choice, userMadlib, custom):
     if choice == "1":
         print("Fill in")
         filledMadlib = fillInMadlib(userMadlib, custom)
+        print(str(filledMadlib))
         print(' '.join(filledMadlib))
         choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder?\n")
         if choice == 'yes':
@@ -280,7 +281,7 @@ def instructionsMenuHandler():
 
 # menuHandler returns the unprocessed user madlib or empty string to retry
 def welcomeMenuHandler(choice):
-    custom={}
+    #custom={} #todo: test all custom word functions with this commented. Independent testing broke return "custom"
     save_manual_file = True
     # print("User selects:", choice)
     base_name = ""

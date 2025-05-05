@@ -144,7 +144,7 @@ def file_read():
 
 def keyword_convert(ind, wrd, ca, custom):#todo: verify all numbered keys 10 and over
     base = re.findall(unnumbered, wrd)
-    base = ''.join(base)
+    base = ''.join(base)#todo: invesitgate potential duplicate of ind and base
     if ca == 0:  # Generic word unnumbered
         print(generic_words[ind] + ': ')
         new = raw_input()
