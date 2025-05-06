@@ -68,29 +68,10 @@ class MadlibApp: #todo interface with fillmadlib
         self.root = root #initializes a general widget (to be used in every element)
         self.root.title("Madlib Generator") #titles the window(s)
         self.userMadlib = []
+        self.outlist = []  # starts the outlist
         self.save_flag = False
         self.welcomeMenuHandler() #Opens the first window
 
-    def cust_config(self, inlist):
-        #print("Custom words detected, enter each of your custom words, one by one, in order of appearance. Enter \"q\" to stop ")
-        for word in inlist:
-            if re.findall(customreg, word):
-                regkey = re.findall(customreg, word)
-                realkey = ''.join(regkey)
-                if realkey not in custom:
-                    base = re.findall(customreg, word)
-                    base = ''.join(base)
-                    regnum = re.findall(r'\d+', base)
-                    num = ''.join(regnum)
-                    print("Custom " + str(num))
-                    ch = raw_input()
-                    custom[realkey] = ch
-                else:
-                    pass
-            else:
-                continue
-
-        return custom
     def customWordsFilter(self, inputList, base_name, saveFileOverride):
         customfile = base_name + "_cts.txt"
         if os.path.exists(os.path.join('inputs', customfile)):
@@ -110,9 +91,10 @@ class MadlibApp: #todo interface with fillmadlib
         custom=local_custom
 
     def advance_to_cust(self):
+        print("advance to cust")
         self.customs_found = re.findall(customreg, self.input_entry.get())
         self.cust_itterate = iter(self.customs_found)
-        self.dummyscreen('advance_to_cust')
+        self.cust_window()
     def cust_window(self):
         for widget in self.root.winfo_children(): widget.destroy() #clears previous window
         #define and create word prompts display
@@ -128,13 +110,19 @@ class MadlibApp: #todo interface with fillmadlib
         self.submit_btn = tk.Button(self.root, text="Submit",command=self.process_cust_entry, bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
 
-        self.next_prompt()
+        self.next_cust()
     def advance_to_second(self): #advances from first screen to second
         self.userMadlib = re.findall(r'/\w+\d*|[^\s\w]|[\w]+', self.input_entry.get()) #finds the keyword ignoring surrounding punctuation
         #print(str(self.userMadlib))
         self.prompt_words = iter(self.userMadlib) #saves the words to prompt
+        print(str(self.userMadlib))
+        #if re.search(customreg, str(self.userMadlib)) is not None:
+        #    print("found words")
+        #    self.advance_to_cust()
         #print("Prompt words:", str(self.prompt_words))
-        self.outlist = [] #starts the outlist
+        #else:
+        #    pass
+
         self.second_window() #loads the second window
     def second_window(self):
         for widget in self.root.winfo_children(): widget.destroy() #clears previous window
@@ -169,6 +157,7 @@ class MadlibApp: #todo interface with fillmadlib
 
         display.insert(tk.END, "\nFinal Madlib:\n" + smart_join(self.outlist))
     def next_cust(self):
+        self.current_word=next(self.cust_itterate)
         try:
             if re.findall(customreg, self.current_word):
                 regkey = re.findall(customreg, self.current_word)
@@ -178,16 +167,19 @@ class MadlibApp: #todo interface with fillmadlib
                     base = ''.join(base)
                     regnum = re.findall(r'\d+', base) #extracts the ID number of the custom word (ex 1)
                     num = ''.join(regnum)
+                    self.curcustkey=base
                     self.display.insert(tk.END, f"Custom "+str(num)+":\n")
                     return
                 else:
                     pass
             else:
                 pass
+
+            self.next_cust()
         except StopIteration:
             self.dummyscreen('done with custs')
             #self.current_word = next(custom)
-        self.dummyscreen('nextcust()')
+        #self.dummyscreen('nextcust()')
     def next_prompt(self):
         try:
             self.current_word = next(self.prompt_words)
@@ -300,11 +292,11 @@ class MadlibApp: #todo interface with fillmadlib
         except StopIteration:
             self.third_window()
 
-    def process_cust_entry(self, key):
+    def process_cust_entry(self):
         user_text = self.input_entry.get().strip()
         self.input_entry.delete(0, tk.END)
         if user_text:
-            custom[key]=self.current_word
+            custom[self.curcustkey]=self.current_word
         self.next_cust()
     def process_next_keyword(self):
         user_text = self.input_entry.get().strip()
