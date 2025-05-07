@@ -118,13 +118,15 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
 
-        self.display = scrolledtext.ScrolledText(self.root, width=60, height=10, font=("Arial", 12))
+        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black")
         self.display.pack(pady=10)
         self.display.insert(tk.END, "Custom words detected, please configure them.\n")
 
-        self.custom_entry = tk.Entry(self.root, width=40)
+        self.custom_entry = tk.Entry(self.root, width=40,font=("Arial", 12), bg="#d0e7ff", fg="black")
+        self.custom_entry.bind("<Return>",
+                               lambda event: self.save_custom_word())  # allows the "enter" key to submit the keyword
         self.custom_entry.pack(pady=10)
-        self.custom_button = tk.Button(self.root, text="Enter", command=self.save_custom_word)
+        self.custom_button = tk.Button(self.root, text="Enter",bg="#3b9dd3", fg="white", command=self.save_custom_word)
         self.custom_button.pack(pady=5)
 
         self.prompt_next_custom()
