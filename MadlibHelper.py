@@ -112,18 +112,15 @@ class MadlibApp: #todo interface with fillmadlib
 
         self.next_cust()
     def advance_to_second(self): #advances from first screen to second
+
         self.userMadlib = re.findall(r'/\w+\d*|[^\s\w]|[\w]+', self.input_entry.get()) #finds the keyword ignoring surrounding punctuation
         #print(str(self.userMadlib))
         self.prompt_words = iter(self.userMadlib) #saves the words to prompt
-        print(str(self.userMadlib))
-        #if re.search(customreg, str(self.userMadlib)) is not None:
-        #    print("found words")
-        #    self.advance_to_cust()
-        #print("Prompt words:", str(self.prompt_words))
-        #else:
-        #    pass
+
 
         self.second_window() #loads the second window
+
+
     def second_window(self):
         for widget in self.root.winfo_children(): widget.destroy() #clears previous window
         #define and create word prompts display
