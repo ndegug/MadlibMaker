@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import scrolledtext
 import re
+import os
 generic_words = { # reminder: do not add any keywords that are the same as ignored words
                  '/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/ver': 'Verb'}
@@ -9,7 +10,7 @@ numword_dic = {}
 unnumbered = "(/...)"
 numbered = "(/...[0-9]+)"
 customreg = "(/ct[0-9]+)"
-numcustcom = ".+\([0-9]+\)"
+#numcustcom = ".+\([0-9]+\)" #todo remove if unneeded for numbered customs
 numcustreg = "(/ct[0-9]+_[0-9]+)"
 tail = "(_[0-9])"
 
@@ -20,15 +21,27 @@ class MadlibApp:
         self.custom_keys = []
         self.custom_index = 0
         self.save_flag = False
+        self.folders()
         self.welcomeMenuHandler()
 
 
+    def folders(self):
+        if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
+            os.mkdir(os.path.join(os.getcwd(), "inputs"))
+        if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
+            os.mkdir(os.path.join(os.getcwd(), "outputs"))
     def dummyscreen(self,name):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         text = "This is the screen for " + str(name)
         w = tk.Label(self.root, text=text, width=80, height=10, bg="#d0e7ff", fg="black")
         w.pack(pady=10)
         self.root.mainloop()  # deploys the GUI screen till closed
+
+    def file_write(self, content, name_of_file, path, ext):
+        completeName = os.path.join(path, name_of_file + ext)
+        f = open(completeName, "w")
+        f.write(content)
+        f.close()
     def welcomeMenuHandler(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
 
@@ -111,7 +124,7 @@ class MadlibApp:
         if self.custom_keys:
             self.custom_configure_window()
         else:
-            self.second_window()
+            self.second_window() #todo:
             self.next_prompt()
 
     def custom_configure_window(self):
@@ -283,6 +296,24 @@ class MadlibApp:
         except StopIteration:
             self.third_window()
 
+    def file_choice(self):
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        w = tk.Label(self.root, text='Would you like to save your Madlib for future use?', width=80, height=10, bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=10)
+        # buttons for Welcome menu selection
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        #Yes button
+        btn = tk.Button(button_frame, command=lambda: self.dummyscreen("yes save in"), text="Yes", bg="#3b9dd3",
+                        fg="white")  # defines each button with frame, todo: add argument: command= enterMadlibManual()
+        btn.grid(row=1, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        # no button
+        btn = tk.Button(button_frame, command=lambda: self.dummyscreen("no save"), text="no", bg="#3b9dd3",
+                        fg="white")  # defines each button with frame, todo: add argument: command= enterMadlibManual()
+        btn.grid(row=1, column=2, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
     def process_next_keyword(self):
         user_text = self.input_entry.get().strip()
         self.input_entry.delete(0, tk.END)
@@ -296,6 +327,35 @@ class MadlibApp:
         else:
             pass
         self.next_prompt()
+
+    def smart_join(self, words):  # removes spaces surrounding punctuation
+        result = ""
+        prev_word = ""
+        quote_flag = False  # indicates being part of a quote segment
+        for i, word in enumerate(words):
+            if i == 0:  # first word, no space before
+                result += word
+                if re.match(r"[\"]", word):  # if the first element is a quote, turn on quote flag
+                    quote_flag = True
+            elif re.match(r"[.,!?;:]", word):  # If it's punctuation, don't add space
+                result += word
+            elif re.match(r"[\"]", word) and quote_flag == False:  # Open quote, space before, turn on quote flag
+                result += " " + word
+                quote_flag = True
+            elif re.match(r"[\"]", word) and quote_flag == True:  # close quote, no space before, turn off quote flag
+                result += word
+                quote_flag = False
+            elif re.match(r"[\"]", prev_word) and quote_flag == True:  # word after open quote, no leading space
+                result += word
+            # elif re.match(r"[\"]", prev_word) and quote_flag==False: #word after close quote, no leading space, turn off quote flag
+            #    result += " " + word
+
+            else:
+                result += " " + word
+            prev_word = word
+        return result
+
+
     def third_window(self):
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -303,32 +363,9 @@ class MadlibApp:
         display.pack(pady=20)
         #final_output = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
 
-        def smart_join(words):  # removes spaces surrounding punctuation
-            result = ""
-            prev_word=""
-            quote_flag=False #indicates being part of a quote segment
-            for i, word in enumerate(words):
-                if i == 0: #first word, no space before
-                    result += word
-                elif re.match(r"[.,!?;:]", word):  # If it's punctuation, don't add space
-                    result += word
-                elif re.match(r"[\"]", word) and quote_flag==False: #Open quote, space before, turn on quote flag
-                    result +=  " " + word
-                    quote_flag=True
-                elif re.match(r"[\"]", word) and quote_flag==True: #close quote, no space before, turn off quote flag
-                    result += word
-                    quote_flag = False
-                elif re.match(r"[\"]", prev_word) and quote_flag==True: #word after open quote, no leading space
-                    result += word
-                #elif re.match(r"[\"]", prev_word) and quote_flag==False: #word after close quote, no leading space, turn off quote flag
-                #    result += " " + word
 
-                else:
-                    result += " " + word
-                prev_word=word
-            return result
 
-        display.insert(tk.END, "\nFinal Madlib:\n" + smart_join(self.outlist))
+        display.insert(tk.END, "\nFinal Madlib:\n" + self.smart_join(self.outlist))
 
 if __name__ == "__main__":
     root = tk.Tk()
