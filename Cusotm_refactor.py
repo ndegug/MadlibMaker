@@ -301,8 +301,34 @@ class MadlibApp:
             widget.destroy()
         display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black")
         display.pack(pady=20)
-        final_output = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
-        display.insert(tk.END, "\nFinal Madlib:\n" + final_output)
+        #final_output = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
+
+        def smart_join(words):  # removes spaces surrounding punctuation
+            result = ""
+            prev_word=""
+            quote_flag=False #indicates being part of a quote segment
+            for i, word in enumerate(words):
+                if i == 0: #first word, no space before
+                    result += word
+                elif re.match(r"[.,!?;:]", word):  # If it's punctuation, don't add space
+                    result += word
+                elif re.match(r"[\"]", word) and quote_flag==False: #Open quote, space before, turn on quote flag
+                    result +=  " " + word
+                    quote_flag=True
+                elif re.match(r"[\"]", word) and quote_flag==True: #close quote, no space before, turn off quote flag
+                    result += word
+                    quote_flag = False
+                elif re.match(r"[\"]", prev_word) and quote_flag==True: #word after open quote, no leading space
+                    result += word
+                #elif re.match(r"[\"]", prev_word) and quote_flag==False: #word after close quote, no leading space, turn off quote flag
+                #    result += " " + word
+
+                else:
+                    result += " " + word
+                prev_word=word
+            return result
+
+        display.insert(tk.END, "\nFinal Madlib:\n" + smart_join(self.outlist))
 
 if __name__ == "__main__":
     root = tk.Tk()
