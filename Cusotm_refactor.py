@@ -298,6 +298,33 @@ class MadlibApp:
         except StopIteration:
             self.third_window()
 
+    def in_file_name(self):
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)', width=80, height=10, bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=10)
+        # buttons for Welcome menu selection
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        self.input_entry.bind("<Return>",
+                              lambda event: self.process_next_keyword())  # allows the "enter" key to submit the keyword
+        self.input_entry.pack(pady=10)
+        self.input_entry.focus_set()  # automatically puts the cursor into the entry field
+        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.save_and_play(), bg="#3b9dd3", fg="white")
+        self.submit_btn.pack(pady=10)
+
+        self.root.mainloop()  # deploys the GUI screen till closed
+
+    def save_and_play(self):
+        base = self.input_entry.get().strip()
+        self.file_write(self.manual_in, base, 'inputs','.txt')
+        w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.txt in your \"inputs\" folder.\nNow we can Play!',
+                     width=80, height=10, bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=10)
+        self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_second(), bg="#3b9dd3", fg="white")
+        self.submit_btn.pack(pady=10)
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         w = tk.Label(self.root, text='Would you like to save your Madlib for future use or play without saving?', width=80, height=10, bg="#d0e7ff",
@@ -307,7 +334,7 @@ class MadlibApp:
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         #Yes button
-        btn = tk.Button(button_frame, command=lambda: self.dummyscreen("yes save in"), text="Save", bg="#3b9dd3",
+        btn = tk.Button(button_frame, command=lambda: self.in_file_name(), text="Save", bg="#3b9dd3",
                         fg="white")  # defines each button with frame, todo: add argument: command= enterMadlibManual()
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
