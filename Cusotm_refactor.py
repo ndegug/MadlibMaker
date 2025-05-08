@@ -113,8 +113,7 @@ class MadlibApp:
         self.sync_display() #adds the keyword to the display
     def advance_from_first(self):
         self.manual_in = self.input_entry.get()
-        self.file_choice()
-    def advance_to_second(self):
+
         self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', self.manual_in)
         self.prompt_words = iter(self.userMadlib)
         self.outlist = []
@@ -126,7 +125,7 @@ class MadlibApp:
         if self.custom_keys:
             self.custom_configure_window()
         else:
-            self.second_window() #todo:
+            self.file_choice()
             self.next_prompt()
 
     def custom_configure_window(self):
@@ -152,8 +151,9 @@ class MadlibApp:
             self.display.insert(tk.END, f"Custom {current_key[3:]}: ")
         else:
             print("No more Customs")
-            self.second_window()
-            self.next_prompt()
+            self.file_choice()
+            #self.second_window()
+            #self.next_prompt()
 
     def save_custom_word(self):
         current_key = self.custom_keys[self.custom_index]
@@ -308,7 +308,7 @@ class MadlibApp:
         button_frame.pack(pady=5)  # for all button frames
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
         self.input_entry.bind("<Return>",
-                              lambda event: self.process_next_keyword())  # allows the "enter" key to submit the keyword
+                              lambda event: self.save_and_play())  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
         self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.save_and_play(), bg="#3b9dd3", fg="white")
@@ -318,13 +318,16 @@ class MadlibApp:
 
     def save_and_play(self):
         base = self.input_entry.get().strip()
-        self.file_write(self.manual_in, base, 'inputs','.txt')
+        self.file_write(self.manual_in+'\n'+str(self.custom), base, 'inputs','.txt')
         w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.txt in your \"inputs\" folder.\nNow we can Play!',
                      width=80, height=10, bg="#d0e7ff",
                      fg="black")
         w.pack(pady=10)
         self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_second(), bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
+    def advance_to_second(self):
+        self.second_window()
+        self.next_prompt()
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         w = tk.Label(self.root, text='Would you like to save your Madlib for future use or play without saving?', width=80, height=10, bg="#d0e7ff",
