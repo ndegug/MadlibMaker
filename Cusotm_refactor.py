@@ -407,7 +407,7 @@ class MadlibApp:
 
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.file_write(self.raw_in+'\n'+str(self.custom), base, 'inputs','.txt')
+        self.file_write(self.raw_in+'\n'+'<C>'+str(self.custom), base, 'inputs','.txt')
         w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.txt in your \"inputs\" folder.\nNow we can Play!',
                      width=80, height=10, bg="#d0e7ff",
                      fg="black")
