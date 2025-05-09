@@ -1,7 +1,10 @@
 import tkinter as tk
-from tkinter import scrolledtext
+from tkinter import scrolledtext, messagebox
 import re
 import os
+import json
+from docx import Document
+
 generic_words = { # reminder: do not add any keywords that are the same as ignored words
                  '/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/ver': 'Verb'}
@@ -23,8 +26,85 @@ class MadlibApp:
         self.save_flag = False
         self.folders()
         self.outlist = []
+        self.mode=0 # decides mode (0=write or 1=load) todo: change to true/false if binary
         self.welcomeMenuHandler()
 
+    def load_input_file(self):
+        # Clear the window
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        self.mode=1
+        # Get all .txt and .docx files from "inputs" folder
+        input_dir = os.path.join(os.path.dirname(__file__), "inputs")
+        files = [f for f in os.listdir(input_dir) if f.endswith(('.txt', '.docx'))]
+
+        # Display available files
+        tk.Label(self.root, text="Available input files:", font=("Arial", 12, "bold")).pack()
+        for file in files:
+            tk.Label(self.root, text=file).pack()
+
+        # Prompt user
+        tk.Label(self.root, text="Please type the name of the file you'd like to load including the extension:").pack()
+        self.file_entry = tk.Entry(self.root)
+        self.file_entry.pack(pady=5)
+
+        # Enter button
+        enter_button = tk.Button(self.root, text="Enter", command=self.process_input_file)
+        enter_button.pack(pady=10)
+
+    def process_input_file(self):
+        filename = self.file_entry.get()
+        input_path = os.path.join(os.path.dirname(__file__), "inputs", filename)
+
+        if not os.path.exists(input_path):
+            messagebox.showerror("File Error", f"File '{filename}' not found.")
+            return
+
+        try:
+            # Read file content
+            if filename.endswith('.txt'):
+                with open(input_path, 'r', encoding='utf-8') as f:
+                    lines = f.readlines()
+            elif filename.endswith('.docx'):
+                doc = Document(input_path)
+                lines = [para.text for para in doc.paragraphs]
+            else:
+                messagebox.showerror("Format Error", "Unsupported file type.")
+                return
+
+            # Split lines into madlib and custom dictionary
+            madlib_lines = []
+            custom_dict_str = ""
+            found_c_marker = False
+
+            for line in lines:
+                if line.strip().startswith("<C>"):
+                    found_c_marker = True
+                    custom_dict_str = line.strip()[3:].strip()  # Remove "<C>"
+                    continue
+                if not found_c_marker:
+                    madlib_lines.append(line.strip())
+
+            if not found_c_marker:
+                messagebox.showerror("Format Error", "No <C> marker found for custom dictionary.")
+                return
+
+            madlib_text = ' '.join(madlib_lines)
+            self.raw_in = madlib_text
+
+            try:
+                self.custom = eval(custom_dict_str)
+                if not isinstance(self.custom, dict):
+                    raise ValueError("Parsed custom dictionary is not a valid dict.")
+            except Exception as e:
+                messagebox.showerror("Parsing Error", f"Could not parse dictionary: {e}")
+                return
+
+            messagebox.showinfo("Success", "File loaded successfully!")
+            self.advance_from_first() #todo: replace with proper menu and test
+
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {e}")
 
     def folders(self):
         if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
@@ -59,7 +139,7 @@ class MadlibApp:
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # Load inputs button
-        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('[new file read function]'), text="Load a Madlib",
+        btn = tk.Button(button_frame, command=lambda: self.load_input_file(), text="Load a Madlib",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame, todo: add argument: command= [file namer function]
         btn.grid(row=1, column=2, padx=2, pady=2,
@@ -113,18 +193,23 @@ class MadlibApp:
         self.input_entry.insert(tk.END, keyword) #inputs keyword without a space (do not have both lines active)
         self.sync_display() #adds the keyword to the display
     def advance_from_first(self):
-        self.manual_in = self.input_entry.get()
+        if self.mode==0:#manual input
+            self.raw_in = self.input_entry.get()
+        elif self.mode==1: #from file
+            pass
+        else:
+            self.dummyscreen('Invalid mode for advance_from_first()')
 
-        self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', self.manual_in)
+        self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', self.raw_in)
         self.prompt_words = iter(self.userMadlib)
         #self.outlist = []
         # Extract and sort custom keys
-        all_custom_matches = re.findall(r'/ct(\d+)(?:_\d+)?', self.manual_in)
+        all_custom_matches = re.findall(r'/ct(\d+)(?:_\d+)?', self.raw_in)
         self.custom_keys = sorted(set(f"/ct{id}" for id in all_custom_matches), key=lambda x: int(x[3:]))
 
-        if self.custom_keys:
+        if self.custom_keys and self.custom=={}:
             self.custom_configure_window()
-        else:
+        else: #todo: investigate methods of skipping "file_choice()," past attemtps prevented customs when blank for some reason
             self.file_choice()
             self.next_prompt()
 
@@ -303,7 +388,7 @@ class MadlibApp:
         w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)', width=80, height=10, bg="#d0e7ff",
                      fg="black")
         w.pack(pady=10)
-        # buttons for Welcome menu selection
+        # buttons for file naming menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
@@ -320,7 +405,7 @@ class MadlibApp:
 
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.file_write(self.manual_in+'\n'+str(self.custom), base, 'inputs','.txt')
+        self.file_write(self.raw_in+'\n'+str(self.custom), base, 'inputs','.txt')
         w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.txt in your \"inputs\" folder.\nNow we can Play!',
                      width=80, height=10, bg="#d0e7ff",
                      fg="black")
