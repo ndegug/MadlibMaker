@@ -22,6 +22,7 @@ class MadlibApp:
         self.custom_index = 0
         self.save_flag = False
         self.folders()
+        self.outlist = []
         self.welcomeMenuHandler()
 
 
@@ -116,8 +117,7 @@ class MadlibApp:
 
         self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', self.manual_in)
         self.prompt_words = iter(self.userMadlib)
-        self.outlist = []
-
+        #self.outlist = []
         # Extract and sort custom keys
         all_custom_matches = re.findall(r'/ct(\d+)(?:_\d+)?', self.manual_in)
         self.custom_keys = sorted(set(f"/ct{id}" for id in all_custom_matches), key=lambda x: int(x[3:]))
@@ -317,7 +317,9 @@ class MadlibApp:
         self.root.mainloop()  # deploys the GUI screen till closed
 
     def save_and_play(self):
+
         base = self.input_entry.get().strip()
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.file_write(self.manual_in+'\n'+str(self.custom), base, 'inputs','.txt')
         w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.txt in your \"inputs\" folder.\nNow we can Play!',
                      width=80, height=10, bg="#d0e7ff",
