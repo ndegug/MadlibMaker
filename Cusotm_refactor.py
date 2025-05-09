@@ -101,7 +101,7 @@ class MadlibApp:
                 return
 
             messagebox.showinfo("Success", "File loaded successfully!")
-            self.advance_from_first() #todo: replace with proper menu and test
+            self.advance_from_first()
 
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {e}")
@@ -209,9 +209,11 @@ class MadlibApp:
 
         if self.custom_keys and self.custom=={}:
             self.custom_configure_window()
-        else: #todo: investigate methods of skipping "file_choice()," past attemtps prevented customs when blank for some reason
+        if self.mode==0:
             self.file_choice()
-            self.next_prompt()
+        else:
+            self.advance_to_second()
+
 
     def custom_configure_window(self):
         for widget in self.root.winfo_children():
@@ -235,7 +237,7 @@ class MadlibApp:
             current_key = self.custom_keys[self.custom_index]
             self.display.insert(tk.END, f"Custom {current_key[3:]}: ")
         else:
-            print("No more Customs")
+            #print("No more Customs")
             self.file_choice()
             #self.second_window()
             #self.next_prompt()
