@@ -208,8 +208,9 @@ class MadlibApp:
         self.custom_keys = sorted(set(f"/ct{id}" for id in all_custom_matches), key=lambda x: int(x[3:]))
 
         if self.custom_keys and self.custom=={}:
-            self.custom_configure_window()
-        if self.mode==0:
+
+            self.custom_configure_window() #configure customs, file_choice will be executted as well
+        elif self.mode==0: #if manual input and no others are needed
             self.file_choice()
         else:
             self.advance_to_second()
@@ -231,6 +232,7 @@ class MadlibApp:
         self.custom_button.pack(pady=5)
 
         self.prompt_next_custom()
+        self.root.mainloop()  # deploys the GUI screen till closed
 
     def prompt_next_custom(self):
         if self.custom_index < len(self.custom_keys):
