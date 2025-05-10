@@ -85,9 +85,9 @@ class MadlibApp:
                 if not found_c_marker:
                     madlib_lines.append(line.strip())
 
-            if not found_c_marker:
-                messagebox.showerror("Format Error", "No <C> marker found for custom dictionary.")
-                return
+            #if not found_c_marker:
+            #    messagebox.showerror("Format Error", "No <C> marker found for custom dictionary.")
+            #    return
 
             madlib_text = ' '.join(madlib_lines)
             self.raw_in = madlib_text
@@ -97,8 +97,9 @@ class MadlibApp:
                 if not isinstance(self.custom, dict):
                     raise ValueError("Parsed custom dictionary is not a valid dict.")
             except Exception as e:
-                messagebox.showerror("Parsing Error", f"Could not parse dictionary: {e}")
-                return
+                #messagebox.showerror("Parsing Error", f"Could not parse dictionary: {e}")
+                #return
+                pass
 
             messagebox.showinfo("Success", "File loaded successfully!")
             self.advance_from_first()
