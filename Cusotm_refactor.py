@@ -428,9 +428,14 @@ class MadlibApp:
         self.next_prompt()
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        w = tk.Label(self.root, text='Would you like to save your Madlib for future use or play without saving?', width=80, height=10, bg="#d0e7ff",
+        display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0",
+                                            fg="black")
+        display.pack(pady=20)
+        # final_output = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
+        display.insert(tk.END, "\nHere is your Madlib:\n" + self.raw_in)
+        w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
                      fg="black")
-        w.pack(pady=10)
+        w.pack(pady=5)
         # buttons for Welcome menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
@@ -444,6 +449,9 @@ class MadlibApp:
                         fg="white")  # defines each button with frame, todo: add argument: command= enterMadlibManual()
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        self.submit_btn = tk.Button(self.root, text="Print HTML", command=self.advance_to_html, bg="#3b9dd3",
+                                    fg="white")
+        self.submit_btn.pack(pady=10)
         self.root.mainloop()  # deploys the GUI screen till closed
     def process_next_keyword(self):
         user_text = self.input_entry.get().strip()
@@ -597,6 +605,13 @@ class MadlibApp:
             self.html_replace()
         except StopIteration:
             self.html_post_process()
+
+    def advance_to_html(self):
+        user_input = self.raw_in  # todo: replace with full madlib
+        self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', user_input)
+        self.html_words = iter(self.userMadlib)
+        self.invalid_html_window()
+        self.html_replace()
 
     def process_invalid_html(self):
         user_text = self.input_entry.get().strip()
