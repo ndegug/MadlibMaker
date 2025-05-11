@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import scrolledtext, messagebox
+import webbrowser
+import tempfile
 import re
 import os
 import json
@@ -16,7 +18,10 @@ customreg = "(/ct[0-9]+)"
 #numcustcom = ".+\([0-9]+\)" #todo remove if unneeded for numbered customs
 numcustreg = "(/ct[0-9]+_[0-9]+)"
 tail = "(_[0-9])"
-
+htmlsample = '<span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: ' \
+             'center;"><span style="display: block; padding: 0 0.2em;">__________</span><span style="display: block; ' \
+             'font-size: 70%; line-height: 1em; padding: 0 0.2em;"><span style="position: relative; line-height: 1em; ' \
+             'margin-top: -.2em; top: -.2em;">underscript</span></span></span>'
 class MadlibApp:
     def __init__(self, root):
         self.root = root
@@ -26,6 +31,7 @@ class MadlibApp:
         self.save_flag = False
         self.folders()
         self.outlist = []
+        self.htlist = []
         self.mode=0 # decides mode (0=write or 1=load) todo: change to true/false if binary
         self.welcomeMenuHandler()
 
@@ -488,11 +494,178 @@ class MadlibApp:
         display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black")
         display.pack(pady=20)
         #final_output = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
+        display.insert(tk.END, "\nHere is your Madlib:\n" + self.smart_join(self.outlist))
+    def invalid_html_window(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
 
+        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
+                                                 fg="black")
+        self.display.pack(pady=10)
+        # define and create entry field for user's entry for a word
+        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        self.input_entry.bind("<Return>",
+                              lambda event: self.process_invalid_html())  # allows the "enter" key to submit the keyword
+        self.input_entry.pack(pady=10)
+        self.input_entry.focus_set()  # automatically puts the cursor into the entry field
 
+        self.submit_btn = tk.Button(self.root, text="Submit", command=self.process_invalid_html, bg="#3b9dd3",
+                                    fg="white")
+        self.submit_btn.pack(pady=10)
 
-        display.insert(tk.END, "\nFinal Madlib:\n" + self.smart_join(self.outlist))
+    def html_replace(self):
+        try:
+            self.current_word = next(self.html_words)
+            #start of criteria
+            final='[undefined]'
+            if re.findall(unnumbered, self.current_word) and not re.findall(numbered, self.current_word) and not re.findall(customreg, self.current_word):
+                # unnumbered
+                regkey = re.findall(unnumbered, self.current_word)
+                realkey = ''.join(regkey)
 
+                if realkey in generic_words.keys():
+                    htword = htmlsample.replace('underscript', generic_words[realkey])
+                    final = self.current_word.replace(realkey, htword, 1)
+                    #self.htlist.append(final)
+                elif realkey in ignored_words:
+                    final=self.current_word
+                    #self.htlist.append(self.current_word)
+                elif realkey not in generic_words.keys():
+                    self.display.insert(tk.END,
+                                        f"{realkey} is not a valid keyword, what is it?:\n")
+                    return
+            elif re.findall(customreg, self.current_word) and not re.findall(numcustreg, self.current_word):
+                # custom
+                regkey = re.findall(customreg, self.current_word)
+                realkey = ''.join(regkey)
+                if realkey in self.custom:
+                    # saved
+                    htword = htmlsample.replace('underscript', self.custom[realkey])
+                    final = self.current_word.replace(realkey, htword, 1)
+                    #self.htlist.append(final)
+                elif realkey not in self.custom:
+                    self.display.insert(tk.END,
+                                        f"{realkey} is not a valid keyword, what is it?:\n")
+                    return
+                else:
+                    # html equivelent
+                    htword = htmlsample.replace('underscript', 'Undefined')
+                    final = self.current_word.replace(realkey, htword, 1)
+                    #self.htlist.append(final)
+            elif re.findall(numcustreg, self.current_word):
+                # numberded custom
+
+                regkey = re.findall(numcustreg, self.current_word)
+                realkey = ''.join(regkey)
+
+                base = re.findall(customreg, self.current_word)
+                base = ''.join(base)
+
+                tailkey = re.findall(tail, self.current_word)
+                tailkey = ''.join(tailkey)
+                regnum = re.findall(r'\d+', tailkey)
+                num = ''.join(regnum)
+
+                htword = htmlsample.replace('underscript', self.custom[base] + ' (' + str(num) + ')')
+                final = self.current_word.replace(realkey, htword, 1)
+                #self.htlist.append(final)
+
+            elif re.findall(numbered, self.current_word):
+                # numbered
+                regkey = re.findall(numbered, self.current_word)
+                regkeyb = re.findall(unnumbered, self.current_word)
+                realkey = ''.join(regkey)
+                base = ''.join(regkeyb)
+                regnum = re.findall(r'\d+', realkey)
+                num = ''.join(regnum)
+
+                if base in generic_words.keys():
+                    htword = htmlsample.replace('underscript', generic_words[base] + ' (' + str(num) + ')')
+                    final = self.current_word.replace(realkey, htword, 1)
+                    #self.htlist.append(final)
+                if base not in generic_words.keys():
+                    self.display.insert(tk.END,
+                                        f"{realkey} is not a valid keyword, what is it?:\n")
+                    return
+                    #self.htlist.append(invalid_html(0, realkey, self.current_word))
+            else:
+                # none, just append
+                # #Latex array
+                final=self.current_word
+            #end of criteria
+            self.htlist.append(final)
+            self.html_replace()
+        except StopIteration:
+            self.html_post_process()
+
+    def process_invalid_html(self):
+        user_text = self.input_entry.get().strip()
+        self.input_entry.delete(0, tk.END)
+        user_ht = htmlsample.replace('underscript', user_text)
+        self.htlist.append(user_ht)
+        self.html_replace()
+    def html_post_process(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        self.html_out = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.htlist))#todo: replace with smart replace
+        self.html_file_choice()
+
+    def html_file_choice(self):
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=10)
+        # buttons for Welcome menu selection
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        #Yes button
+        btn = tk.Button(button_frame, command=lambda: self.html_file_name(), text="Save", bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        # no button
+        btn = tk.Button(button_frame, command=lambda: self.html_view(), text="Print without saving", bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=2, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        self.root.mainloop()  # deploys the GUI screen till closed todo: see if this is needed
+
+    def html_file_name(self):
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)', width=80, height=10,
+                     bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=10)
+        # buttons for file naming menu selection
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        self.input_entry.bind("<Return>",
+                              lambda event: self.html_save())  # allows the "enter" key to submit the keyword
+        self.input_entry.pack(pady=10)
+        self.input_entry.focus_set()  # automatically puts the cursor into the entry field
+        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.html_save(), bg="#3b9dd3",
+                                    fg="white")
+        self.submit_btn.pack(pady=10)
+    def html_save(self):
+
+        base = self.input_entry.get().strip()
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        #self.file_write(self.html_out, base, 'outputs','.html') #todo: enable when ready to test
+        w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.html in your \"outputs\" folder.\nNow let\'s print it!',
+                     width=80, height=10, bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=10)
+        self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3", fg="white")
+        self.submit_btn.pack(pady=10)
+
+    def html_view(self):
+
+        self.root.destroy()  # closes the gui entirely todo: decide whether to quit the window here
+        messagebox.showinfo("Thank you.", "We'll uploaded your madlib to your browser, you can print it from there.")
+        with tempfile.NamedTemporaryFile("w", delete=False, suffix=".html") as f:
+            f.write(self.html_out)
+            webbrowser.open(f.name)
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Madlib App")
