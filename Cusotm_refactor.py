@@ -460,17 +460,17 @@ class MadlibApp:
         for i, word in enumerate(words):
             if i == 0:  # first word, no space before
                 result += word
-                if re.match(r"[\"]", word):  # if the first element is a quote, turn on quote flag
+                if word=="\"":  # if the first element is a quote, turn on quote flag
                     quote_flag = True
             elif re.match(r"[.,!?;:]", word):  # If it's punctuation, don't add space
                 result += word
-            elif re.match(r"[\"]", word) and quote_flag == False:  # Open quote, space before, turn on quote flag
+            elif word=="\"" and quote_flag == False:  # Open quote, space before, turn on quote flag
                 result += " " + word
                 quote_flag = True
-            elif re.match(r"[\"]", word) and quote_flag == True:  # close quote, no space before, turn off quote flag
+            elif word=="\"" and quote_flag == True:  # close quote, no space before, turn off quote flag
                 result += word
                 quote_flag = False
-            elif re.match(r"[\"]", prev_word) and quote_flag == True:  # word after open quote, no leading space
+            elif prev_word=="\"" and quote_flag == True:  # word after open quote, no leading space
                 result += word
             # elif re.match(r"[\"]", prev_word) and quote_flag==False: #word after close quote, no leading space, turn off quote flag
             #    result += " " + word
