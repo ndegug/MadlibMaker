@@ -449,9 +449,11 @@ class MadlibApp:
                         fg="white")  # defines each button with frame, todo: add argument: command= enterMadlibManual()
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
-        self.submit_btn = tk.Button(self.root, text="Print HTML", command=self.advance_to_html, bg="#3b9dd3",
-                                    fg="white")
-        self.submit_btn.pack(pady=10)
+        btn = tk.Button(button_frame, command=lambda: self.advance_to_html(), text="Print HTML",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame, todo: add argument: command= enterMadlibManual()
+        btn.grid(row=1, column=4, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         self.root.mainloop()  # deploys the GUI screen till closed
     def process_next_keyword(self):
         user_text = self.input_entry.get().strip()
