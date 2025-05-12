@@ -32,6 +32,7 @@ class MadlibApp:
         self.folders()
         self.outlist = []
         self.htlist = []
+        self.title=''
         self.mode=0 # decides mode (0=write or 1=load) todo: change to true/false if binary
         self.welcomeMenuHandler()
 
@@ -55,9 +56,47 @@ class MadlibApp:
         self.file_entry.pack(pady=5)
 
         # Enter button
-        enter_button = tk.Button(self.root, text="Enter", command=self.process_input_file)
+        enter_button = tk.Button(self.root, text="Enter", command=self.process_input_file_2)
         enter_button.pack(pady=10)
 
+    def process_input_file_2(self): #todo: decide between orignal and this one
+        filename = self.file_entry.get()
+        file_path = os.path.join(os.path.dirname(__file__), "inputs", filename)
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except UnicodeDecodeError:
+            try:
+                import docx
+                doc = docx.Document(file_path)
+                content = '\n'.join([para.text for para in doc.paragraphs])
+            except Exception as e:
+                messagebox.showerror("Error", f"Could not read DOCX file: {e}")
+                return
+
+        # Extract custom dictionary
+        custom_start = content.find("<C>")
+        if custom_start != -1:
+            custom_text = content[custom_start + 3:].strip()
+            try:
+                self.custom = eval(custom_text)
+            except Exception as e:
+                #messagebox.showerror("Error", f"Could not parse custom dictionary: {e}")
+                return
+            madlib_text = content[:custom_start].strip()
+        else:
+            madlib_text = content.strip()
+
+        # Extract title if present
+        title_start = content.find("<t>")
+        title_end = content.find("</t>")
+        if title_start != -1 and title_end != -1 and title_end > title_start:
+            self.title = content[title_start + 3:title_end].strip()
+        else:
+            self.title = ""
+
+        self.raw_in=madlib_text
+        self.advance_from_first()
     def process_input_file(self):
         filename = self.file_entry.get()
         input_path = os.path.join(os.path.dirname(__file__), "inputs", filename)
@@ -199,7 +238,7 @@ class MadlibApp:
         #self.input_entry.insert(tk.END, keyword + " ") #inputs keyword to text with a space automatically after it
         self.input_entry.insert(tk.END, keyword) #inputs keyword without a space (do not have both lines active)
         self.sync_display() #adds the keyword to the display
-    def advance_from_first(self):
+    def advance_from_first(self): #todo: show play vs dont play selection screen for loads
         if self.mode==0:#manual input
             self.raw_in = self.input_entry.get()
         elif self.mode==1: #from file
@@ -392,7 +431,7 @@ class MadlibApp:
             self.outlist.append(self.current_word)
             self.next_prompt()
         except StopIteration:
-            self.third_window()
+            self.file_choice()
 
     def in_file_name(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
@@ -428,6 +467,7 @@ class MadlibApp:
         self.next_prompt()
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        print(self.title)
         display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0",
                                             fg="black")
         display.pack(pady=20)
