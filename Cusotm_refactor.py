@@ -247,7 +247,7 @@ class MadlibApp:
         #self.input_entry.insert(tk.END, keyword + " ") #inputs keyword to text with a space automatically after it
         self.input_entry.insert(tk.END, keyword) #inputs keyword without a space (do not have both lines active)
         self.sync_display() #adds the keyword to the display
-    def advance_from_first(self): #todo: show play vs dont play selection screen for loads
+    def advance_from_first(self):
         if self.mode==0:#manual input
             self.raw_in = self.input_entry.get()
         elif self.mode==1: #from file
@@ -490,17 +490,17 @@ class MadlibApp:
         button_frame.pack(pady=5)  # for all button frames
         #Yes button
         btn = tk.Button(button_frame, command=lambda: self.in_file_name(), text="Save", bg="#3b9dd3",
-                        fg="white")  # defines each button with frame, todo: add argument: command= enterMadlibManual()
+                        fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # no button
         btn = tk.Button(button_frame, command=lambda: self.advance_to_second(), text="Play without saving", bg="#3b9dd3",
-                        fg="white")  # defines each button with frame, todo: add argument: command= enterMadlibManual()
+                        fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         btn = tk.Button(button_frame, command=lambda: self.advance_to_html(), text="Print HTML",
                         bg="#3b9dd3",
-                        fg="white")  # defines each button with frame, todo: add argument: command= enterMadlibManual()
+                        fg="white")  # defines each button with frame,
         btn.grid(row=1, column=4, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         self.root.mainloop()  # deploys the GUI screen till closed
@@ -572,6 +572,64 @@ class MadlibApp:
                                     fg="white")
         self.submit_btn.pack(pady=10)
 
+    def html_replace_C(self): #todo: decide between original (had length bugs) and "_C." if "_C" then refactor keyword replacement to match this
+        try:
+            while True:
+                self.current_word = next(self.html_words)
+                final = '[undefined]'
+                if re.findall(unnumbered, self.current_word) and not re.findall(numbered,
+                                                                                self.current_word) and not re.findall(
+                        customreg, self.current_word):
+                    regkey = re.findall(unnumbered, self.current_word)
+                    realkey = ''.join(regkey)
+
+                    if realkey in generic_words:
+                        htword = htmlsample.replace('underscript', generic_words[realkey])
+                        final = self.current_word.replace(realkey, htword, 1)
+                    elif realkey in ignored_words:
+                        final = self.current_word
+                    else:
+                        self.display.insert(tk.END, f"{realkey} is not a valid keyword, what is it?:\n")
+                        return
+
+                elif re.findall(customreg, self.current_word) and not re.findall(numcustreg, self.current_word):
+                    regkey = re.findall(customreg, self.current_word)
+                    realkey = ''.join(regkey)
+                    if realkey in self.custom:
+                        htword = htmlsample.replace('underscript', self.custom[realkey])
+                        final = self.current_word.replace(realkey, htword, 1)
+                    else:
+                        self.display.insert(tk.END, f"{realkey} is not a valid keyword, what is it?:\n")
+                        return
+
+                elif re.findall(numcustreg, self.current_word):
+                    regkey = re.findall(numcustreg, self.current_word)
+                    realkey = ''.join(regkey)
+                    base = ''.join(re.findall(customreg, self.current_word))
+                    num = ''.join(re.findall(r'\d+', self.current_word))
+                    htword = htmlsample.replace('underscript', self.custom[base] + ' (' + num + ')')
+                    final = self.current_word.replace(realkey, htword, 1)
+
+                elif re.findall(numbered, self.current_word):
+                    regkey = re.findall(numbered, self.current_word)
+                    regkeyb = re.findall(unnumbered, self.current_word)
+                    realkey = ''.join(regkey)
+                    base = ''.join(regkeyb)
+                    num = ''.join(re.findall(r'\d+', realkey))
+
+                    if base in generic_words:
+                        htword = htmlsample.replace('underscript', generic_words[base] + ' (' + num + ')')
+                        final = self.current_word.replace(realkey, htword, 1)
+                    else:
+                        self.display.insert(tk.END, f"{realkey} is not a valid keyword, what is it?:\n")
+                        return
+                else:
+                    final = self.current_word
+
+                self.htlist.append(final)
+
+        except StopIteration:
+            self.html_post_process()
     def html_replace(self):
         try:
             self.current_word = next(self.html_words)
@@ -658,18 +716,18 @@ class MadlibApp:
             self.html_post_process()
 
     def advance_to_html(self):
-        user_input = self.raw_in  # todo: replace with full madlib
+        user_input = self.raw_in
         self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', user_input)
         self.html_words = iter(self.userMadlib)
         self.invalid_html_window()
-        self.html_replace()
+        self.html_replace_C()
 
     def process_invalid_html(self):
         user_text = self.input_entry.get().strip()
         self.input_entry.delete(0, tk.END)
         user_ht = htmlsample.replace('underscript', user_text)
         self.htlist.append(user_ht)
-        self.html_replace()
+        self.html_replace_C()
     def html_post_process(self):
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -717,7 +775,7 @@ class MadlibApp:
 
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        #self.file_write(self.html_out, base, 'outputs','.html') #todo: enable when ready to test
+        #self.file_write(self.html_out, base, 'outputs','.html') #todo: enable when ready to test HTML file saving
         w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.html in your \"outputs\" folder.\nNow let\'s print it!',
                      width=80, height=10, bg="#d0e7ff",
                      fg="black")
