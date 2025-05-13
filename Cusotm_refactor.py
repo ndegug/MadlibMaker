@@ -565,7 +565,7 @@ class MadlibApp:
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Yes button
-        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('plain save'), text="Save", bg="#3b9dd3",
+        btn = tk.Button(button_frame, command=lambda: self.plain_file_name(), text="Save", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
@@ -575,6 +575,34 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+
+    def plain_file_name(self): #todo: combine all output file namers into one function. Use conditional statements to generate buttons of the needed types
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)', width=80, height=10,
+                     bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=10)
+        # buttons for file naming menu selection
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        self.input_entry.bind("<Return>",
+                              lambda event: self.plain_save())  # allows the "enter" key to submit the keyword
+        self.input_entry.pack(pady=10)
+        self.input_entry.focus_set()  # automatically puts the cursor into the entry field
+        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.plain_save(), bg="#3b9dd3",
+                                    fg="white")
+    def plain_save(self): #todo: combine all save/save notifications into one function
+
+        base = self.input_entry.get().strip()
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        self.file_write(self.filled, base, 'outputs','.txt') #todo: enable when ready to test HTML file saving
+        w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.txt in your \"outputs\" folder.\nWe hope you like it!',
+                     width=80, height=10, bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=10)
+        self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.dummyscreen('back to menu'), bg="#3b9dd3", fg="white")
+        self.submit_btn.pack(pady=10)
 
     def invalid_html_window(self):
         for widget in self.root.winfo_children():
