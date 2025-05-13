@@ -225,6 +225,8 @@ class MadlibApp:
         f = open(completeName, "w")
         f.write(content)
         f.close()
+    def escape(self):
+        return
     def welcomeMenuHandler(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
 
@@ -309,15 +311,42 @@ class MadlibApp:
         all_custom_matches = re.findall(r'/ct(\d+)(?:_\d+)?', self.raw_in)
         self.custom_keys = sorted(set(f"/ct{id}" for id in all_custom_matches), key=lambda x: int(x[3:]))
 
+
         if self.custom_keys and self.custom=={}:
 
             self.custom_configure_window() #configure customs, file_choice will be executted as well
         else: #if manual input and no others are needed
-            self.file_choice()
+            self.title_write()
+            #self.file_choice() #todo: add conditional statement for when tile is already programed to go straight to file_choice
         #else:
         #    self.advance_to_second()
 
-
+    def title_write(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        tk.Label(self.root, text="Would you like to title your Madlib?\n Type it here and click enter or \"skip\" to skip this step.", font=("Arial", 12, "bold")).pack()
+        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        self.input_entry.bind("<Return>",
+                              lambda event: self.process_next_keyword())
+        self.input_entry.pack(pady=10)
+        self.input_entry.focus_set()  # automatically puts the cursor into the entry field
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        # Yes button
+        btn = tk.Button(button_frame, command=lambda: self.title_saver(), text="Submit", bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        # no button
+        btn = tk.Button(button_frame, command=lambda: self.file_choice(), text="Skip",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=2, padx=2, pady=2,
+                 sticky="ew")
+        #self.root.mainloop()  # deploys the GUI screen till closed
+    def title_saver(self):
+        self.title = self.input_entry.get().strip()
+        self.file_choice()
     def custom_configure_window(self):
         for widget in self.root.winfo_children():
             widget.destroy()
