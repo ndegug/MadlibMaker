@@ -518,16 +518,19 @@ class MadlibApp:
             pass
         self.next_prompt()
 
+    def normalize_quotes(self, text):
+        return text.replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'") #todo: try to support curly quotes in HTML or Docx print instead of replacing them.
     def smart_join(self, words):  # removes spaces surrounding punctuation todo: evaluate if self.outlist can be integrated into this instead of passed to it
         result = ""
         prev_word = ""
         quote_flag = False  # indicates being part of a quote segment
         for i, word in enumerate(words):
+            word=self.normalize_quotes(word)
             if i == 0:  # first word, no space before
                 result += word
                 if word=="\"":  # if the first element is a quote, turn on quote flag
                     quote_flag = True
-            elif re.match(r"[.,!?;:]", word):  # If it's punctuation, don't add space
+            elif re.match(r"[.,!?;:\']", word) or re.match(r"[\']", prev_word):  # If it's punctuation, don't add space
                 result += word
             elif word=="\"" and quote_flag == False:  # Open quote, space before, turn on quote flag
                 result += " " + word
@@ -731,7 +734,7 @@ class MadlibApp:
     def html_post_process(self):
         for widget in self.root.winfo_children():
             widget.destroy()
-        self.html_out = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.htlist))#todo: replace with smart replace
+        self.html_out=self.smart_join(self.htlist)
         self.html_file_choice()
 
     def html_file_choice(self):
