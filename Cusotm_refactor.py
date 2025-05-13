@@ -556,7 +556,8 @@ class MadlibApp:
         display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black")
         display.pack(pady=20)
         #final_output = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
-        display.insert(tk.END, "\nHere is your filled Madlib:\n" + self.smart_join(self.outlist))
+        self.filled=self.smart_join(self.outlist)
+        display.insert(tk.END, "\nHere is your filled Madlib:\n" + self.filled)
         w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
                      fg="black")
         w.pack(pady=5)
@@ -564,7 +565,7 @@ class MadlibApp:
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Yes button
-        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('save filled'), text="Save", bg="#3b9dd3",
+        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('plain save'), text="Save", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
