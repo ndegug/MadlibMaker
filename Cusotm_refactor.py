@@ -778,7 +778,7 @@ class MadlibApp:
 
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        #self.file_write(self.html_out, base, 'outputs','.html') #todo: enable when ready to test HTML file saving
+        self.file_write(self.html_out, base, 'outputs','.html') #todo: enable when ready to test HTML file saving
         w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.html in your \"outputs\" folder.\nNow let\'s print it!',
                      width=80, height=10, bg="#d0e7ff",
                      fg="black")
