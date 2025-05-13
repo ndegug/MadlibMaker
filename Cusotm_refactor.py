@@ -440,7 +440,7 @@ class MadlibApp:
             self.outlist.append(self.current_word)
             self.next_prompt()
         except StopIteration:
-            self.file_choice()
+            self.third_window()
 
     def in_file_name(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
@@ -550,13 +550,31 @@ class MadlibApp:
 
 
 
-    def third_window(self):
+    def third_window(self):  #decide whether to save filled output
         for widget in self.root.winfo_children():
             widget.destroy()
         display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black")
         display.pack(pady=20)
         #final_output = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
-        display.insert(tk.END, "\nHere is your Madlib:\n" + self.smart_join(self.outlist))
+        display.insert(tk.END, "\nHere is your filled Madlib:\n" + self.smart_join(self.outlist))
+        w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=5)
+        # buttons for Welcome menu selection
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        # Yes button
+        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('save filled'), text="Save", bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        # no button
+        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('back to menu'), text="Return to menu",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=2, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+
     def invalid_html_window(self):
         for widget in self.root.winfo_children():
             widget.destroy()
