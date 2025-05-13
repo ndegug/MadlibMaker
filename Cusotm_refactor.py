@@ -65,9 +65,56 @@ class MadlibApp:
         self.file_entry.pack(pady=5)
 
         # Enter button
-        enter_button = tk.Button(self.root, text="Enter", command=self.process_input_file_2)
+        enter_button = tk.Button(self.root, text="Enter", command=self.process_input_file_3)
         enter_button.pack(pady=10)
 
+    def process_input_file_3(self): #todo remove other process_input_file methods if this works
+        madlib_text = ""
+        custom_dict = {}
+        title_text = ""
+        filename = self.file_entry.get()
+        file_path = os.path.join(os.path.dirname(__file__), "inputs", filename)
+        try:
+            # Read file content
+            if file_path.endswith(".txt"):
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+            elif file_path.endswith(".docx"):
+                doc = Document(file_path)
+                content = "\n".join([p.text for p in doc.paragraphs])
+            else:
+                messagebox.showerror("Unsupported Format", "Only .txt and .docx files are supported.")
+                return
+
+            # Extract title if present
+            if "<t>" in content and "</t>" in content:
+                start = content.index("<t>") + len("<t>")
+                end = content.index("</t>")
+                title_text = content[start:end].strip()
+
+                # Remove title from content
+                content = content[:content.index("<t>")] + content[end + len("</t>"):]
+
+            # Extract custom dictionary
+            if "<C>" in content:
+                c_index = content.index("<C>")
+                madlib_text = content[:c_index].strip()
+                dict_text = content[c_index + len("<C>"):].strip()
+                try:
+                    custom_dict = eval(dict_text)
+                except Exception as e:
+                    messagebox.showerror("Custom Dict Error", f"Failed to parse custom dictionary:\n{e}")
+                    return
+            else:
+                madlib_text = content.strip()
+
+            self.title = title_text
+            self.custom = custom_dict
+            self.raw_in=madlib_text
+            self.advance_from_first()
+
+        except Exception as e:
+            messagebox.showerror("File Error", f"Could not read file:\n{e}")
     def process_input_file_2(self): #todo: decide between orignal and this one
         filename = self.file_entry.get()
         file_path = os.path.join(os.path.dirname(__file__), "inputs", filename)
@@ -825,7 +872,7 @@ class MadlibApp:
 
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.file_write(self.html_out, base, 'outputs','.html') #todo: enable when ready to test HTML file saving
+        self.file_write(self.html_out, base, 'outputs','.html') #todo: include selected (or loaded) title and formatting from terminal version
         w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.html in your \"outputs\" folder.\nNow let\'s print it!',
                      width=80, height=10, bg="#d0e7ff",
                      fg="black")
