@@ -316,18 +316,24 @@ class MadlibApp:
 
             self.custom_configure_window() #configure customs, file_choice will be executted as well
         else: #if manual input and no others are needed
-            self.title_write()
-            #self.file_choice() #todo: add conditional statement for when tile is already programed to go straight to file_choice
+            self.title_check()
+            #self.file_choice()
         #else:
         #    self.advance_to_second()
 
+    def title_check(self):
+        if self.title:
+            self.file_choice()
+        else:
+            print("no title")
+            self.title_write()
     def title_write(self):
         for widget in self.root.winfo_children():
             widget.destroy()
         tk.Label(self.root, text="Would you like to title your Madlib?\n Type it here and click enter or \"skip\" to skip this step.", font=("Arial", 12, "bold")).pack()
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
         self.input_entry.bind("<Return>",
-                              lambda event: self.process_next_keyword())
+                              lambda event: self.title_saver())
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
         button_frame = tk.Frame(self.root)  # defines the button frame
@@ -371,7 +377,8 @@ class MadlibApp:
             self.display.insert(tk.END, f"Custom {current_key[3:]}: ")
         else:
             #print("No more Customs")
-            self.file_choice()
+            self.title_check()
+            #self.file_choice()
             #self.second_window()
             #self.next_prompt()
 
