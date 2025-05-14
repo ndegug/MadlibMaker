@@ -304,7 +304,8 @@ class MadlibApp:
         else:
             self.dummyscreen('Invalid mode for advance_from_first()')
 
-        self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', self.raw_in)
+        #self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', self.raw_in)
+        self.userMadlib= self.raw_in.split(' ') #todo: try and make all splits like this and integrate previous version's solution to quote problems
         self.prompt_words = iter(self.userMadlib)
         #self.outlist = []
         # Extract and sort custom keys
@@ -547,7 +548,7 @@ class MadlibApp:
 
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.file_write(self.raw_in+'\n'+'<C>'+str(self.custom), base, 'inputs','.txt')
+        self.file_write(self.raw_in+'\n'+'<C>'+str(self.custom), base, 'inputs','.txt')#todo: add title
         w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.txt in your \"inputs\" folder.\nNow we can Play!',
                      width=80, height=10, bg="#d0e7ff",
                      fg="black")
@@ -587,7 +588,7 @@ class MadlibApp:
         btn.grid(row=1, column=4, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         self.root.mainloop()  # deploys the GUI screen till closed
-    def process_next_keyword(self):
+    def process_next_keyword(self): #todo: pass the word and use re.sub to retain quotes
         user_text = self.input_entry.get().strip()
         self.input_entry.delete(0, tk.END)
         if user_text and self.save_flag == False:
@@ -679,7 +680,7 @@ class MadlibApp:
 
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.file_write(self.filled, base, 'outputs','.txt') #todo: enable when ready to test HTML file saving
+        self.file_write(self.filled, base, 'outputs','.txt') #todo: add title
         w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.txt in your \"outputs\" folder.\nWe hope you like it!',
                      width=80, height=10, bg="#d0e7ff",
                      fg="black")
@@ -763,90 +764,6 @@ class MadlibApp:
 
         except StopIteration:
             self.html_post_process()
-    def html_replace(self):
-        try:
-            self.current_word = next(self.html_words)
-            #start of criteria
-            final='[undefined]'
-            if re.findall(unnumbered, self.current_word) and not re.findall(numbered, self.current_word) and not re.findall(customreg, self.current_word):
-                # unnumbered
-                regkey = re.findall(unnumbered, self.current_word)
-                realkey = ''.join(regkey)
-
-                if realkey in generic_words.keys():
-                    htword = htmlsample.replace('underscript', generic_words[realkey])
-                    final = self.current_word.replace(realkey, htword, 1)
-                    #self.htlist.append(final)
-                elif realkey in ignored_words:
-                    final=self.current_word
-                    #self.htlist.append(self.current_word)
-                elif realkey not in generic_words.keys():
-                    self.display.insert(tk.END,
-                                        f"{realkey} is not a valid keyword, what is it?:\n")
-                    return
-            elif re.findall(customreg, self.current_word) and not re.findall(numcustreg, self.current_word):
-                # custom
-                regkey = re.findall(customreg, self.current_word)
-                realkey = ''.join(regkey)
-                if realkey in self.custom:
-                    # saved
-                    htword = htmlsample.replace('underscript', self.custom[realkey])
-                    final = self.current_word.replace(realkey, htword, 1)
-                    #self.htlist.append(final)
-                elif realkey not in self.custom:
-                    self.display.insert(tk.END,
-                                        f"{realkey} is not a valid keyword, what is it?:\n")
-                    return
-                else:
-                    # html equivelent
-                    htword = htmlsample.replace('underscript', 'Undefined')
-                    final = self.current_word.replace(realkey, htword, 1)
-                    #self.htlist.append(final)
-            elif re.findall(numcustreg, self.current_word):
-                # numberded custom
-
-                regkey = re.findall(numcustreg, self.current_word)
-                realkey = ''.join(regkey)
-
-                base = re.findall(customreg, self.current_word)
-                base = ''.join(base)
-
-                tailkey = re.findall(tail, self.current_word)
-                tailkey = ''.join(tailkey)
-                regnum = re.findall(r'\d+', tailkey)
-                num = ''.join(regnum)
-
-                htword = htmlsample.replace('underscript', self.custom[base] + ' (' + str(num) + ')')
-                final = self.current_word.replace(realkey, htword, 1)
-                #self.htlist.append(final)
-
-            elif re.findall(numbered, self.current_word):
-                # numbered
-                regkey = re.findall(numbered, self.current_word)
-                regkeyb = re.findall(unnumbered, self.current_word)
-                realkey = ''.join(regkey)
-                base = ''.join(regkeyb)
-                regnum = re.findall(r'\d+', realkey)
-                num = ''.join(regnum)
-
-                if base in generic_words.keys():
-                    htword = htmlsample.replace('underscript', generic_words[base] + ' (' + str(num) + ')')
-                    final = self.current_word.replace(realkey, htword, 1)
-                    #self.htlist.append(final)
-                if base not in generic_words.keys():
-                    self.display.insert(tk.END,
-                                        f"{realkey} is not a valid keyword, what is it?:\n")
-                    return
-                    #self.htlist.append(invalid_html(0, realkey, self.current_word))
-            else:
-                # none, just append
-                # #Latex array
-                final=self.current_word
-            #end of criteria
-            self.htlist.append(final)
-            self.html_replace()
-        except StopIteration:
-            self.html_post_process()
 
     def advance_to_html(self):
         user_input = self.raw_in
@@ -885,7 +802,7 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
-        self.root.mainloop()  # deploys the GUI screen till closed todo: see if this is needed
+        self.root.mainloop()  # deploys the GUI screen till closed
 
     def html_file_name(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
