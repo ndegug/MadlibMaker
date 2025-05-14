@@ -419,6 +419,7 @@ class MadlibApp:
                     customreg, self.current_word):
                 regkey = re.findall(unnumbered, self.current_word)
                 realkey = ''.join(regkey)
+                self.save_key = realkey
                 if realkey in generic_words:
                     self.display.insert(tk.END, f"{generic_words[realkey]}:\n")
                     return
@@ -436,6 +437,7 @@ class MadlibApp:
                 # custom
                 regkey = re.findall(customreg, self.current_word)
                 realkey = ''.join(regkey)
+                self.save_key = realkey
                 if realkey in self.custom:
                     base = re.findall(customreg, self.current_word)
                     base = ''.join(base)
@@ -467,25 +469,25 @@ class MadlibApp:
                 tailkey = ''.join(tailkey)
                 regnum = re.findall(r'\d+', tailkey)
                 num = ''.join(regnum)
-
+                self.save_key = realkey
                 if realkey not in numword_dic:
                     # numbered cust unsaved
                     base = re.findall(customreg, self.current_word)
                     base = ''.join(base)
                     self.display.insert(tk.END, f"{self.custom[base]} :\n")  # todo: fix unconfigged numbered customs
                     self.save_flag = True
-                    self.save_key = realkey
+                    #self.save_key = realkey
                     return
                 elif realkey in numword_dic:
                     print("I'm a saved word " + str(realkey) + " " + str(numword_dic[realkey]))
-                    self.current_word = numword_dic[realkey]
+                    self.current_word = re.sub(realkey, numword_dic[realkey], self.current_word)
                     # numbered cust saved
                 elif base not in self.custom:
                     # numbered cust unsaved
                     self.display.insert(tk.END,
                                         f"{realkey} hasn't been configured, what would you like to replace it with?:\n")
                     self.save_flag = True
-                    self.save_key = realkey
+                    #self.save_key = realkey
                     return
                 else:
                     # others
@@ -502,10 +504,11 @@ class MadlibApp:
                 base = ''.join(regkeyb)
                 regnum = re.findall(r'\d+', realkey)
                 num = ''.join(regnum)
+                self.save_key = realkey
                 if realkey not in numword_dic.keys() and base in generic_words.keys():
                     self.display.insert(tk.END, f"{generic_words[base]}:\n")
                     self.save_flag = True
-                    self.save_key = realkey
+                    #self.save_key = realkey
                     return
                     # numbered unsaved
                     # outlist.append(keyword_convert(realkey, self.current_word, 1, None))
@@ -515,12 +518,13 @@ class MadlibApp:
                     return
                     # outlist.append(keyword_convert(realkey, self.current_word, 6, None))  # invalid
                 elif realkey in numword_dic.keys():
-                    self.current_word = numword_dic[realkey]
+                    self.current_word =  re.sub(realkey, numword_dic[realkey], self.current_word)
                     # outlist.append(keyword_convert(realkey, self.current_word, 2, None))  # numbered saved
             else:
                 pass
                 # none, just append
                 # outlist.append(word)
+
             self.outlist.append(self.current_word)
             self.next_prompt()
         except StopIteration:
@@ -592,9 +596,9 @@ class MadlibApp:
         user_text = self.input_entry.get().strip()
         self.input_entry.delete(0, tk.END)
         if user_text and self.save_flag == False:
-            self.outlist.append(user_text)
+            self.outlist.append(re.sub(self.save_key, user_text, self.current_word))
         elif user_text and self.save_flag == True:
-            self.outlist.append(user_text)
+            self.outlist.append(re.sub(self.save_key, user_text, self.current_word))
             numword_dic[self.save_key]=user_text
             #print("I'm saving ",str(self.save_key),' as ',str(self.current_word))
             self.save_flag=False
@@ -639,8 +643,8 @@ class MadlibApp:
             widget.destroy()
         display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black")
         display.pack(pady=20)
-        #final_output = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
-        self.filled=self.smart_join(self.outlist)
+        self.filled = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
+        #self.filled=self.smart_join(self.outlist)
         display.insert(tk.END, "\nHere is your filled Madlib:\n" + self.filled)
         w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
                      fg="black")
@@ -766,8 +770,9 @@ class MadlibApp:
             self.html_post_process()
 
     def advance_to_html(self):
-        user_input = self.raw_in
-        self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', user_input)
+        #user_input = self.raw_in
+        #self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', user_input)
+        self.userMadlib=self.raw_in.split(' ')
         self.html_words = iter(self.userMadlib)
         self.invalid_html_window()
         self.html_replace_C()
@@ -781,7 +786,8 @@ class MadlibApp:
     def html_post_process(self):
         for widget in self.root.winfo_children():
             widget.destroy()
-        self.html_out=self.smart_join(self.htlist)
+        #self.html_out=self.smart_join(self.htlist)
+        self.html_out=re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
         self.html_file_choice()
 
     def html_file_choice(self):
