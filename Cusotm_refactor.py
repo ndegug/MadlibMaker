@@ -608,7 +608,7 @@ class MadlibApp:
 
     def normalize_quotes(self, text):
         return text.replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'") #todo: try to support curly quotes in HTML or Docx print instead of replacing them.
-    def smart_join(self, words):  # removes spaces surrounding punctuation todo: evaluate if self.outlist can be integrated into this instead of passed to it
+    def smart_join(self, words):  # removes spaces surrounding punctuation
         result = ""
         prev_word = ""
         quote_flag = False  # indicates being part of a quote segment
@@ -684,7 +684,7 @@ class MadlibApp:
 
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.file_write(self.filled, base, 'outputs','.txt') #todo: add title
+        self.file_write(self.normalize_quotes(self.filled), base, 'outputs','.txt') #todo: add title
         w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.txt in your \"outputs\" folder.\nWe hope you like it!',
                      width=80, height=10, bg="#d0e7ff",
                      fg="black")
@@ -720,7 +720,7 @@ class MadlibApp:
                         customreg, self.current_word):
                     regkey = re.findall(unnumbered, self.current_word)
                     realkey = ''.join(regkey)
-
+                    self.save_key=realkey
                     if realkey in generic_words:
                         htword = htmlsample.replace('underscript', generic_words[realkey])
                         final = self.current_word.replace(realkey, htword, 1)
@@ -754,7 +754,7 @@ class MadlibApp:
                     realkey = ''.join(regkey)
                     base = ''.join(regkeyb)
                     num = ''.join(re.findall(r'\d+', realkey))
-
+                    self.save_key = realkey
                     if base in generic_words:
                         htword = htmlsample.replace('underscript', generic_words[base] + ' (' + num + ')')
                         final = self.current_word.replace(realkey, htword, 1)
@@ -787,7 +787,7 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
         #self.html_out=self.smart_join(self.htlist)
-        self.html_out=re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
+        self.html_out = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.htlist))
         self.html_file_choice()
 
     def html_file_choice(self):
