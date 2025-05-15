@@ -8,6 +8,8 @@ import json
 from docx import Document
 htmlhead = '<html><head></head><body><h1> heading </h1><style>h1 {text-align: center;}p.big {  line-height: ' \
            '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
+htmlhead_notitle = '<html><head></head><body><style>h1 {text-align: center;}p.big {  line-height: ' \
+           '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
 generic_words = { # reminder: do not add any keywords that are the same as ignored words
                  '/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/ver': 'Verb', '/vng': 'Verb ending in \"ing\"', '/ved': 'Past tense verb',
@@ -47,6 +49,35 @@ class MadlibApp:
         self.welcomeMenuHandler()
 #todo: move all but root into reset() function
     def load_input_file(self):
+        # Clear existing widgets if necessary
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        self.mode = 1
+        label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 14))
+        label.pack(pady=10)
+
+        inputs_path = os.path.join(os.getcwd(), "inputs")
+
+        if not os.path.exists(inputs_path):
+            os.makedirs(inputs_path)
+
+        files = [f for f in os.listdir(inputs_path) if f.endswith('.txt') or f.endswith('.docx')]
+
+        if not files:
+            no_files_label = tk.Label(self.root, text="No input files found in the 'inputs' folder.",
+                                      font=("Arial", 12))
+            no_files_label.pack(pady=10)
+            return
+
+        button_frame = tk.Frame(self.root)
+        button_frame.pack(pady=10)
+
+        for filename in files:
+            full_path = os.path.join(inputs_path, filename)
+            btn = tk.Button(button_frame, text=filename, font=("Arial", 12),
+                            command=lambda path=full_path: self.process_input_file_3(path))
+            btn.pack(pady=5, fill='x')
+    def load_input_file_old(self):
         # Clear the window
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -57,9 +88,24 @@ class MadlibApp:
 
         # Display available files
         tk.Label(self.root, text="Available input files:", font=("Arial", 12, "bold")).pack()
-        for file in files:
-            tk.Label(self.root, text=file).pack()
-
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        #for file in files:
+        #    tk.Label(self.root, text=file).pack()
+        row = 0  # initializes row and column counters for button grid
+        col = 0
+        fileID=0
+        for file in files:  # for every generic word. Grabs the key (/adj) and label (adjective)
+            btn = tk.Button(button_frame, command=lambda: self.dummyscreen(str(files[fileID])), text=file,
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame
+            btn.grid(row=row, column=col, padx=2, pady=2,
+                     sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+            col += 1
+            fileID += 1
+            if col >= 10:  # ten columns, then new row
+                col = 0
+                row += 1
         # Prompt user
         tk.Label(self.root, text="Please type the name of the file you'd like to load including the extension:").pack()
         self.file_entry = tk.Entry(self.root)
@@ -69,12 +115,12 @@ class MadlibApp:
         enter_button = tk.Button(self.root, text="Enter", command=self.process_input_file_3)
         enter_button.pack(pady=10)
 
-    def process_input_file_3(self): #todo remove other process_input_file methods if this works
+    def process_input_file_3(self, path): #todo remove other process_input_file methods if this works
         madlib_text = ""
         custom_dict = {}
         title_text = ""
-        filename = self.file_entry.get()
-        file_path = os.path.join(os.path.dirname(__file__), "inputs", filename)
+        #filename = self.file_entry.get()
+        file_path = path
         try:
             # Read file content
             if file_path.endswith(".txt"):
@@ -645,7 +691,10 @@ class MadlibApp:
         display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black")
         display.pack(pady=20)
         self.filled = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
-        #self.filled=self.smart_join(self.outlist)
+
+        if self.title:
+            self.filled=self.title+"\n\n"+self.filled
+
         display.insert(tk.END, "\nHere is your filled Madlib:\n" + self.filled)
         w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
                      fg="black")
@@ -681,6 +730,7 @@ class MadlibApp:
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
         self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.plain_save(), bg="#3b9dd3",
                                     fg="white")
+        self.submit_btn.pack(pady=10)
     def plain_save(self): #todo: combine all save/save notifications into one function
 
         base = self.input_entry.get().strip()
@@ -791,6 +841,8 @@ class MadlibApp:
         self.html_out = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.htlist))
         if self.title:
             self.html_out = htmlhead.replace('heading', self.title, 1) + self.html_out + ' </p></body></html>'
+        else:
+            self.html_out = htmlhead_notitle + self.html_out + ' </p></body></html>'
         self.html_file_choice()
 
     def html_file_choice(self):
