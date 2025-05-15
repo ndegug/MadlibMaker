@@ -4,6 +4,7 @@ import webbrowser
 import tempfile
 import re
 import os
+from long_strings_gui import *
 import json
 from docx import Document
 htmlhead = '<html><head></head><body><h1> heading </h1><style>h1 {text-align: center;}p.big {  line-height: ' \
@@ -85,7 +86,7 @@ class MadlibApp:
             if col >= 10:  # ten columns, then new row
                 col = 0
                 row += 1
-    def load_input_file_old(self):
+    def load_input_file_old(self): #todo: remove unless load bugs are found
         # Clear the window
         for widget in self.root.winfo_children():
             widget.destroy()
