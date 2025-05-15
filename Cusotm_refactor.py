@@ -72,17 +72,26 @@ class MadlibApp:
         button_frame = tk.Frame(self.root)
         button_frame.pack(pady=10)
 
+        row = 0  # initializes row and column counters for button grid
+        col = 0
         for filename in files:
             full_path = os.path.join(inputs_path, filename)
             btn = tk.Button(button_frame, text=filename, font=("Arial", 12),
-                            command=lambda path=full_path: self.process_input_file_3(path))
-            btn.pack(pady=5, fill='x')
+                            command=lambda path=full_path: self.process_input_file_3(path), bg="#3b9dd3",
+                        fg="white")
+            btn.grid(row=row, column=col, padx=2, pady=2,
+                     sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+            col += 1
+            if col >= 10:  # ten columns, then new row
+                col = 0
+                row += 1
     def load_input_file_old(self):
         # Clear the window
         for widget in self.root.winfo_children():
             widget.destroy()
         self.mode=1
         # Get all .txt and .docx files from "inputs" folder
+
         input_dir = os.path.join(os.path.dirname(__file__), "inputs")
         files = [f for f in os.listdir(input_dir) if f.endswith(('.txt', '.docx'))]
 
