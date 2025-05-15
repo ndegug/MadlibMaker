@@ -1,13 +1,27 @@
 import tkinter as tk
 from tkinter import scrolledtext, messagebox
+import webbrowser
+import tempfile
 import re
 import os
 import json
 from docx import Document
-
+htmlhead = '<html><head></head><body><h1> heading </h1><style>h1 {text-align: center;}p.big {  line-height: ' \
+           '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
+htmlhead_notitle = '<html><head></head><body><style>h1 {text-align: center;}p.big {  line-height: ' \
+           '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
 generic_words = { # reminder: do not add any keywords that are the same as ignored words
                  '/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
-                 '/ver': 'Verb'}
+                 '/ver': 'Verb', '/vng': 'Verb ending in \"ing\"', '/ved': 'Past tense verb',
+                 '/ves': 'Verb ending in \"s\"', '/adv': 'adverb',
+                 '/num': 'Number', '/nam': 'Name', '/cel': 'Celebrity',
+                 '/per': 'Person', '/pir': 'Person in room', '/thi': 'Thing',
+                 '/pla': 'Place', '/job': 'Job', '/ran': 'Random Word',
+                 '/rex': 'Random Exclamation', '/tvs': 'TV Show', '/mov': 'Movie',
+                 '/mtv': "Movie/TV show", '/ins': 'Insulting name', '/phr': 'Random Phrase',
+                 '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
+                 '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid',
+                 '/emo': 'Emotion', '/noi': 'noise', '/eve': 'Event', '/fos': 'Plural food', '/fur': 'Furniture'}
 ignored_words = ['/her', '/she', '/She']  # words that resemble generic words that will be ignored
 numword_dic = {}
 unnumbered = "(/...)"
@@ -16,7 +30,10 @@ customreg = "(/ct[0-9]+)"
 #numcustcom = ".+\([0-9]+\)" #todo remove if unneeded for numbered customs
 numcustreg = "(/ct[0-9]+_[0-9]+)"
 tail = "(_[0-9])"
-
+htmlsample = '<span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: ' \
+             'center;"><span style="display: block; padding: 0 0.2em;">__________</span><span style="display: block; ' \
+             'font-size: 70%; line-height: 1em; padding: 0 0.2em;"><span style="position: relative; line-height: 1em; ' \
+             'margin-top: -.2em; top: -.2em;">underscript</span></span></span>'
 class MadlibApp:
     def __init__(self, root):
         self.root = root
@@ -26,10 +43,41 @@ class MadlibApp:
         self.save_flag = False
         self.folders()
         self.outlist = []
+        self.htlist = []
+        self.title=''
         self.mode=0 # decides mode (0=write or 1=load) todo: change to true/false if binary
         self.welcomeMenuHandler()
-
+#todo: move all but root into reset() function
     def load_input_file(self):
+        # Clear existing widgets if necessary
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        self.mode = 1
+        label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 14))
+        label.pack(pady=10)
+
+        inputs_path = os.path.join(os.getcwd(), "inputs")
+
+        if not os.path.exists(inputs_path):
+            os.makedirs(inputs_path)
+
+        files = [f for f in os.listdir(inputs_path) if f.endswith('.txt') or f.endswith('.docx')]
+
+        if not files:
+            no_files_label = tk.Label(self.root, text="No input files found in the 'inputs' folder.",
+                                      font=("Arial", 12))
+            no_files_label.pack(pady=10)
+            return
+
+        button_frame = tk.Frame(self.root)
+        button_frame.pack(pady=10)
+
+        for filename in files:
+            full_path = os.path.join(inputs_path, filename)
+            btn = tk.Button(button_frame, text=filename, font=("Arial", 12),
+                            command=lambda path=full_path: self.process_input_file_3(path))
+            btn.pack(pady=5, fill='x')
+    def load_input_file_old(self):
         # Clear the window
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -40,18 +88,118 @@ class MadlibApp:
 
         # Display available files
         tk.Label(self.root, text="Available input files:", font=("Arial", 12, "bold")).pack()
-        for file in files:
-            tk.Label(self.root, text=file).pack()
-
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        #for file in files:
+        #    tk.Label(self.root, text=file).pack()
+        row = 0  # initializes row and column counters for button grid
+        col = 0
+        fileID=0
+        for file in files:  # for every generic word. Grabs the key (/adj) and label (adjective)
+            btn = tk.Button(button_frame, command=lambda: self.dummyscreen(str(files[fileID])), text=file,
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame
+            btn.grid(row=row, column=col, padx=2, pady=2,
+                     sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+            col += 1
+            fileID += 1
+            if col >= 10:  # ten columns, then new row
+                col = 0
+                row += 1
         # Prompt user
         tk.Label(self.root, text="Please type the name of the file you'd like to load including the extension:").pack()
         self.file_entry = tk.Entry(self.root)
         self.file_entry.pack(pady=5)
 
         # Enter button
-        enter_button = tk.Button(self.root, text="Enter", command=self.process_input_file)
+        enter_button = tk.Button(self.root, text="Enter", command=self.process_input_file_3)
         enter_button.pack(pady=10)
 
+    def process_input_file_3(self, path): #todo remove other process_input_file methods if this works
+        madlib_text = ""
+        custom_dict = {}
+        title_text = ""
+        #filename = self.file_entry.get()
+        file_path = path
+        try:
+            # Read file content
+            if file_path.endswith(".txt"):
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+            elif file_path.endswith(".docx"):
+                doc = Document(file_path)
+                content = "\n".join([p.text for p in doc.paragraphs])
+            else:
+                messagebox.showerror("Unsupported Format", "Only .txt and .docx files are supported.")
+                return
+
+            # Extract title if present
+            if "<t>" in content and "</t>" in content:
+                start = content.index("<t>") + len("<t>")
+                end = content.index("</t>")
+                title_text = content[start:end].strip()
+
+                # Remove title from content
+                content = content[:content.index("<t>")] + content[end + len("</t>"):]
+
+            # Extract custom dictionary
+            if "<C>" in content:
+                c_index = content.index("<C>")
+                madlib_text = content[:c_index].strip()
+                dict_text = content[c_index + len("<C>"):].strip()
+                try:
+                    custom_dict = eval(dict_text)
+                except Exception as e:
+                    messagebox.showerror("Custom Dict Error", f"Failed to parse custom dictionary:\n{e}")
+                    return
+            else:
+                madlib_text = content.strip()
+
+            self.title = title_text
+            self.custom = custom_dict
+            self.raw_in=madlib_text
+            self.advance_from_first()
+
+        except Exception as e:
+            messagebox.showerror("File Error", f"Could not read file:\n{e}")
+    def process_input_file_2(self): #todo: decide between orignal and this one
+        filename = self.file_entry.get()
+        file_path = os.path.join(os.path.dirname(__file__), "inputs", filename)
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except UnicodeDecodeError:
+            try:
+                import docx
+                doc = docx.Document(file_path)
+                content = '\n'.join([para.text for para in doc.paragraphs])
+            except Exception as e:
+                messagebox.showerror("Error", f"Could not read DOCX file: {e}")
+                return
+
+        # Extract custom dictionary
+        custom_start = content.find("<C>")
+        if custom_start != -1:
+            custom_text = content[custom_start + 3:].strip()
+            try:
+                self.custom = eval(custom_text)
+            except Exception as e:
+                #messagebox.showerror("Error", f"Could not parse custom dictionary: {e}")
+                return
+            madlib_text = content[:custom_start].strip()
+        else:
+            madlib_text = content.strip()
+
+        # Extract title if present
+        title_start = content.find("<t>")
+        title_end = content.find("</t>")
+        if title_start != -1 and title_end != -1 and title_end > title_start:
+            self.title = content[title_start + 3:title_end].strip()
+        else:
+            self.title = ""
+
+        self.raw_in=madlib_text
+        self.advance_from_first()
     def process_input_file(self):
         filename = self.file_entry.get()
         input_path = os.path.join(os.path.dirname(__file__), "inputs", filename)
@@ -124,6 +272,8 @@ class MadlibApp:
         f = open(completeName, "w")
         f.write(content)
         f.close()
+    def escape(self):
+        return
     def welcomeMenuHandler(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
 
@@ -201,22 +351,56 @@ class MadlibApp:
         else:
             self.dummyscreen('Invalid mode for advance_from_first()')
 
-        self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', self.raw_in)
+        #self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', self.raw_in)
+        self.userMadlib= self.raw_in.split(' ') #todo: try and make all splits like this and integrate previous version's solution to quote problems
         self.prompt_words = iter(self.userMadlib)
         #self.outlist = []
         # Extract and sort custom keys
         all_custom_matches = re.findall(r'/ct(\d+)(?:_\d+)?', self.raw_in)
         self.custom_keys = sorted(set(f"/ct{id}" for id in all_custom_matches), key=lambda x: int(x[3:]))
 
+
         if self.custom_keys and self.custom=={}:
 
             self.custom_configure_window() #configure customs, file_choice will be executted as well
-        elif self.mode==0: #if manual input and no others are needed
+        else: #if manual input and no others are needed
+            self.title_check()
+            #self.file_choice()
+        #else:
+        #    self.advance_to_second()
+
+    def title_check(self):
+        if self.title:
             self.file_choice()
         else:
-            self.advance_to_second()
-
-
+            print("no title")
+            self.title_write()
+    def title_write(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        tk.Label(self.root, text="Would you like to title your Madlib?\n Type it here and click enter or \"skip\" to skip this step.", font=("Arial", 12, "bold")).pack()
+        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        self.input_entry.bind("<Return>",
+                              lambda event: self.title_saver())
+        self.input_entry.pack(pady=10)
+        self.input_entry.focus_set()  # automatically puts the cursor into the entry field
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        # Yes button
+        btn = tk.Button(button_frame, command=lambda: self.title_saver(), text="Submit", bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        # no button
+        btn = tk.Button(button_frame, command=lambda: self.file_choice(), text="Skip",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=2, padx=2, pady=2,
+                 sticky="ew")
+        #self.root.mainloop()  # deploys the GUI screen till closed
+    def title_saver(self):
+        self.title = self.input_entry.get().strip()
+        self.file_choice()
     def custom_configure_window(self):
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -241,7 +425,8 @@ class MadlibApp:
             self.display.insert(tk.END, f"Custom {current_key[3:]}: ")
         else:
             #print("No more Customs")
-            self.file_choice()
+            self.title_check()
+            #self.file_choice()
             #self.second_window()
             #self.next_prompt()
 
@@ -281,6 +466,7 @@ class MadlibApp:
                     customreg, self.current_word):
                 regkey = re.findall(unnumbered, self.current_word)
                 realkey = ''.join(regkey)
+                self.save_key = realkey
                 if realkey in generic_words:
                     self.display.insert(tk.END, f"{generic_words[realkey]}:\n")
                     return
@@ -298,6 +484,7 @@ class MadlibApp:
                 # custom
                 regkey = re.findall(customreg, self.current_word)
                 realkey = ''.join(regkey)
+                self.save_key = realkey
                 if realkey in self.custom:
                     base = re.findall(customreg, self.current_word)
                     base = ''.join(base)
@@ -329,25 +516,25 @@ class MadlibApp:
                 tailkey = ''.join(tailkey)
                 regnum = re.findall(r'\d+', tailkey)
                 num = ''.join(regnum)
-
+                self.save_key = realkey
                 if realkey not in numword_dic:
                     # numbered cust unsaved
                     base = re.findall(customreg, self.current_word)
                     base = ''.join(base)
                     self.display.insert(tk.END, f"{self.custom[base]} :\n")  # todo: fix unconfigged numbered customs
                     self.save_flag = True
-                    self.save_key = realkey
+                    #self.save_key = realkey
                     return
                 elif realkey in numword_dic:
                     print("I'm a saved word " + str(realkey) + " " + str(numword_dic[realkey]))
-                    self.current_word = numword_dic[realkey]
+                    self.current_word = re.sub(realkey, numword_dic[realkey], self.current_word)
                     # numbered cust saved
                 elif base not in self.custom:
                     # numbered cust unsaved
                     self.display.insert(tk.END,
                                         f"{realkey} hasn't been configured, what would you like to replace it with?:\n")
                     self.save_flag = True
-                    self.save_key = realkey
+                    #self.save_key = realkey
                     return
                 else:
                     # others
@@ -364,10 +551,11 @@ class MadlibApp:
                 base = ''.join(regkeyb)
                 regnum = re.findall(r'\d+', realkey)
                 num = ''.join(regnum)
+                self.save_key = realkey
                 if realkey not in numword_dic.keys() and base in generic_words.keys():
                     self.display.insert(tk.END, f"{generic_words[base]}:\n")
                     self.save_flag = True
-                    self.save_key = realkey
+                    #self.save_key = realkey
                     return
                     # numbered unsaved
                     # outlist.append(keyword_convert(realkey, self.current_word, 1, None))
@@ -377,12 +565,13 @@ class MadlibApp:
                     return
                     # outlist.append(keyword_convert(realkey, self.current_word, 6, None))  # invalid
                 elif realkey in numword_dic.keys():
-                    self.current_word = numword_dic[realkey]
+                    self.current_word =  re.sub(realkey, numword_dic[realkey], self.current_word)
                     # outlist.append(keyword_convert(realkey, self.current_word, 2, None))  # numbered saved
             else:
                 pass
                 # none, just append
                 # outlist.append(word)
+
             self.outlist.append(self.current_word)
             self.next_prompt()
         except StopIteration:
@@ -410,7 +599,7 @@ class MadlibApp:
 
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.file_write(self.raw_in+'\n'+'<C>'+str(self.custom), base, 'inputs','.txt')
+        self.file_write(self.raw_in+'\n'+'<C>'+str(self.custom), base, 'inputs','.txt')#todo: add title
         w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.txt in your \"inputs\" folder.\nNow we can Play!',
                      width=80, height=10, bg="#d0e7ff",
                      fg="black")
@@ -422,30 +611,41 @@ class MadlibApp:
         self.next_prompt()
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        w = tk.Label(self.root, text='Would you like to save your Madlib for future use or play without saving?', width=80, height=10, bg="#d0e7ff",
+        print(self.title)
+        display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0",
+                                            fg="black")
+        display.pack(pady=20)
+        # final_output = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
+        display.insert(tk.END, "\nHere is your Madlib:\n" + self.raw_in)
+        w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
                      fg="black")
-        w.pack(pady=10)
+        w.pack(pady=5)
         # buttons for Welcome menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         #Yes button
         btn = tk.Button(button_frame, command=lambda: self.in_file_name(), text="Save", bg="#3b9dd3",
-                        fg="white")  # defines each button with frame, todo: add argument: command= enterMadlibManual()
+                        fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # no button
         btn = tk.Button(button_frame, command=lambda: self.advance_to_second(), text="Play without saving", bg="#3b9dd3",
-                        fg="white")  # defines each button with frame, todo: add argument: command= enterMadlibManual()
+                        fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        btn = tk.Button(button_frame, command=lambda: self.advance_to_html(), text="Print HTML",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=4, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         self.root.mainloop()  # deploys the GUI screen till closed
-    def process_next_keyword(self):
+    def process_next_keyword(self): #todo: pass the word and use re.sub to retain quotes
         user_text = self.input_entry.get().strip()
         self.input_entry.delete(0, tk.END)
         if user_text and self.save_flag == False:
-            self.outlist.append(user_text)
+            self.outlist.append(re.sub(self.save_key, user_text, self.current_word))
         elif user_text and self.save_flag == True:
-            self.outlist.append(user_text)
+            self.outlist.append(re.sub(self.save_key, user_text, self.current_word))
             numword_dic[self.save_key]=user_text
             #print("I'm saving ",str(self.save_key),' as ',str(self.current_word))
             self.save_flag=False
@@ -453,24 +653,27 @@ class MadlibApp:
             pass
         self.next_prompt()
 
-    def smart_join(self, words):  # removes spaces surrounding punctuation todo: evaluate if self.outlist can be integrated into this instead of passed to it
+    def normalize_quotes(self, text):
+        return text.replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'") #todo: try to support curly quotes in HTML or Docx print instead of replacing them.
+    def smart_join(self, words):  # removes spaces surrounding punctuation
         result = ""
         prev_word = ""
         quote_flag = False  # indicates being part of a quote segment
         for i, word in enumerate(words):
+            word=self.normalize_quotes(word)
             if i == 0:  # first word, no space before
                 result += word
-                if re.match(r"[\"]", word):  # if the first element is a quote, turn on quote flag
+                if word=="\"":  # if the first element is a quote, turn on quote flag
                     quote_flag = True
-            elif re.match(r"[.,!?;:]", word):  # If it's punctuation, don't add space
+            elif re.match(r"[.,!?;:\']", word) or re.match(r"[\']", prev_word):  # If it's punctuation, don't add space
                 result += word
-            elif re.match(r"[\"]", word) and quote_flag == False:  # Open quote, space before, turn on quote flag
+            elif word=="\"" and quote_flag == False:  # Open quote, space before, turn on quote flag
                 result += " " + word
                 quote_flag = True
-            elif re.match(r"[\"]", word) and quote_flag == True:  # close quote, no space before, turn off quote flag
+            elif word=="\"" and quote_flag == True:  # close quote, no space before, turn off quote flag
                 result += word
                 quote_flag = False
-            elif re.match(r"[\"]", prev_word) and quote_flag == True:  # word after open quote, no leading space
+            elif prev_word=="\"" and quote_flag == True:  # word after open quote, no leading space
                 result += word
             # elif re.match(r"[\"]", prev_word) and quote_flag==False: #word after close quote, no leading space, turn off quote flag
             #    result += " " + word
@@ -482,17 +685,222 @@ class MadlibApp:
 
 
 
-    def third_window(self):
+    def third_window(self):  #decide whether to save filled output
         for widget in self.root.winfo_children():
             widget.destroy()
         display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black")
         display.pack(pady=20)
-        #final_output = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
+        self.filled = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
 
+        if self.title:
+            self.filled=self.title+"\n\n"+self.filled
 
+        display.insert(tk.END, "\nHere is your filled Madlib:\n" + self.filled)
+        w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=5)
+        # buttons for Welcome menu selection
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        # Yes button
+        btn = tk.Button(button_frame, command=lambda: self.plain_file_name(), text="Save", bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        # no button
+        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('back to menu'), text="Return to menu",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=2, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
 
-        display.insert(tk.END, "\nFinal Madlib:\n" + self.smart_join(self.outlist))
+    def plain_file_name(self): #todo: combine all output file namers into one function. Use conditional statements to generate buttons of the needed types
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)', width=80, height=10,
+                     bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=10)
+        # buttons for file naming menu selection
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        self.input_entry.bind("<Return>",
+                              lambda event: self.plain_save())  # allows the "enter" key to submit the keyword
+        self.input_entry.pack(pady=10)
+        self.input_entry.focus_set()  # automatically puts the cursor into the entry field
+        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.plain_save(), bg="#3b9dd3",
+                                    fg="white")
+        self.submit_btn.pack(pady=10)
+    def plain_save(self): #todo: combine all save/save notifications into one function
 
+        base = self.input_entry.get().strip()
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        self.file_write(self.normalize_quotes(self.filled), base, 'outputs','.txt') #todo: add title
+        w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.txt in your \"outputs\" folder.\nWe hope you like it!',
+                     width=80, height=10, bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=10)
+        self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.dummyscreen('back to menu'), bg="#3b9dd3", fg="white")
+        self.submit_btn.pack(pady=10)
+
+    def invalid_html_window(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+
+        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
+                                                 fg="black")
+        self.display.pack(pady=10)
+        # define and create entry field for user's entry for a word
+        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        self.input_entry.bind("<Return>",
+                              lambda event: self.process_invalid_html())  # allows the "enter" key to submit the keyword
+        self.input_entry.pack(pady=10)
+        self.input_entry.focus_set()  # automatically puts the cursor into the entry field
+
+        self.submit_btn = tk.Button(self.root, text="Submit", command=self.process_invalid_html, bg="#3b9dd3",
+                                    fg="white")
+        self.submit_btn.pack(pady=10)
+
+    def html_replace_C(self): #todo: decide between original (had length bugs) and "_C." if "_C" then refactor keyword replacement to match this
+        try:
+            while True:
+                self.current_word = next(self.html_words)
+                final = '[undefined]'
+                if re.findall(unnumbered, self.current_word) and not re.findall(numbered,
+                                                                                self.current_word) and not re.findall(
+                        customreg, self.current_word):
+                    regkey = re.findall(unnumbered, self.current_word)
+                    realkey = ''.join(regkey)
+                    self.save_key=realkey
+                    if realkey in generic_words:
+                        htword = htmlsample.replace('underscript', generic_words[realkey])
+                        final = self.current_word.replace(realkey, htword, 1)
+                    elif realkey in ignored_words:
+                        final = self.current_word
+                    else:
+                        self.display.insert(tk.END, f"{realkey} is not a valid keyword, what is it?:\n")
+                        return
+
+                elif re.findall(customreg, self.current_word) and not re.findall(numcustreg, self.current_word):
+                    regkey = re.findall(customreg, self.current_word)
+                    realkey = ''.join(regkey)
+                    if realkey in self.custom:
+                        htword = htmlsample.replace('underscript', self.custom[realkey])
+                        final = self.current_word.replace(realkey, htword, 1)
+                    else:
+                        self.display.insert(tk.END, f"{realkey} is not a valid keyword, what is it?:\n")
+                        return
+
+                elif re.findall(numcustreg, self.current_word):
+                    regkey = re.findall(numcustreg, self.current_word)
+                    realkey = ''.join(regkey)
+                    base = ''.join(re.findall(customreg, self.current_word))
+                    num = ''.join(re.findall(r'\d+', self.current_word))
+                    htword = htmlsample.replace('underscript', self.custom[base] + ' (' + num + ')')
+                    final = self.current_word.replace(realkey, htword, 1)
+
+                elif re.findall(numbered, self.current_word):
+                    regkey = re.findall(numbered, self.current_word)
+                    regkeyb = re.findall(unnumbered, self.current_word)
+                    realkey = ''.join(regkey)
+                    base = ''.join(regkeyb)
+                    num = ''.join(re.findall(r'\d+', realkey))
+                    self.save_key = realkey
+                    if base in generic_words:
+                        htword = htmlsample.replace('underscript', generic_words[base] + ' (' + num + ')')
+                        final = self.current_word.replace(realkey, htword, 1)
+                    else:
+                        self.display.insert(tk.END, f"{realkey} is not a valid keyword, what is it?:\n")
+                        return
+                else:
+                    final = self.current_word
+
+                self.htlist.append(final)
+
+        except StopIteration:
+            self.html_post_process()
+
+    def advance_to_html(self):
+        #user_input = self.raw_in
+        #self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', user_input)
+        self.userMadlib=self.raw_in.split(' ')
+        self.html_words = iter(self.userMadlib)
+        self.invalid_html_window()
+        self.html_replace_C()
+
+    def process_invalid_html(self):
+        user_text = self.input_entry.get().strip()
+        self.input_entry.delete(0, tk.END)
+        user_ht = htmlsample.replace('underscript', user_text)
+        self.htlist.append(user_ht)
+        self.html_replace_C()
+    def html_post_process(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        #self.html_out=self.smart_join(self.htlist)
+        self.html_out = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.htlist))
+        if self.title:
+            self.html_out = htmlhead.replace('heading', self.title, 1) + self.html_out + ' </p></body></html>'
+        else:
+            self.html_out = htmlhead_notitle + self.html_out + ' </p></body></html>'
+        self.html_file_choice()
+
+    def html_file_choice(self):
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=10)
+        # buttons for Welcome menu selection
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        #Yes button
+        btn = tk.Button(button_frame, command=lambda: self.html_file_name(), text="Save", bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        # no button
+        btn = tk.Button(button_frame, command=lambda: self.html_view(), text="Print without saving", bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=2, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        self.root.mainloop()  # deploys the GUI screen till closed
+
+    def html_file_name(self):
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)', width=80, height=10,
+                     bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=10)
+        # buttons for file naming menu selection
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        self.input_entry.bind("<Return>",
+                              lambda event: self.html_save())  # allows the "enter" key to submit the keyword
+        self.input_entry.pack(pady=10)
+        self.input_entry.focus_set()  # automatically puts the cursor into the entry field
+        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.html_save(), bg="#3b9dd3",
+                                    fg="white")
+        self.submit_btn.pack(pady=10)
+    def html_save(self):
+
+        base = self.input_entry.get().strip()
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        self.file_write(self.html_out, base, 'outputs','.html') #todo: include selected (or loaded) title and formatting from terminal version
+        w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.html in your \"outputs\" folder.\nNow let\'s print it!',
+                     width=80, height=10, bg="#d0e7ff",
+                     fg="black")
+        w.pack(pady=10)
+        self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3", fg="white")
+        self.submit_btn.pack(pady=10)
+
+    def html_view(self):
+
+        self.root.destroy()  # closes the gui entirely todo: decide whether to quit the window here
+        messagebox.showinfo("Thank you.", "We'll uploaded your madlib to your browser, you can print it from there.")
+        with tempfile.NamedTemporaryFile("w", delete=False, suffix=".html") as f:
+            f.write(self.html_out)
+            webbrowser.open(f.name)
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Madlib App")
