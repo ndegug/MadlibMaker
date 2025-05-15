@@ -6,7 +6,8 @@ import re
 import os
 import json
 from docx import Document
-
+htmlhead = '<html><head></head><body><h1> heading </h1><style>h1 {text-align: center;}p.big {  line-height: ' \
+           '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
 generic_words = { # reminder: do not add any keywords that are the same as ignored words
                  '/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/ver': 'Verb', '/vng': 'Verb ending in \"ing\"', '/ved': 'Past tense verb',
@@ -44,7 +45,7 @@ class MadlibApp:
         self.title=''
         self.mode=0 # decides mode (0=write or 1=load) todo: change to true/false if binary
         self.welcomeMenuHandler()
-
+#todo: move all but root into reset() function
     def load_input_file(self):
         # Clear the window
         for widget in self.root.winfo_children():
@@ -788,6 +789,8 @@ class MadlibApp:
             widget.destroy()
         #self.html_out=self.smart_join(self.htlist)
         self.html_out = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.htlist))
+        if self.title:
+            self.html_out = htmlhead.replace('heading', self.title, 1) + self.html_out + ' </p></body></html>'
         self.html_file_choice()
 
     def html_file_choice(self):
