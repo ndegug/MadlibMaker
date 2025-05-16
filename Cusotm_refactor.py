@@ -511,11 +511,11 @@ class MadlibApp:
                 #regnum = re.findall(r'\d+', tailkey)
                 #num = ''.join(regnum)
                 self.save_key = realkey
-                if realkey not in numword_dic:
+                if realkey not in numword_dic:# todo: fix unconfigged numbered customs, try adding "and base in self.custom"
                     # numbered cust unsaved
                     base = re.findall(customreg, self.current_word)
                     base = ''.join(base)
-                    self.display.insert(tk.END, f"{self.custom[base]} :\n")  # todo: fix unconfigged numbered customs
+                    self.display.insert(tk.END, f"{self.custom[base]} :\n")
                     self.save_flag = True
                     #self.save_key = realkey
                     return
