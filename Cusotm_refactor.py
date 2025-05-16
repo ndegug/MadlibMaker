@@ -290,12 +290,63 @@ class MadlibApp:
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # Instruction menu button
-        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('New Instructions'), text="Instructions",
+        btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="Instructions",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame, todo: add argument: command= instructionsMenuHandler()
         btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         self.root.mainloop()  # deploys the GUI screen till closed
+    def instruct_main(self):
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+
+        # Welcome Menu
+        # welcome text
+        w = tk.Label(self.root, text='Instructions', width=80, height=10, bg="#d0e7ff", fg="black")
+        w.pack(pady=10)
+        # buttons for Welcome menu selection
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        # manual input button
+        btn = tk.Button(button_frame, command=lambda: self.end_instructions(how_to_play_madlibs), text="How to play Madlibs", bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        # Load inputs button todo: integrate all other instruction menus
+        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('write madlibs'), text="How to write madlibs",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=2, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        # Instruction menu button
+        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('load madlibs'), text="Loading a madlib",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=3, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('printing madlibs'), text="Printing madlibs",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=4, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        self.root.mainloop()  # deploys the GUI screen till closed #todo: test if needed
+    def end_instructions(self,content):#generic window for instructions at the end of the instruction tree.
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        w = tk.Label(self.root, text=content, width=80, height=10, bg="#d0e7ff", fg="black")
+        w.pack(pady=10)
+        # buttons for Welcome menu selection
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        # manual input button
+        btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="Back to Instructions",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('back to menu'), text="Back to main menu",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=1, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
     def setup_first_window(self):
         for widget in self.root.winfo_children():
             widget.destroy()

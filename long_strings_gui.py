@@ -15,7 +15,7 @@ generic_words = { # reminder: do not add any keywords that are the same as ignor
                  '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid',
                  '/emo': 'Emotion', '/noi': 'noise', '/eve': 'Event', '/fos': 'Plural food', '/fur': 'Furniture'}
 ignored_words = ['/her', '/she', '/She']  # words that resemble generic words that will be ignored
-
+#todo: insert return characters
 how_to_play_madlibs = """
 In case you’ve never played the age-old game of Madlibs, here’s how the game is played:
 A Madlib is a story with missing words. Before reading the story, players are prompted with a word category like “adjective.” At which point, they must choose a word in that category to be written into the vacant space. Once all the blanks are filled, you read the result.
