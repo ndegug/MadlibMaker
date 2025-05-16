@@ -301,7 +301,7 @@ class MadlibApp:
 
         # Welcome Menu
         # welcome text
-        w = tk.Label(self.root, text='Instructions', width=80, height=10, bg="#d0e7ff", fg="black")
+        w = tk.Label(self.root, text='What would you like to learn about?', width=80, height=10, bg="#d0e7ff", fg="black")
         w.pack(pady=10)
         # buttons for Welcome menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
@@ -312,29 +312,87 @@ class MadlibApp:
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # Load inputs button todo: integrate all other instruction menus
-        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('write madlibs'), text="How to write madlibs",
+        btn = tk.Button(button_frame, command=lambda: self.write_instructions_menu(), text="How to write madlibs",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # Instruction menu button
-        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('load madlibs'), text="Loading a madlib",
+        btn = tk.Button(button_frame, command=lambda: self.end_instructions(loading_a_madlib), text="Loading a madlib",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
-        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('printing madlibs'), text="Printing madlibs",
+        btn = tk.Button(button_frame, command=lambda: self.end_instructions(printing_madlibs), text="Printing madlibs",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=4, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         self.root.mainloop()  # deploys the GUI screen till closed #todo: test if needed
+    def write_instructions_menu(self):
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
+                                                 fg="black", wrap=tk.WORD)
+        self.display.pack(pady=10)
+        self.display.insert(tk.END, how_to_write_a_madlib)
+        #self.display.insert(tk.END, content.replace("\\n", "\n"))
+        self.display.config(state='disabled')  # Make it read-only
+        # buttons for Welcome menu selection
+        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame.pack(pady=5)  # for all button frames
+        # Generic words
+        btn = tk.Button(button_frame, command=lambda: self.end_instructions(generic_words_list), text="Generic words",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        #numbered words
+        btn = tk.Button(button_frame, command=lambda: self.end_instructions(numbered_words),
+                        text="Numbered words",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=1, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        # Custom words
+        btn = tk.Button(button_frame, command=lambda: self.end_instructions(custom_words_basics),
+                        text="Custom words basics",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=2, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        # numbered custom words
+        btn = tk.Button(button_frame, command=lambda: self.end_instructions(numbered_custom_words),
+                        text="Numbered custom words",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=3, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        # Custom dic
+        btn = tk.Button(button_frame, command=lambda: self.end_instructions(prewriting_custom_configurations),
+                        text="Preconfiguring custom words",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=4, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        # back button
+        btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="Back to Instructions",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=2, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        #back to menu button
+        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('back to menu'), text="Back to main menu",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=2, column=1, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
     def end_instructions(self,content):#generic window for instructions at the end of the instruction tree.
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
                                                  fg="black", wrap=tk.WORD)
         self.display.pack(pady=10)
-        self.display.insert(tk.END, content.replace("\\n", "\n"))
+        self.display.insert(tk.END, content)
+        #self.display.insert(tk.END, content.replace("\\n", "\n"))
         self.display.config(state='disabled')  # Make it read-only
         # buttons for Welcome menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
