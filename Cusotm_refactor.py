@@ -331,8 +331,11 @@ class MadlibApp:
         self.root.mainloop()  # deploys the GUI screen till closed #todo: test if needed
     def end_instructions(self,content):#generic window for instructions at the end of the instruction tree.
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        w = tk.Label(self.root, text=content, width=80, height=10, bg="#d0e7ff", fg="black")
-        w.pack(pady=10)
+        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
+                                                 fg="black", wrap=tk.WORD)
+        self.display.pack(pady=10)
+        self.display.insert(tk.END, content.replace("\\n", "\n"))
+        self.display.config(state='disabled')  # Make it read-only
         # buttons for Welcome menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
