@@ -849,10 +849,10 @@ class MadlibApp:
         button_frame.pack(pady=5)  # for all button frames
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
         self.input_entry.bind("<Return>",
-                              lambda event: self.plain_save())  # allows the "enter" key to submit the keyword
+                              lambda event: self.output_save(0))  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
-        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.plain_save(), bg="#3b9dd3",
+        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.output_save(0), bg="#3b9dd3",
                                     fg="white")
         self.submit_btn.pack(pady=10)
     def plain_save(self): #todo: combine all save/save notifications into one function
@@ -1001,10 +1001,10 @@ class MadlibApp:
         button_frame.pack(pady=5)  # for all button frames
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
         self.input_entry.bind("<Return>",
-                              lambda event: self.html_save())  # allows the "enter" key to submit the keyword
+                              lambda event: self.output_save(1))  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
-        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.html_save(), bg="#3b9dd3",
+        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.output_save(1), bg="#3b9dd3",
                                     fg="white")
         self.submit_btn.pack(pady=10)
     def html_save(self):
@@ -1018,7 +1018,43 @@ class MadlibApp:
         w.pack(pady=10)
         self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
-
+    def output_save(self,md):
+        base = self.input_entry.get().strip()
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        if md==0: #plain save
+            self.file_write(self.normalize_quotes(self.filled), base, 'outputs', '.txt')  # todo: add title
+            w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
+                base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',
+                         width=80, height=10, bg="#d0e7ff",
+                         fg="black")
+            w.pack(pady=10)
+            self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3",
+                                        fg="white")
+            self.submit_btn.pack(pady=10)
+        elif md==1: #html save
+            
+            self.file_write(self.html_out, base, 'outputs',
+                            '.html')  # todo: include selected (or loaded) title and formatting from terminal version
+            w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(
+                base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',
+                         width=80, height=10, bg="#d0e7ff",
+                         fg="black")
+            w.pack(pady=10)
+            self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3",
+                                        fg="white")
+            self.submit_btn.pack(pady=10)
+        else: #plain and all invalids
+            
+            self.file_write(self.html_out, base, 'outputs',
+                            '.txt')  # todo: include selected (or loaded) title and formatting from terminal version
+            w = tk.Label(self.root, text='Invalid save case found, please contact the developer.\n In the meantime, your mandlib has been saved to: ' + str(
+                base) + '.txt in your \"outputs\" folder.',
+                         width=80, height=10, bg="#d0e7ff",
+                         fg="black")
+            w.pack(pady=10)
+            self.submit_btn = tk.Button(self.root, text="Ok", command=lambda: self.html_view(), bg="#3b9dd3",
+                                        fg="white")
+            self.submit_btn.pack(pady=10)
     def html_view(self):
 
         self.root.destroy()  # closes the gui entirely todo: decide whether to quit the window here
