@@ -22,6 +22,8 @@ htmlsample = '<span class="nowrap" style="display: none; display: inline-block; 
 class MadlibApp:
     def __init__(self, root):
         self.root = root
+        self.reset()
+    def reset(self):
         self.custom = {}
         self.custom_keys = []
         self.custom_index = 0
@@ -29,10 +31,9 @@ class MadlibApp:
         self.folders()
         self.outlist = []
         self.htlist = []
-        self.title=''
-        self.mode=0 # decides mode (0=write or 1=load) todo: change to true/false if binary
+        self.title = ''
+        self.mode = 0  # decides mode (0=write or 1=load) todo: change to true/false if binary
         self.welcomeMenuHandler()
-#todo: move all but root into reset() function
     def load_input_file(self):
         # Clear existing widgets if necessary
         for widget in self.root.winfo_children():
@@ -382,7 +383,7 @@ class MadlibApp:
         btn.grid(row=2, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         #back to menu button
-        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('back to menu'), text="<< Back to main menu",
+        btn = tk.Button(button_frame, command=lambda: self.reset(), text="<< Back to main menu",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=2, column=3, padx=2, pady=2,
@@ -409,7 +410,7 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
             btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
-            btn = tk.Button(button_frame, command=lambda: self.dummyscreen('back to menu'), text="<<< Back to main menu",
+            btn = tk.Button(button_frame, command=lambda: self.reset(), text="<<< Back to main menu",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
             btn.grid(row=1, column=3, padx=2, pady=2,
@@ -420,7 +421,7 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
             btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
-            btn = tk.Button(button_frame, command=lambda: self.dummyscreen('back to menu'), text="<< Back to main menu",
+            btn = tk.Button(button_frame, command=lambda: self.reset(), text="<< Back to main menu",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
             btn.grid(row=1, column=3, padx=2, pady=2,
@@ -831,7 +832,7 @@ class MadlibApp:
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # no button
-        btn = tk.Button(button_frame, command=lambda: self.dummyscreen('back to menu'), text="Return to menu",
+        btn = tk.Button(button_frame, command=lambda: self.reset(), text="Return to menu",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
@@ -863,7 +864,7 @@ class MadlibApp:
                      width=80, height=10, bg="#d0e7ff",
                      fg="black")
         w.pack(pady=10)
-        self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.dummyscreen('back to menu'), bg="#3b9dd3", fg="white")
+        self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
 
     def invalid_html_window(self):
