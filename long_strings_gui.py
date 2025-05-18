@@ -42,7 +42,7 @@ how_to_write_a_madlib = """
     Want to use a player’s word more than once? Want to add your own categories? Click on the items below to learn about our advanced keywords to help you do that!"""
 
 generic_words_list = """
-Here is a list of all our natively supported categories and keys:
+ Here is a list of all our natively supported categories and keys:
 
     '/adj': 'Adjective',     '/nou': 'Noun',     '/pln': 'Plural noun',
     '/ver': 'Verb',     '/vng': 'Verb ending in "ing"',     '/ved': 'Past tense verb',
@@ -56,58 +56,58 @@ Here is a list of all our natively supported categories and keys:
     '/fic': 'Fictional Character',     '/act': 'Activity',     '/bod': 'Body Part',     '/flu': 'Fluid',
     '/emo': 'Emotion',     '/noi': 'noise',     '/eve': 'Event',     '/fos': 'Plural food',     '/fur': 'Furniture'
 
-If you’d like to add your own, see “Custom Words” for how to do that."""
+ If you’d like to add your own, see “Custom Words” for how to do that."""
 
 numbered_words = """
-Numbered words are used to repeat a user’s entry more than once. Simply add a sequence number at the end of the generic word and all keywords of that type and number will be filled in with the first entry. 
+    Numbered words are used to repeat a user’s entry more than once. Simply add a sequence number at the end of the generic word and all keywords of that type and number will be filled in with the first entry. 
 
-Let’s look at this example:
+    Let’s look at this example:
 
     The man was so /adj1 and /adj2, he decided that he’d never be /adj2 or /adj1 again!
 
-Here, the program would ask the player for two adjectives, one after the other. If the player chooses “dirty” and “ugly” for those adjectives, the result would be:
+    Here, the program would ask the player for two adjectives, one after the other. If the player chooses “dirty” and “ugly” for those adjectives, the result would be:
 
     The man was so dirty and ugly, he decided that he’d never be ugly or dirty again!
 
-Use this whenever something in the story needs to be repeated."""
+    Use this whenever something in the story needs to be repeated."""
 
 custom_words_basics = """
-If there is a category not listed in our generic words that you’d like to add your own, use Custom Words. Basic custom words take the form: “/ct1” where the number following the “ct” is the ID number.
+    If there is a category not listed in our generic words that you’d like to add your own, use Custom Words. Basic custom words take the form: “/ct1” where the number following the “ct” is the ID number.
 
-When the program finds that you’ve added custom word keys, it will ask you to configure them, so remember which number you want your custom category to correspond with. If you are writing your Madlibs externally, 
+    When the program finds that you’ve added custom word keys, it will ask you to configure them, so remember which number you want your custom category to correspond with. If you are writing your Madlibs externally, 
 
-Here’s an example:
+    Here’s an example:
 
-    “My car sprayed /ct1 all over the /ct2!”
+        “My car sprayed /ct1 all over the /ct2!”
 
-The program will first ask you to configure these custom words. Enter the word categories when prompted, then you’ll be able to start using them in your Madlib. Suppose you configured the categories to be: “Fluid” and “Thing outside.” When the Madlib is played, the user will be asked for a word in each of these categories and it may result in:
+    The program will first ask you to configure these custom words. Enter the word categories when prompted, then you’ll be able to start using them in your Madlib. Suppose you configured the categories to be: “Fluid” and “Thing outside.” When the Madlib is played, the user will be asked for a word in each of these categories and it may result in:
 
-    “My car sprayed apple juice all over the grass!”"""
+        “My car sprayed apple juice all over the grass!”"""
 
 numbered_custom_words = """
-Custom words can also be numbered in the sequence “/ct1_1” where the first number is the ID number and the second number is the sequence number. 
+    Custom words can also be numbered in the sequence “/ct1_1” where the first number is the ID number and the second number is the sequence number. 
 
-Let’s look at another example with the same custom words:
+    Let’s look at another example with the same custom words:
 
-    “My car sprayed /ct1_1 and /ct1_2 all over the place! The /ct1_2 covered the /ct2_1 and the /ct1_1 covered the /ct2_2!”
+        “My car sprayed /ct1_1 and /ct1_2 all over the place! The /ct1_2 covered the /ct2_1 and the /ct1_1 covered the /ct2_2!”
 
-In this example, with the same configuration as the lesson in “custom words basics,” the program will ask for words in the following sequence:
+    In this example, with the same configuration as the lesson in “custom words basics,” the program will ask for words in the following sequence:
 
-    Fluid
-    Fluid
-    Thing outside
-    Thing outside
+        Fluid
+        Fluid
+        Thing outside
+        Thing outside
 
-When prompted, the user responds with: 
+    When prompted, the user responds with: 
     
-    Apple juice 
-    Orange juice
-    Grass
-    Beach ball
+        Apple juice 
+        Orange juice
+        Grass
+        Beach ball
 
-The result:
-    “My car sprayed Apple juice and Orange juice all over the place! The Orange juice covered the grass and the Apple juice covered the beach ball!”
-Noticed how each word got carried over to matching sequence numbers (after the underscore). Keep this in mind when writing Madlibs with your own custom categories."""
+    The result:
+        “My car sprayed Apple juice and Orange juice all over the place! The Orange juice covered the grass and the Apple juice covered the beach ball!”
+    Noticed how each word got carried over to matching sequence numbers (after the underscore). Keep this in mind when writing Madlibs with your own custom categories."""
 
 prewriting_custom_configurations = """
     When writing Madlibs to send to a friend, you’ll want to include your custom words pre-configured so that neither you, nor the recipient will be required to configure them again. To do this, you’ll need to type a custom dictionary.

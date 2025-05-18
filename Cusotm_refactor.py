@@ -763,7 +763,7 @@ class MadlibApp:
         btn.grid(row=1, column=4, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         self.root.mainloop()  # deploys the GUI screen till closed
-    def process_next_keyword(self): #todo: pass the word and use re.sub to retain quotes
+    def process_next_keyword(self): #todo: use self.display.insert(tk.END, f"{user_input}\n") to show recorded word
         user_text = self.input_entry.get().strip()
         self.input_entry.delete(0, tk.END)
         if user_text and self.save_flag == False:
@@ -778,7 +778,7 @@ class MadlibApp:
         self.next_prompt()
 
     def normalize_quotes(self, text):
-        return text.replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'") #todo: try to support curly quotes in HTML or Docx print instead of replacing them.
+        return text.replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
     def smart_join(self, words):  # removes spaces surrounding punctuation
         result = ""
         prev_word = ""
