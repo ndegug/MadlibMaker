@@ -106,8 +106,8 @@ class MadlibApp:
         self.file_entry.pack(pady=5)
 
         # Enter button
-        enter_button = tk.Button(self.root, text="Enter", command=self.process_input_file_3)
-        enter_button.pack(pady=10)
+        #enter_button = tk.Button(self.root, text="Enter", command=self.process_input_file_3())
+        #enter_button.pack(pady=10)
 
     def process_input_file_3(self, path): #todo remove other process_input_file methods if this works
         madlib_text = ""
