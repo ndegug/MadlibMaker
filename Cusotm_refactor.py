@@ -788,7 +788,7 @@ class MadlibApp:
         display.pack(pady=20)
         self.filled = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
 
-        if self.title: #todo: move this step to save function when dox outputs are integrated. display.insert title here instead
+        if self.title: #todo: decide if this step should be in save function when dox outputs are integrated. display.insert title here instead
             self.filled=self.title+"\n\n"+self.filled
 
         display.insert(tk.END, "\nHere is your filled Madlib:\n" + self.filled)
@@ -1019,7 +1019,7 @@ class MadlibApp:
         elif md==2: #word document outputs
             self.dummyscreen("dox outputs")
         elif md==3: #save and play inputs
-            self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')  # todo: add title
+            self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')  # todo: decide if this should be done in file_choice
             w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(
                 base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
                          width=80, height=10, bg="#d0e7ff",
