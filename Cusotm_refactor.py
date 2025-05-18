@@ -838,7 +838,7 @@ class MadlibApp:
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
 
-    def plain_file_name(self): #todo: combine all output file namers into one function. Use conditional statements to generate buttons of the needed types
+    def plain_file_name(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)', width=80, height=10,
                      bg="#d0e7ff",
@@ -854,17 +854,6 @@ class MadlibApp:
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
         self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.output_save(0), bg="#3b9dd3",
                                     fg="white")
-        self.submit_btn.pack(pady=10)
-    def plain_save(self): #todo: combine all save/save notifications into one function
-
-        base = self.input_entry.get().strip()
-        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.file_write(self.normalize_quotes(self.filled), base, 'outputs','.txt') #todo: add title
-        w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.txt in your \"outputs\" folder.\nWe hope you like it!',
-                     width=80, height=10, bg="#d0e7ff",
-                     fg="black")
-        w.pack(pady=10)
-        self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
 
     def invalid_html_window(self):
@@ -1006,17 +995,6 @@ class MadlibApp:
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
         self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.output_save(1), bg="#3b9dd3",
                                     fg="white")
-        self.submit_btn.pack(pady=10)
-    def html_save(self):
-
-        base = self.input_entry.get().strip()
-        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.file_write(self.html_out, base, 'outputs','.html') #todo: include selected (or loaded) title and formatting from terminal version
-        w = tk.Label(self.root, text='Your mandlib has been saved to: '+str(base)+ '.html in your \"outputs\" folder.\nNow let\'s print it!',
-                     width=80, height=10, bg="#d0e7ff",
-                     fg="black")
-        w.pack(pady=10)
-        self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
     def output_save(self,md):
         base = self.input_entry.get().strip()
