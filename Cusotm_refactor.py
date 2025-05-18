@@ -477,7 +477,7 @@ class MadlibApp:
             self.dummyscreen('Invalid mode for advance_from_first()')
 
         #self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', self.raw_in)
-        self.userMadlib= self.raw_in.split(' ') #todo: try and make all splits like this and integrate previous version's solution to quote problems
+        self.userMadlib= self.raw_in.split(' ')
         self.prompt_words = iter(self.userMadlib)
         #self.outlist = []
         # Extract and sort custom keys
@@ -788,7 +788,7 @@ class MadlibApp:
         display.pack(pady=20)
         self.filled = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
 
-        if self.title:
+        if self.title: #todo: move this step to save function when dox outputs are integrated. display.insert title here instead
             self.filled=self.title+"\n\n"+self.filled
 
         display.insert(tk.END, "\nHere is your filled Madlib:\n" + self.filled)
@@ -1019,7 +1019,7 @@ class MadlibApp:
         elif md==2: #word document outputs
             self.dummyscreen("dox outputs")
         elif md==3: #save and play inputs
-            self.file_write(self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')  # todo: add title
+            self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')  # todo: add title
             w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(
                 base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
                          width=80, height=10, bg="#d0e7ff",
@@ -1028,16 +1028,16 @@ class MadlibApp:
             self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_second(),
                                         bg="#3b9dd3", fg="white")
             self.submit_btn.pack(pady=10)
-        else: #plain and all invalids
-            
-            self.file_write(self.html_out, base, 'outputs',
+        else: #all invalids
+
+            self.file_write(self.html_out + self.normalize_quotes(self.filled), base, 'outputs',
                             '.txt')  # todo: include selected (or loaded) title and formatting from terminal version
             w = tk.Label(self.root, text='Invalid save case found, please contact the developer.\n In the meantime, your mandlib has been saved to: ' + str(
-                base) + '.txt in your \"outputs\" folder.',
+                base) + '.txt in your \"outputs\" folder, but it won\'t be pretty.',
                          width=80, height=10, bg="#d0e7ff",
                          fg="black")
             w.pack(pady=10)
-            self.submit_btn = tk.Button(self.root, text="Ok", command=lambda: self.html_view(), bg="#3b9dd3",
+            self.submit_btn = tk.Button(self.root, text="Ok", command=lambda: self.reset(), bg="#3b9dd3",
                                         fg="white")
             self.submit_btn.pack(pady=10)
     def html_view(self):
