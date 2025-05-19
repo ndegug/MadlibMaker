@@ -722,9 +722,14 @@ class MadlibApp:
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         #Yes button
-        btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save", bg="#3b9dd3",
+        btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save plain text input", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        btn = tk.Button(button_frame, command=lambda: self.output_file_name(4), text="Save Word doc input",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame, todo: add a "file type choice" window
+        btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # no button
         btn = tk.Button(button_frame, command=lambda: self.advance_to_second(), text="Play without saving", bg="#3b9dd3",
@@ -734,7 +739,7 @@ class MadlibApp:
         btn = tk.Button(button_frame, command=lambda: self.advance_to_html(), text="Print HTML",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
-        btn.grid(row=1, column=4, padx=2, pady=2,
+        btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         self.root.mainloop()  # deploys the GUI screen till closed
     def process_next_keyword(self): #todo: use self.display.insert(tk.END, f"{user_input}\n") to show recorded word
@@ -1074,21 +1079,25 @@ class MadlibApp:
 
             doc = Document()
 
-            if self.title:
-                # Add title
-                title_paragraph = doc.add_paragraph()
-                title_run = title_paragraph.add_run('<t>'+self.title+'/t')
-                title_run.bold = True
-                title_run.font.size = Pt(24)
-                title_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
-                # Add a blank line
-                doc.add_paragraph()
+            # Add title
+            title_paragraph = doc.add_paragraph()
+            title_run = title_paragraph.add_run('<t>'+self.title+'</t>')
+            title_run.bold = True
+            title_run.font.size = Pt(24)
+            title_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+            # Add a blank line
+            doc.add_paragraph()
 
             # Add body text
             body_paragraph = doc.add_paragraph()
-            body_run = body_paragraph.add_run(self.filled)
+            body_run = body_paragraph.add_run(self.raw_in)
             body_run.font.size = Pt(12)
+
+            custom_paragraph = doc.add_paragraph()
+            custom_run = custom_paragraph.add_run('<C>'+str(self.custom))
+            custom_run.font.size= Pt(12)
 
             # Save the document
             doc.save(full_path)
