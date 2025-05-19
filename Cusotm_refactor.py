@@ -1059,10 +1059,41 @@ class MadlibApp:
             self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3",
                                         fg="white")
             self.submit_btn.pack(pady=10)
-        elif md==3: #save and play inputs
+        elif md==3: #save and play inputs plain text
             self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')  # todo: decide if this should be done in file_choice
             w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(
                 base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
+                         width=80, height=10, bg="#d0e7ff",
+                         fg="black")
+            w.pack(pady=10)
+            self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_second(),
+                                        bg="#3b9dd3", fg="white")
+            self.submit_btn.pack(pady=10)
+        elif md==4: #save and play Word docx inputs
+            full_path = os.path.join('inputs', base + '.docx')
+
+            doc = Document()
+
+            if self.title:
+                # Add title
+                title_paragraph = doc.add_paragraph()
+                title_run = title_paragraph.add_run('<t>'+self.title+'/t')
+                title_run.bold = True
+                title_run.font.size = Pt(24)
+                title_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+                # Add a blank line
+                doc.add_paragraph()
+
+            # Add body text
+            body_paragraph = doc.add_paragraph()
+            body_run = body_paragraph.add_run(self.filled)
+            body_run.font.size = Pt(12)
+
+            # Save the document
+            doc.save(full_path)
+            w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
+                base) + '.docx in your \"inputs\" folder.\nNow let\'s play it!',
                          width=80, height=10, bg="#d0e7ff",
                          fg="black")
             w.pack(pady=10)
