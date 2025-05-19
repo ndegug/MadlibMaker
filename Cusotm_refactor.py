@@ -7,6 +7,8 @@ import os
 from long_strings_gui import *
 import json
 from docx import Document
+from docx.shared import Pt
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 numword_dic = {}
 unnumbered = "(/...)"
@@ -720,9 +722,14 @@ class MadlibApp:
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         #Yes button
-        btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save", bg="#3b9dd3",
+        btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save plain text input", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        btn = tk.Button(button_frame, command=lambda: self.output_file_name(4), text="Save Word doc input",
+                        bg="#3b9dd3",
+                        fg="white")  # defines each button with frame, todo: add a "file type choice" window
+        btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # no button
         btn = tk.Button(button_frame, command=lambda: self.advance_to_second(), text="Play without saving", bg="#3b9dd3",
@@ -732,7 +739,7 @@ class MadlibApp:
         btn = tk.Button(button_frame, command=lambda: self.advance_to_html(), text="Print HTML",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
-        btn.grid(row=1, column=4, padx=2, pady=2,
+        btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         self.root.mainloop()  # deploys the GUI screen till closed
     def process_next_keyword(self): #todo: use self.display.insert(tk.END, f"{user_input}\n") to show recorded word
@@ -788,10 +795,12 @@ class MadlibApp:
         display.pack(pady=20)
         self.filled = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
 
-        if self.title: #todo: decide if this step should be in save function when dox outputs are integrated. display.insert title here instead
-            self.filled=self.title+"\n\n"+self.filled
 
-        display.insert(tk.END, "\nHere is your filled Madlib:\n" + self.filled)
+
+        display.insert(tk.END, "\nHere is your filled Madlib:")
+        if self.title:
+            display.insert(tk.END, "\n\n"+self.title)
+        display.insert(tk.END, "\n\n"+self.filled)
         w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
                      fg="black")
         w.pack(pady=5)
@@ -799,9 +808,13 @@ class MadlibApp:
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Yes button
-        btn = tk.Button(button_frame, command=lambda: self.output_file_name(0), text="Save", bg="#3b9dd3",
+        btn = tk.Button(button_frame, command=lambda: self.output_file_name(0), text="Save plain text", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
+                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        btn = tk.Button(button_frame, command=lambda: self.output_file_name(2), text="Save Word Doc", bg="#3b9dd3",
+                        fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # no button
         btn = tk.Button(button_frame, command=lambda: self.reset(), text="Return to menu",
@@ -995,6 +1008,8 @@ class MadlibApp:
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         if md==0: #plain save
+            if self.title:
+                self.filled = self.title + "\n\n" + self.filled
             self.file_write(self.normalize_quotes(self.filled), base, 'outputs', '.txt')  # todo: add title
             w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
                 base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',
@@ -1017,11 +1032,77 @@ class MadlibApp:
                                         fg="white")
             self.submit_btn.pack(pady=10)
         elif md==2: #word document outputs
-            self.dummyscreen("dox outputs")
-        elif md==3: #save and play inputs
+            # Full path to save the document
+
+            full_path = os.path.join('outputs', base + '.docx')
+
+            doc = Document()
+
+            if self.title:
+                # Add title
+                title_paragraph = doc.add_paragraph()
+                title_run = title_paragraph.add_run(self.title)
+                title_run.bold = True
+                title_run.font.size = Pt(24)
+                title_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+                # Add a blank line
+                doc.add_paragraph()
+
+            # Add body text
+            body_paragraph = doc.add_paragraph()
+            body_run = body_paragraph.add_run(self.filled)
+            body_run.font.size = Pt(12)
+
+            # Save the document
+            doc.save(full_path)
+            w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
+                base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',
+                         width=80, height=10, bg="#d0e7ff",
+                         fg="black")
+            w.pack(pady=10)
+            self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3",
+                                        fg="white")
+            self.submit_btn.pack(pady=10)
+        elif md==3: #save and play inputs plain text
             self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')  # todo: decide if this should be done in file_choice
             w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(
                 base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
+                         width=80, height=10, bg="#d0e7ff",
+                         fg="black")
+            w.pack(pady=10)
+            self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_second(),
+                                        bg="#3b9dd3", fg="white")
+            self.submit_btn.pack(pady=10)
+        elif md==4: #save and play Word docx inputs
+            full_path = os.path.join('inputs', base + '.docx')
+
+            doc = Document()
+
+
+            # Add title
+            title_paragraph = doc.add_paragraph()
+            title_run = title_paragraph.add_run('<t>'+self.title+'</t>')
+            title_run.bold = True
+            title_run.font.size = Pt(24)
+            title_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+            # Add a blank line
+            doc.add_paragraph()
+
+            # Add body text
+            body_paragraph = doc.add_paragraph()
+            body_run = body_paragraph.add_run(self.raw_in)
+            body_run.font.size = Pt(12)
+
+            custom_paragraph = doc.add_paragraph()
+            custom_run = custom_paragraph.add_run('<C>'+str(self.custom))
+            custom_run.font.size= Pt(12)
+
+            # Save the document
+            doc.save(full_path)
+            w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
+                base) + '.docx in your \"inputs\" folder.\nNow let\'s play it!',
                          width=80, height=10, bg="#d0e7ff",
                          fg="black")
             w.pack(pady=10)
