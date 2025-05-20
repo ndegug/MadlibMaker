@@ -553,7 +553,7 @@ class MadlibApp:
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         self.display.pack(pady=20)
-        w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff", fg="black")
+        w = tk.Label(self.root, text='What would you like to do?', width=40, height=5, bg="#d0e7ff", fg="black")
         w.pack(pady=5)
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
@@ -561,7 +561,7 @@ class MadlibApp:
         if not self.load_mode: #manual input, show it, no hide needed
             self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.title + "\n\n"+self.raw_in)
         else: #load, use button to reveal
-            self.display.insert(tk.END, "\n   Your Madlib is ready to play. If you are the author, click \"SPOIL\" to preview it. Otherwise, we recommend you play it blind.")
+            self.display.insert(tk.END, "\n   Your Madlib is ready to play. If you are the author, click \"SPOIL\" to preview it. Otherwise, we recommend you click \"Play without Saving\" to play it blind.")
             self.spbtn = tk.Button(button_frame, command=lambda: self.spoiler(), text="SPOIL",
                             bg="#F23F3F",
                             fg="white")  # defines each button with frame,
