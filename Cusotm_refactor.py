@@ -550,7 +550,7 @@ class MadlibApp:
 
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black")
+        self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         self.display.pack(pady=20)
         w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff", fg="black")
         w.pack(pady=5)
@@ -684,21 +684,18 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
 
-        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
-                                                 fg="black")
+        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black")
         self.display.pack(pady=10)
         # define and create entry field for user's entry for a word
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
-        self.input_entry.bind("<Return>",
-                              lambda event: self.process_invalid_html())  # allows the "enter" key to submit the keyword
+        self.input_entry.bind("<Return>", lambda event: self.process_invalid_html())  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
 
-        self.submit_btn = tk.Button(self.root, text="Submit", command=self.process_invalid_html, bg="#3b9dd3",
-                                    fg="white")
+        self.submit_btn = tk.Button(self.root, text="Submit", command=self.process_invalid_html, bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
 
-    def html_replace_C(self): #todo: decide between original (had length bugs) and "_C." if "_C" then refactor keyword replacement to match this
+    def  html_replace(self): #todo: decide between original (had length bugs) and "_C." if "_C" then refactor keyword replacement to match this
         try:
             while True:
                 self.current_word = next(self.html_words)
@@ -764,14 +761,14 @@ class MadlibApp:
         self.userMadlib=self.raw_in.split(' ')
         self.html_words = iter(self.userMadlib)
         self.invalid_html_window()
-        self.html_replace_C()
+        self. html_replace()
 
     def process_invalid_html(self):
         user_text = self.input_entry.get().strip()
         self.input_entry.delete(0, tk.END)
         user_ht = htmlsample.replace('underscript', user_text)
         self.htlist.append(user_ht)
-        self.html_replace_C()
+        self. html_replace()
     def html_post_process(self):
         for widget in self.root.winfo_children():
             widget.destroy()
