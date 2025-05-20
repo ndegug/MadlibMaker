@@ -41,7 +41,8 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
         self.load_mode = True
-        label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 14))
+        label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 12, "bold"),width=100, height=5, bg="#d0e7ff",
+                         fg="black")
         label.pack(pady=10)
 
         inputs_path = os.path.join(os.getcwd(), "inputs")
@@ -70,7 +71,7 @@ class MadlibApp:
             btn.grid(row=row, column=col, padx=2, pady=2,
                      sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
             col += 1
-            if col >= 10:  # ten columns, then new row
+            if col >= 5:  # ten columns, then new row
                 col = 0
                 row += 1
     def load_input_file_old(self): #todo: remove unless load bugs are found
@@ -356,7 +357,7 @@ class MadlibApp:
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
                                                  fg="black", wrap=tk.WORD)
-        self.display.pack(pady=10)
+        self.display.pack(pady=10, padx=5)
         self.display.insert(tk.END, how_to_write_a_madlib)
         #self.display.insert(tk.END, content.replace("\\n", "\n"))
         self.display.config(state='disabled')  # Make it read-only
@@ -414,7 +415,7 @@ class MadlibApp:
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
                                                  fg="black", wrap=tk.WORD)
-        self.display.pack(pady=10)
+        self.display.pack(pady=10, padx=5)
         self.display.insert(tk.END, content)
         #self.display.insert(tk.END, content.replace("\\n", "\n"))
         self.display.config(state='disabled')  # Make it read-only
@@ -451,15 +452,18 @@ class MadlibApp:
     def setup_first_window(self):
         for widget in self.root.winfo_children():
             widget.destroy()
-        self.input_entry = tk.Entry(self.root, width=60)
-        self.input_entry.pack(pady=20)
+        l = tk.Label(self.root, text='Type your Madlib below!', font=("Arial", 12, "bold"), fg="black")
+        l.pack(pady=5)
+        #self.input_entry = tk.Entry(self.root, width=60)
+        #self.input_entry.pack(pady=20)
 
-        for widget in self.root.winfo_children(): widget.destroy() #removes pre-existing widgets
+        #for widget in self.root.winfo_children(): widget.destroy() #removes pre-existing widgets
 
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black") #defines the text input field, size, color of font and background
         self.input_entry.pack(pady=10)# sets the verticle spacing given between the input field and other successive elements
         self.input_entry.focus_set()  # This sets focus so the cursor appears in the field
-
+        l = tk.Label(self.root, text='Use these buttons to quick-drop a keyword!', font=("Arial", 12), fg="black")
+        l.pack(pady=5)
         button_frame = tk.Frame(self.root) #defines the button frame
         button_frame.pack(pady=5)
 
@@ -857,7 +861,7 @@ class MadlibApp:
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
     def output_file_name(self,md): #output file namer
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)', width=80, height=10,
+        w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)',font=("Arial", 12, "bold"), width=80, height=10,
                      bg="#d0e7ff",
                      fg="black")
         w.pack(pady=10)
