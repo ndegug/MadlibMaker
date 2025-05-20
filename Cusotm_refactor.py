@@ -433,14 +433,15 @@ class MadlibApp:
             self.prompt_next_custom() #prompt the next custom word to be configured
 
     def second_window(self): #generates Madlib play/fill window
-        for widget in self.root.winfo_children():
-            widget.destroy()
+        for widget in self.root.winfo_children():widget.destroy()
+        tk.Label(self.root, text="Give us a/an:", font=("Arial", 12, "bold")).pack()
 
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
                                                  fg="black")
-        self.display.pack(pady=10)
+        self.display.pack(pady=10, padx=5)
+        tk.Label(self.root, text="Your entry:", font=("Arial", 12)).pack()
         # define and create entry field for user's entry for a word
-        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=40, bg="#d0e7ff", fg="black")
         self.input_entry.bind("<Return>",
                               lambda event: self.process_next_keyword())  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
@@ -460,13 +461,13 @@ class MadlibApp:
                 realkey = ''.join(regkey)
                 self.save_key = realkey
                 if realkey in generic_words:
-                    self.display.insert(tk.END, f"{generic_words[realkey]}:\n")
+                    self.display.insert(tk.END, f"{generic_words[realkey]}: ")
                     return
                 elif realkey in ignored_words:
                     return
                 else:
                     self.display.insert(tk.END,
-                                        f"{realkey} is not a valid keyword, what would you like to replace it with?:\n")
+                                        f"{realkey} is not a valid keyword, what would you like to replace it with?: ")
                     return
 
             elif re.findall(customreg, self.current_word) and not re.findall(numcustreg, self.current_word):
@@ -475,10 +476,10 @@ class MadlibApp:
                 realkey = ''.join(regkey)
                 self.save_key = realkey
                 if realkey in self.custom:
-                    self.display.insert(tk.END, f"{self.custom[realkey]}:\n")
+                    self.display.insert(tk.END, f"{self.custom[realkey]}: ")
                     return
                 elif realkey not in self.custom:
-                    self.display.insert(tk.END,f"{realkey} hasn't been configured, what would you like to replace it with?:\n")
+                    self.display.insert(tk.END,f"{realkey} hasn't been configured, what would you like to replace it with?: ")
                     return
 
             elif re.findall(numcustreg, self.current_word):
@@ -494,7 +495,7 @@ class MadlibApp:
                     # numbered cust unsaved
                     base = re.findall(customreg, self.current_word)
                     base = ''.join(base)
-                    self.display.insert(tk.END, f"{self.custom[base]} :\n")
+                    self.display.insert(tk.END, f"{self.custom[base]} : ")
                     self.save_flag = True
                     return
                 elif realkey in numword_dic:
@@ -503,13 +504,13 @@ class MadlibApp:
                 elif base not in self.custom:
                     # numbered cust unsaved
                     self.display.insert(tk.END,
-                                        f"{realkey} hasn't been configured, what would you like to replace it with?:\n")
+                                        f"{realkey} hasn't been configured, what would you like to replace it with?: ")
                     self.save_flag = True
                     return
                 else:
                     # others
                     self.display.insert(tk.END,
-                                        f"{realkey} is not a valid keyword, what would you like to replace it with?:\n")
+                                        f"{realkey} is not a valid keyword, what would you like to replace it with?: ")
                     return
 
             elif re.findall(numbered, self.current_word):
@@ -520,7 +521,7 @@ class MadlibApp:
                 base = ''.join(regkeyb)
                 self.save_key = realkey
                 if realkey not in numword_dic.keys() and base in generic_words.keys():
-                    self.display.insert(tk.END, f"{generic_words[base]}:\n")
+                    self.display.insert(tk.END, f"{generic_words[base]}: ")
                     self.save_flag = True
                     return
 
@@ -528,7 +529,7 @@ class MadlibApp:
                 elif realkey not in numword_dic.keys() and base not in generic_words.keys():
                     # numbered unsaved
 
-                    self.display.insert(tk.END,f"{realkey} is not a valid keyword, what would you like to replace it with?:\n")
+                    self.display.insert(tk.END,f"{realkey} is not a valid keyword, what would you like to replace it with?: ")
                     return
                 elif realkey in numword_dic.keys():
                     self.current_word =  re.sub(realkey, numword_dic[realkey], self.current_word)
@@ -590,6 +591,7 @@ class MadlibApp:
         self.root.mainloop()  # deploys the GUI screen till closed
     def process_next_keyword(self): #todo: use self.display.insert(tk.END, f"{user_input}\n") to show recorded word
         user_text = self.input_entry.get().strip()
+        self.display.insert(tk.END, f"{user_text}\n")
         self.input_entry.delete(0, tk.END)
         if user_text and self.save_flag == False:
             self.outlist.append(re.sub(self.save_key, user_text, self.current_word))
