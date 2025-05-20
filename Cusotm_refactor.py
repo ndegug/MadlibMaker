@@ -611,30 +611,29 @@ class MadlibApp:
             widget.destroy()
         display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black")
         display.pack(pady=20)
-        self.filled = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
-
-
+        self.filled = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist)) #rejoins output array without spacing between words and punctuation
 
         display.insert(tk.END, "\nHere is your filled Madlib:")
-        if self.title:
+        if self.title: #display title if it exists
             display.insert(tk.END, "\n\n"+self.title)
         display.insert(tk.END, "\n\n"+self.filled)
         w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
                      fg="black")
         w.pack(pady=5)
-        # buttons for Welcome menu selection
+        # buttons for filled madlib save selection
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
-        # Yes button
+        # Plain text
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(0), text="Save plain text", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
+        #Word doc
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(2), text="Save Word Doc", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
-        # no button
+        # Back to menu
         btn = tk.Button(button_frame, command=lambda: self.reset(), text="Return to menu",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
@@ -670,7 +669,7 @@ class MadlibApp:
                      bg="#d0e7ff",
                      fg="black")
         w.pack(pady=10)
-        # buttons for file naming menu selection
+
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
@@ -678,8 +677,7 @@ class MadlibApp:
                               lambda event: self.output_save(0))  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
-        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.output_save(0), bg="#3b9dd3",
-                                    fg="white")
+        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.output_save(0), bg="#3b9dd3", fg="white") #submit button
         self.submit_btn.pack(pady=10)
 
     def invalid_html_window(self):
