@@ -559,7 +559,7 @@ class MadlibApp:
         button_frame.pack(pady=5)  # for all button frames
 
         if not self.load_mode: #manual input, show it, no hide needed
-            self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.raw_in)
+            self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.title + "\n\n"+self.raw_in)
         else: #load, use button to reveal
             self.display.insert(tk.END, "\n   Your Madlib is ready to play. If you are the author, click \"SPOIL\" to preview it. Otherwise, we recommend you play it blind.")
             self.spbtn = tk.Button(button_frame, command=lambda: self.spoiler(), text="SPOIL",
@@ -805,13 +805,13 @@ class MadlibApp:
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
         self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.save_file(1), bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
-    def save_file(self,md): # saveing input and output todo: rename to generic save name
+    def save_file(self,md): # saveing input and output
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         if md==0: #plain save
             if self.title:
                 self.filled = self.title + "\n\n" + self.filled
-            self.file_write(self.normalize_quotes(self.filled), base, 'outputs', '.txt')  # todo: add title
+            self.file_write(self.normalize_quotes(self.filled), base, 'outputs', '.txt')
             w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
                 base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
                          width=80, height=10, bg="#d0e7ff",
