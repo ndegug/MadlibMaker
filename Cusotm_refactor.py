@@ -859,7 +859,7 @@ class MadlibApp:
                                         fg="white")
             self.submit_btn.pack(pady=10)
         elif md==3: #save and play inputs plain text
-            self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')  # todo: decide if this should be done in file_choice
+            self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')
             w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
                          width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
             w.pack(pady=10)
@@ -903,7 +903,7 @@ class MadlibApp:
         else: #all invalids
 
             self.file_write(self.html_out + self.normalize_quotes(self.filled), base, 'outputs',
-                            '.txt')  # todo: include selected (or loaded) title and formatting from terminal version
+                            '.txt')  #normalize quotes for text
             w = tk.Label(self.root, text='Invalid save case found, please contact the developer.\n In the meantime, your mandlib has been saved to: ' + str(base) + '.txt in your \"outputs\" folder, but it won\'t be pretty.',
                          width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
             w.pack(pady=10)
