@@ -1,13 +1,13 @@
-import tkinter as tk
+import tkinter as tk #main GUI tools
 from tkinter import scrolledtext, messagebox
-import webbrowser
-import tempfile
-import re
-import os
-from long_strings_gui import *
-from docx import Document
-from docx.shared import Pt
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+import webbrowser #for opening html files in browser
+import tempfile #for WORD input file analysis
+import re #regular expression library for substituting words
+import os #for file and folder writing and reading
+from long_strings_gui import * #collection of long strings
+from docx import Document #for writing and reading word docs
+from docx.shared import Pt #for word doc formatting
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT #for word doc formatting
 
 numword_dic = {}
 unnumbered = "(/...)"
