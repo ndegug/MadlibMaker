@@ -34,14 +34,15 @@ class MadlibApp:
         self.outlist = []
         self.htlist = []
         self.title = ''
-        self.mode = 0  # decides mode (0=write or 1=load) todo: change to true/false if binary
+        self.load_mode = False  # decides mode (False=write or True=load) todo: change to true/false if binary
         self.welcomeMenuHandler()
     def load_input_file(self):
         # Clear existing widgets if necessary
         for widget in self.root.winfo_children():
             widget.destroy()
-        self.mode = 1
-        label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 14))
+        self.load_mode = True
+        label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 12, "bold"),width=100, height=5, bg="#d0e7ff",
+                         fg="black")
         label.pack(pady=10)
 
         inputs_path = os.path.join(os.getcwd(), "inputs")
@@ -70,14 +71,14 @@ class MadlibApp:
             btn.grid(row=row, column=col, padx=2, pady=2,
                      sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
             col += 1
-            if col >= 10:  # ten columns, then new row
+            if col >= 5:  # ten columns, then new row
                 col = 0
                 row += 1
     def load_input_file_old(self): #todo: remove unless load bugs are found
         # Clear the window
         for widget in self.root.winfo_children():
             widget.destroy()
-        self.mode=1
+        self.load_mode = True
         # Get all .txt and .docx files from "inputs" folder
 
         input_dir = os.path.join(os.path.dirname(__file__), "inputs")
@@ -276,8 +277,24 @@ class MadlibApp:
 
         # Welcome Menu
         # welcome text
-        w = tk.Label(self.root, text='Hello, Welcome to the Madlib Maker', width=80, height=10, bg="#d0e7ff", fg="black")
+        w = tk.Label(self.root, text='Hello!\n Welcome to the Madlib Maker',font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
+        w.pack(pady=(15))
+        w = tk.Label(self.root, text='What would you like to do\ntoday?', width=24,
+                     height=3, bg="#d0e7ff", fg="black")
         w.pack(pady=10)
+        #w = scrolledtext.ScrolledText(self.root, font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
+        #w.pack(pady=10)
+
+        #font configs
+        #w.tag_configure("bold", font=("Arial", 12, "bold"),justify='center')
+        #w.tag_configure("plain", font=("Arial", 12),justify='center')
+        # Insert both styled and plain text
+        #w.insert(tk.END, "\nHello!\nWelcome to the Madlib Maker!\n","bold")
+        #w.insert(tk.END, "\nWhat would you like to do today?","plain")
+
+        # Optionally disable editing
+        #w.config(state='disabled')
+
         # buttons for Welcome menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
@@ -304,7 +321,8 @@ class MadlibApp:
 
         # Welcome Menu
         # welcome text
-        w = tk.Label(self.root, text='What would you like to learn about?', width=80, height=10, bg="#d0e7ff", fg="black")
+        w = tk.Label(self.root, text='What would you like to learn about?', font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
+
         w.pack(pady=10)
         # buttons for Welcome menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
@@ -331,13 +349,15 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=4, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
-        #todo: include a "back to menu" button
+        btn= tk.Button(self.root, text="< Back to main menu", command=lambda: self.reset(), bg="#3b9dd3",
+                                    fg="white")
+        btn.pack(pady=10)
         self.root.mainloop()  # deploys the GUI screen till closed #todo: test if needed
     def write_instructions_menu(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
                                                  fg="black", wrap=tk.WORD)
-        self.display.pack(pady=10)
+        self.display.pack(pady=10, padx=5)
         self.display.insert(tk.END, how_to_write_a_madlib)
         #self.display.insert(tk.END, content.replace("\\n", "\n"))
         self.display.config(state='disabled')  # Make it read-only
@@ -395,7 +415,7 @@ class MadlibApp:
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
                                                  fg="black", wrap=tk.WORD)
-        self.display.pack(pady=10)
+        self.display.pack(pady=10, padx=5)
         self.display.insert(tk.END, content)
         #self.display.insert(tk.END, content.replace("\\n", "\n"))
         self.display.config(state='disabled')  # Make it read-only
@@ -432,15 +452,18 @@ class MadlibApp:
     def setup_first_window(self):
         for widget in self.root.winfo_children():
             widget.destroy()
-        self.input_entry = tk.Entry(self.root, width=60)
-        self.input_entry.pack(pady=20)
+        l = tk.Label(self.root, text='Type your Madlib below!', font=("Arial", 12, "bold"), fg="black")
+        l.pack(pady=5)
+        #self.input_entry = tk.Entry(self.root, width=60)
+        #self.input_entry.pack(pady=20)
 
-        for widget in self.root.winfo_children(): widget.destroy() #removes pre-existing widgets
+        #for widget in self.root.winfo_children(): widget.destroy() #removes pre-existing widgets
 
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black") #defines the text input field, size, color of font and background
         self.input_entry.pack(pady=10)# sets the verticle spacing given between the input field and other successive elements
         self.input_entry.focus_set()  # This sets focus so the cursor appears in the field
-
+        l = tk.Label(self.root, text='Use these buttons to quick-drop a keyword!', font=("Arial", 12), fg="black")
+        l.pack(pady=5)
         button_frame = tk.Frame(self.root) #defines the button frame
         button_frame.pack(pady=5)
 
@@ -471,9 +494,9 @@ class MadlibApp:
         self.input_entry.insert(tk.END, keyword) #inputs keyword without a space (do not have both lines active)
         self.sync_display() #adds the keyword to the display
     def advance_from_first(self):
-        if self.mode==0:#manual input
+        if self.load_mode == False:#manual input
             self.raw_in = self.input_entry.get()
-        elif self.mode==1: #from file
+        elif self.load_mode == True: #from file
             pass
         else:
             self.dummyscreen('Invalid mode for advance_from_first()')
@@ -707,28 +730,42 @@ class MadlibApp:
     def advance_to_second(self):
         self.second_window()
         self.next_prompt()
+    def spoiler(self):
+        self.display.insert(tk.END, self.raw_in)
+        self.spbtn.destroy()
+
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         print(self.title)
-        display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0",
+        self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0",
                                             fg="black")
-        display.pack(pady=20)
-        # final_output = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
-        display.insert(tk.END, "\nHere is your Madlib:\n" + self.raw_in)
+        self.display.pack(pady=20)
+        # buttons for Welcome menu selection
         w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
                      fg="black")
         w.pack(pady=5)
-        # buttons for Welcome menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
-        #Yes button
+
+        if not self.load_mode: #manual input, show it, no hide needed
+            self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.raw_in)
+        else: #load, use button to reveal
+            self.display.insert(tk.END, "\nYou are about to play:\n\n" + self.title + "\n\n")
+            self.spbtn = tk.Button(button_frame, command=lambda: self.spoiler(), text="SPOIL",
+                            bg="#F23F3F",
+                            fg="white")  # defines each button with frame,
+            self.spbtn.grid(row=1, column=4, padx=2, pady=2,
+                     sticky="ew")
+
+
+        #plain input save
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save plain text input", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(4), text="Save Word doc input",
                         bg="#3b9dd3",
-                        fg="white")  # defines each button with frame, todo: add a "file type choice" window
+                        fg="white")  # defines each button with frame,
         btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # no button
@@ -736,7 +773,7 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
-        btn = tk.Button(button_frame, command=lambda: self.advance_to_html(), text="Print HTML",
+        btn = tk.Button(button_frame, command=lambda: self.advance_to_html(), text="Print Physical",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=3, padx=2, pady=2,
@@ -824,7 +861,7 @@ class MadlibApp:
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
     def output_file_name(self,md): #output file namer
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)', width=80, height=10,
+        w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)',font=("Arial", 12, "bold"), width=80, height=10,
                      bg="#d0e7ff",
                      fg="black")
         w.pack(pady=10)
@@ -969,7 +1006,7 @@ class MadlibApp:
 
     def html_file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",
+        w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
                      fg="black")
         w.pack(pady=10)
         # buttons for Welcome menu selection
@@ -1012,7 +1049,7 @@ class MadlibApp:
                 self.filled = self.title + "\n\n" + self.filled
             self.file_write(self.normalize_quotes(self.filled), base, 'outputs', '.txt')  # todo: add title
             w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
-                base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',
+                base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
                          width=80, height=10, bg="#d0e7ff",
                          fg="black")
             w.pack(pady=10)
@@ -1022,14 +1059,14 @@ class MadlibApp:
         elif md==1: #html save
             
             self.file_write(self.html_out, base, 'outputs',
-                            '.html')  # todo: include selected (or loaded) title and formatting from terminal version
+                            '.html')
             w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(
                 base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',
-                         width=80, height=10, bg="#d0e7ff",
+                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
                          fg="black")
             w.pack(pady=10)
             self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3",
-                                        fg="white")
+                                        fg="white") #todo: add button grid and "back to menu" for file confirmations, beware of "laready has slaves" errors
             self.submit_btn.pack(pady=10)
         elif md==2: #word document outputs
             # Full path to save the document
@@ -1057,7 +1094,7 @@ class MadlibApp:
             # Save the document
             doc.save(full_path)
             w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
-                base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',
+                base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
                          width=80, height=10, bg="#d0e7ff",
                          fg="black")
             w.pack(pady=10)
@@ -1068,7 +1105,7 @@ class MadlibApp:
             self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')  # todo: decide if this should be done in file_choice
             w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(
                 base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
-                         width=80, height=10, bg="#d0e7ff",
+                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
                          fg="black")
             w.pack(pady=10)
             self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_second(),
@@ -1103,7 +1140,7 @@ class MadlibApp:
             doc.save(full_path)
             w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
                 base) + '.docx in your \"inputs\" folder.\nNow let\'s play it!',
-                         width=80, height=10, bg="#d0e7ff",
+                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
                          fg="black")
             w.pack(pady=10)
             self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_second(),
@@ -1115,7 +1152,7 @@ class MadlibApp:
                             '.txt')  # todo: include selected (or loaded) title and formatting from terminal version
             w = tk.Label(self.root, text='Invalid save case found, please contact the developer.\n In the meantime, your mandlib has been saved to: ' + str(
                 base) + '.txt in your \"outputs\" folder, but it won\'t be pretty.',
-                         width=80, height=10, bg="#d0e7ff",
+                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
                          fg="black")
             w.pack(pady=10)
             self.submit_btn = tk.Button(self.root, text="Ok", command=lambda: self.reset(), bg="#3b9dd3",
