@@ -589,7 +589,7 @@ class MadlibApp:
         btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         self.root.mainloop()  # deploys the GUI screen till closed
-    def process_next_keyword(self): #todo: use self.display.insert(tk.END, f"{user_input}\n") to show recorded word
+    def process_next_keyword(self):
         user_text = self.input_entry.get().strip()
         self.display.insert(tk.END, f"{user_text}\n")
         self.input_entry.delete(0, tk.END)
