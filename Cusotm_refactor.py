@@ -34,13 +34,13 @@ class MadlibApp:
         self.outlist = []
         self.htlist = []
         self.title = ''
-        self.mode = 0  # decides mode (0=write or 1=load) todo: change to true/false if binary
+        self.load_mode = False  # decides mode (False=write or True=load) todo: change to true/false if binary
         self.welcomeMenuHandler()
     def load_input_file(self):
         # Clear existing widgets if necessary
         for widget in self.root.winfo_children():
             widget.destroy()
-        self.mode = 1
+        self.load_mode = True
         label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 14))
         label.pack(pady=10)
 
@@ -77,7 +77,7 @@ class MadlibApp:
         # Clear the window
         for widget in self.root.winfo_children():
             widget.destroy()
-        self.mode=1
+        self.load_mode = True
         # Get all .txt and .docx files from "inputs" folder
 
         input_dir = os.path.join(os.path.dirname(__file__), "inputs")
@@ -471,9 +471,9 @@ class MadlibApp:
         self.input_entry.insert(tk.END, keyword) #inputs keyword without a space (do not have both lines active)
         self.sync_display() #adds the keyword to the display
     def advance_from_first(self):
-        if self.mode==0:#manual input
+        if self.load_mode == False:#manual input
             self.raw_in = self.input_entry.get()
-        elif self.mode==1: #from file
+        elif self.load_mode == True: #from file
             pass
         else:
             self.dummyscreen('Invalid mode for advance_from_first()')
@@ -707,20 +707,34 @@ class MadlibApp:
     def advance_to_second(self):
         self.second_window()
         self.next_prompt()
+    def spoiler(self):
+        self.display.insert(tk.END, self.raw_in)
+        self.spbtn.destroy()
+
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         print(self.title)
-        display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0",
+        self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0",
                                             fg="black")
-        display.pack(pady=20)
-        # final_output = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist))
-        display.insert(tk.END, "\nHere is your Madlib:\n" + self.raw_in)
+        self.display.pack(pady=20)
+        # buttons for Welcome menu selection
         w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
                      fg="black")
         w.pack(pady=5)
-        # buttons for Welcome menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
+
+        if self.load_mode==False: #manual input, show it, no hide needed
+            self.display.insert(tk.END, "\nHere is your Madlib:\n" + self.raw_in)
+        else: #load, use button to reveal
+            self.display.insert(tk.END, "\nYou are about to play:\n" + self.title + "\n\n")
+            self.spbtn = tk.Button(button_frame, command=lambda: self.spoiler(), text="SPOIL",
+                            bg="#F23F3F",
+                            fg="white")  # defines each button with frame,
+            self.spbtn.grid(row=1, column=4, padx=2, pady=2,
+                     sticky="ew")
+
+
         #Yes button
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save plain text input", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
