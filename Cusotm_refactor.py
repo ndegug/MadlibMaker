@@ -545,7 +545,7 @@ class MadlibApp:
         self.next_prompt()
 
     def spoiler(self): #inserts madlib input text to display if the user chooses to spoil a loaded madlib
-        self.display.insert(tk.END, self.raw_in)
+        self.display.insert(tk.END, "\n\n" + self.title + "\n\n"+self.raw_in)
         self.spbtn.destroy()
 
     def file_choice(self):
@@ -560,7 +560,7 @@ class MadlibApp:
         if not self.load_mode: #manual input, show it, no hide needed
             self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.raw_in)
         else: #load, use button to reveal
-            self.display.insert(tk.END, "\nYou are about to play:\n\n" + self.title + "\n\n")
+            self.display.insert(tk.END, "\n   Your Madlib is ready to play. If you are the author, click \"SPOIL\" to preview it. Otherwise, we recommend you play it blind.")
             self.spbtn = tk.Button(button_frame, command=lambda: self.spoiler(), text="SPOIL",
                             bg="#F23F3F",
                             fg="white")  # defines each button with frame,
