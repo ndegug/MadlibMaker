@@ -415,23 +415,23 @@ class MadlibApp:
 
     def prompt_next_custom(self): #promts each custom word in display
         if self.custom_index < len(self.custom_keys):
-            current_key = self.custom_keys[self.custom_index] #grab the custom key based on index
+            current_key = self.custom_keys[self.custom_index] #grab the custom key based on sequential index
             self.display.insert(tk.END, f"Custom {current_key[3:]}: ") #inserts each prompt with the entry based on ID number
         else:
             self.title_check() #with all customs configured, advance to title check
 
 
-    def save_custom_word(self):
+    def save_custom_word(self): #saves custom word to custom dictionary
         current_key = self.custom_keys[self.custom_index]
         user_input = self.custom_entry.get().strip()
         if user_input:
-            self.custom[current_key] = user_input
-            self.custom_entry.delete(0, tk.END)
-            self.custom_index += 1
-            self.display.insert(tk.END, f"{user_input}\n")
-            self.prompt_next_custom()
+            self.custom[current_key] = user_input #adds user input to custom dictionary for current key
+            self.custom_entry.delete(0, tk.END) #deletes user input from the input field
+            self.custom_index += 1 #updates the custom keys index
+            self.display.insert(tk.END, f"{user_input}\n") #append user input to display for reference todo: add this to main word entries
+            self.prompt_next_custom() #prompt the next custom word to be configured
 
-    def second_window(self):
+    def second_window(self): #generates Madlib play/fill window
         for widget in self.root.winfo_children():
             widget.destroy()
 
@@ -449,27 +449,24 @@ class MadlibApp:
                                     fg="white")
         self.submit_btn.pack(pady=10)
 
-    def next_prompt(self):
+    def next_prompt(self): #iterates through each word of the madlib array, returns when user input is needed todo: complete comments
         try:
             self.current_word = next(self.prompt_words)
-            if re.findall(unnumbered, self.current_word) and not re.findall(numbered,
-                                                                            self.current_word) and not re.findall(
-                    customreg, self.current_word):
+
+            #Generic word unnumbered
+            if re.findall(unnumbered, self.current_word) and not re.findall(numbered,self.current_word) and not re.findall(customreg, self.current_word):
                 regkey = re.findall(unnumbered, self.current_word)
                 realkey = ''.join(regkey)
                 self.save_key = realkey
                 if realkey in generic_words:
                     self.display.insert(tk.END, f"{generic_words[realkey]}:\n")
                     return
-                    # outlist.append(keyword_convert(realkey, self.current_word, 0, None))
                 elif realkey in ignored_words:
-                    # outlist.append(word)
                     return
                 else:
                     self.display.insert(tk.END,
                                         f"{realkey} is not a valid keyword, what would you like to replace it with?:\n")
                     return
-                    # outlist.append(keyword_convert(realkey, self.current_word, 6, None))
 
             elif re.findall(customreg, self.current_word) and not re.findall(numcustreg, self.current_word):
                 # custom
@@ -477,36 +474,20 @@ class MadlibApp:
                 realkey = ''.join(regkey)
                 self.save_key = realkey
                 if realkey in self.custom:
-                    base = re.findall(customreg, self.current_word)
-                    base = ''.join(base)
                     self.display.insert(tk.END, f"{self.custom[realkey]}:\n")
                     return
-
-                # outlist.append(keyword_convert(realkey, self.current_word, 3, custom))
-
-                # HTML array
                 elif realkey not in self.custom:
-                    self.display.insert(tk.END,
-                                        f"{realkey} hasn't been configured, what would you like to replace it with?:\n")
+                    self.display.insert(tk.END,f"{realkey} hasn't been configured, what would you like to replace it with?:\n")
                     return
-                    # outlist.append(keyword_convert(realkey, self.current_word, 5, custom))
-
-
-            # html equivelent
 
             elif re.findall(numcustreg, self.current_word):
-                # numberded custom
+                # numbered custom
 
                 regkey = re.findall(numcustreg, self.current_word)
                 realkey = ''.join(regkey)
 
                 base = re.findall(customreg, self.current_word)
                 base = ''.join(base)
-                num = ''.join(re.findall(r'_(\d+)', self.current_word))
-                #tailkey = re.findall(tail, self.current_word) #todo: restore if numcustwords have issues
-                #tailkey = ''.join(tailkey)
-                #regnum = re.findall(r'\d+', tailkey)
-                #num = ''.join(regnum)
                 self.save_key = realkey
                 if realkey not in numword_dic:# todo: fix unconfigged numbered customs, try adding "and base in self.custom"
                     # numbered cust unsaved
@@ -514,7 +495,6 @@ class MadlibApp:
                     base = ''.join(base)
                     self.display.insert(tk.END, f"{self.custom[base]} :\n")
                     self.save_flag = True
-                    #self.save_key = realkey
                     return
                 elif realkey in numword_dic:
                     self.current_word = re.sub(realkey, numword_dic[realkey], self.current_word)
@@ -524,7 +504,6 @@ class MadlibApp:
                     self.display.insert(tk.END,
                                         f"{realkey} hasn't been configured, what would you like to replace it with?:\n")
                     self.save_flag = True
-                    #self.save_key = realkey
                     return
                 else:
                     # others
@@ -532,36 +511,28 @@ class MadlibApp:
                                         f"{realkey} is not a valid keyword, what would you like to replace it with?:\n")
                     return
 
-
             elif re.findall(numbered, self.current_word):
                 # numbered
                 regkey = re.findall(numbered, self.current_word)
                 regkeyb = re.findall(unnumbered, self.current_word)
                 realkey = ''.join(regkey)
                 base = ''.join(regkeyb)
-                regnum = re.findall(r'\d+', realkey)
-                num = ''.join(regnum)
                 self.save_key = realkey
                 if realkey not in numword_dic.keys() and base in generic_words.keys():
                     self.display.insert(tk.END, f"{generic_words[base]}:\n")
                     self.save_flag = True
-                    #self.save_key = realkey
                     return
-                    # numbered unsaved
-                    # outlist.append(keyword_convert(realkey, self.current_word, 1, None))
+
+
                 elif realkey not in numword_dic.keys() and base not in generic_words.keys():
-                    self.display.insert(tk.END,
-                                        f"{realkey} is not a valid keyword, what would you like to replace it with?:\n")
+                    # numbered unsaved
+
+                    self.display.insert(tk.END,f"{realkey} is not a valid keyword, what would you like to replace it with?:\n")
                     return
-                    # outlist.append(keyword_convert(realkey, self.current_word, 6, None))  # invalid
                 elif realkey in numword_dic.keys():
                     self.current_word =  re.sub(realkey, numword_dic[realkey], self.current_word)
-                    # outlist.append(keyword_convert(realkey, self.current_word, 2, None))  # numbered saved
             else:
                 pass
-                # none, just append
-                # outlist.append(word)
-
             self.outlist.append(self.current_word)
             self.next_prompt()
         except StopIteration:
