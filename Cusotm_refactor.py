@@ -276,8 +276,8 @@ class MadlibApp:
 
         # Welcome Menu
         # welcome text
-        w = tk.Label(self.root, text='Hello, Welcome to the Madlib Maker',font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
-        w.pack(  pady=(15), padx=(15))
+        w = tk.Label(self.root, text='Hello!\n Welcome to the Madlib Maker',font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
+        w.pack(pady=(15))
         w = tk.Label(self.root, text='What would you like to do\ntoday?', width=24,
                      height=3, bg="#d0e7ff", fg="black")
         w.pack(pady=10)
@@ -320,7 +320,7 @@ class MadlibApp:
 
         # Welcome Menu
         # welcome text
-        w = tk.Label(self.root, text='What would you like to learn about?', width=80, height=10, bg="#d0e7ff", fg="black")
+        w = tk.Label(self.root, text='What would you like to learn about?', font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
 
         w.pack(pady=10)
         # buttons for Welcome menu selection
@@ -348,7 +348,9 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=4, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
-        #todo: include a "back to menu" button
+        btn= tk.Button(self.root, text="< Back to main menu", command=lambda: self.reset(), bg="#3b9dd3",
+                                    fg="white")
+        btn.pack(pady=10)
         self.root.mainloop()  # deploys the GUI screen till closed #todo: test if needed
     def write_instructions_menu(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
