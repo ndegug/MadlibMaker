@@ -5,7 +5,6 @@ import tempfile
 import re
 import os
 from long_strings_gui import *
-import json
 from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
@@ -14,7 +13,6 @@ numword_dic = {}
 unnumbered = "(/...)"
 numbered = "(/...[0-9]+)"
 customreg = "(/ct[0-9]+)"
-#numcustcom = ".+\([0-9]+\)" #todo remove if unneeded for numbered customs
 numcustreg = "(/ct[0-9]+_[0-9]+)"
 tail = "(_[0-9])"
 htmlsample = '<span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: ' \
@@ -26,33 +24,33 @@ class MadlibApp:
         self.root = root
         self.reset()
     def reset(self):
-        self.custom = {}
-        self.custom_keys = []
-        self.custom_index = 0
-        self.save_flag = False
-        self.folders()
-        self.outlist = []
-        self.htlist = []
-        self.title = ''
-        self.load_mode = False  # decides mode (False=write or True=load) todo: change to true/false if binary
-        self.welcomeMenuHandler()
+        self.custom = {} #full custom dictionary
+        self.custom_keys = [] #storage for recording custom keys detected
+        self.custom_index = 0 #for custom detection
+        self.save_flag = False #flag for saving numbered keywords
+        self.folders() #creates input and output folders if not here
+        self.outlist = [] #output array for filled madlibs
+        self.htlist = [] #output array for html madlibs
+        self.title = '' #madlib title
+        self.load_mode = False  # decides mode (False=write or True=load)
+        self.welcomeMenuHandler() #welcome menu
     def load_input_file(self):
         # Clear existing widgets if necessary
         for widget in self.root.winfo_children():
             widget.destroy()
-        self.load_mode = True
+        self.load_mode = True #begin load mode
         label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 12, "bold"),width=100, height=5, bg="#d0e7ff",
                          fg="black")
         label.pack(pady=10)
 
         inputs_path = os.path.join(os.getcwd(), "inputs")
 
-        if not os.path.exists(inputs_path):
+        if not os.path.exists(inputs_path): #double check for inputs folder todo: add this check for every file write operation
             os.makedirs(inputs_path)
 
-        files = [f for f in os.listdir(inputs_path) if f.endswith('.txt') or f.endswith('.docx')]
+        files = [f for f in os.listdir(inputs_path) if f.endswith('.txt') or f.endswith('.docx')] #grabs all files in inputs
 
-        if not files:
+        if not files: #edge case of no valid input files
             no_files_label = tk.Label(self.root, text="No input files found in the 'inputs' folder.",
                                       font=("Arial", 12))
             no_files_label.pack(pady=10)
@@ -63,7 +61,7 @@ class MadlibApp:
 
         row = 0  # initializes row and column counters for button grid
         col = 0
-        for filename in files:
+        for filename in files: #generate buttons for all files
             full_path = os.path.join(inputs_path, filename)
             btn = tk.Button(button_frame, text=filename, font=("Arial", 12),
                             command=lambda path=full_path: self.process_input_file_3(path), bg="#3b9dd3",
@@ -71,53 +69,13 @@ class MadlibApp:
             btn.grid(row=row, column=col, padx=2, pady=2,
                      sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
             col += 1
-            if col >= 5:  # ten columns, then new row
+            if col >= 5:  # max number of columns, then new row
                 col = 0
                 row += 1
-    def load_input_file_old(self): #todo: remove unless load bugs are found
-        # Clear the window
-        for widget in self.root.winfo_children():
-            widget.destroy()
-        self.load_mode = True
-        # Get all .txt and .docx files from "inputs" folder
 
-        input_dir = os.path.join(os.path.dirname(__file__), "inputs")
-        files = [f for f in os.listdir(input_dir) if f.endswith(('.txt', '.docx'))]
-
-        # Display available files
-        tk.Label(self.root, text="Available input files:", font=("Arial", 12, "bold")).pack()
-        button_frame = tk.Frame(self.root)  # defines the button frame
-        button_frame.pack(pady=5)  # for all button frames
-        #for file in files:
-        #    tk.Label(self.root, text=file).pack()
-        row = 0  # initializes row and column counters for button grid
-        col = 0
-        fileID=0
-        for file in files:  # for every generic word. Grabs the key (/adj) and label (adjective)
-            btn = tk.Button(button_frame, command=lambda: self.dummyscreen(str(files[fileID])), text=file,
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame
-            btn.grid(row=row, column=col, padx=2, pady=2,
-                     sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
-            col += 1
-            fileID += 1
-            if col >= 10:  # ten columns, then new row
-                col = 0
-                row += 1
-        # Prompt user
-        tk.Label(self.root, text="Please type the name of the file you'd like to load including the extension:").pack()
-        self.file_entry = tk.Entry(self.root)
-        self.file_entry.pack(pady=5)
-
-        # Enter button
-        #enter_button = tk.Button(self.root, text="Enter", command=self.process_input_file_3())
-        #enter_button.pack(pady=10)
-
-    def process_input_file_3(self, path): #todo remove other process_input_file methods if this works
-        madlib_text = ""
-        custom_dict = {}
-        title_text = ""
-        #filename = self.file_entry.get()
+    def process_input_file_3(self, path): #todo: comment lines
+        custom_dict = {} #temporary custom dic storage
+        title_text = "" #temporary title storage
         file_path = path
         try:
             # Read file content
@@ -160,98 +118,6 @@ class MadlibApp:
 
         except Exception as e:
             messagebox.showerror("File Error", f"Could not read file:\n{e}")
-    def process_input_file_2(self): #todo: decide between orignal and this one
-        filename = self.file_entry.get()
-        file_path = os.path.join(os.path.dirname(__file__), "inputs", filename)
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-        except UnicodeDecodeError:
-            try:
-                import docx
-                doc = docx.Document(file_path)
-                content = '\n'.join([para.text for para in doc.paragraphs])
-            except Exception as e:
-                messagebox.showerror("Error", f"Could not read DOCX file: {e}")
-                return
-
-        # Extract custom dictionary
-        custom_start = content.find("<C>")
-        if custom_start != -1:
-            custom_text = content[custom_start + 3:].strip()
-            try:
-                self.custom = eval(custom_text)
-            except Exception as e:
-                #messagebox.showerror("Error", f"Could not parse custom dictionary: {e}")
-                return
-            madlib_text = content[:custom_start].strip()
-        else:
-            madlib_text = content.strip()
-
-        # Extract title if present
-        title_start = content.find("<t>")
-        title_end = content.find("</t>")
-        if title_start != -1 and title_end != -1 and title_end > title_start:
-            self.title = content[title_start + 3:title_end].strip()
-        else:
-            self.title = ""
-
-        self.raw_in=madlib_text
-        self.advance_from_first()
-    def process_input_file(self):
-        filename = self.file_entry.get()
-        input_path = os.path.join(os.path.dirname(__file__), "inputs", filename)
-
-        if not os.path.exists(input_path):
-            messagebox.showerror("File Error", f"File '{filename}' not found.")
-            return
-
-        try:
-            # Read file content
-            if filename.endswith('.txt'):
-                with open(input_path, 'r', encoding='utf-8') as f:
-                    lines = f.readlines()
-            elif filename.endswith('.docx'):
-                doc = Document(input_path)
-                lines = [para.text for para in doc.paragraphs]
-            else:
-                messagebox.showerror("Format Error", "Unsupported file type.")
-                return
-
-            # Split lines into madlib and custom dictionary
-            madlib_lines = []
-            custom_dict_str = ""
-            found_c_marker = False
-
-            for line in lines:
-                if line.strip().startswith("<C>"):
-                    found_c_marker = True
-                    custom_dict_str = line.strip()[3:].strip()  # Remove "<C>"
-                    continue
-                if not found_c_marker:
-                    madlib_lines.append(line.strip())
-
-            #if not found_c_marker:
-            #    messagebox.showerror("Format Error", "No <C> marker found for custom dictionary.")
-            #    return
-
-            madlib_text = ' '.join(madlib_lines)
-            self.raw_in = madlib_text
-
-            try:
-                self.custom = eval(custom_dict_str)
-                if not isinstance(self.custom, dict):
-                    raise ValueError("Parsed custom dictionary is not a valid dict.")
-            except Exception as e:
-                #messagebox.showerror("Parsing Error", f"Could not parse dictionary: {e}")
-                #return
-                pass
-
-            messagebox.showinfo("Success", "File loaded successfully!")
-            self.advance_from_first()
-
-        except Exception as e:
-            messagebox.showerror("Error", f"An error occurred: {e}")
 
     def folders(self):
         if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
