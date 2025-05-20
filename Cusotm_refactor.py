@@ -656,10 +656,10 @@ class MadlibApp:
 
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
         self.input_entry.bind("<Return>",
-                                  lambda event: self.output_save(md))  # allows the "enter" key to submit the keyword
+                                  lambda event: self.save_file(md))  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
-        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.output_save(md), bg="#3b9dd3",
+        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.save_file(md), bg="#3b9dd3",
                                         fg="white")
         self.submit_btn.pack(pady=10)
 
@@ -675,10 +675,10 @@ class MadlibApp:
         button_frame.pack(pady=5)  # for all button frames
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
         self.input_entry.bind("<Return>",
-                              lambda event: self.output_save(0))  # allows the "enter" key to submit the keyword
+                              lambda event: self.save_file(0))  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
-        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.output_save(0), bg="#3b9dd3", fg="white") #submit button
+        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.save_file(0), bg="#3b9dd3", fg="white") #submit button
         self.submit_btn.pack(pady=10)
 
     def invalid_html_window(self):
@@ -800,12 +800,12 @@ class MadlibApp:
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
-        self.input_entry.bind("<Return>", lambda event: self.output_save(1))  # allows the "enter" key to submit the keyword
+        self.input_entry.bind("<Return>", lambda event: self.save_file(1))  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
-        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.output_save(1), bg="#3b9dd3", fg="white")
+        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.save_file(1), bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
-    def output_save(self,md): #todo: rename to generic save name
+    def save_file(self,md): # saveing input and output todo: rename to generic save name
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         if md==0: #plain save
