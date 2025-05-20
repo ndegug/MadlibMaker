@@ -33,7 +33,9 @@ loading_a_madlib = """
 how_to_write_a_madlib = """
     Here at the Madlib maker, you can write Madlibs with ease. Write your Madlibs here or your preferred text/documentation software. Write your story and insert one of our keywords. Keywords like “/adj” will be replaced by an “adjective” of the player’s choice. You can type these keywords yourself, or, if you’re typing your Madlib in-house, click the buttons on the keypad that correspond with the word category you want to place in your Madlib. For a full list of the native keywords, click “generic words.” 
     
-    For long Madlibs, we recommend writing your Madlib outside of the program and then moving the file to the “inputs” folder to be loaded. We currently support Word Docx and Text files as inputs. Be aware that certain formatting choices in Word may not be supported. If something doesn’t look right, try turning off special Word characters such as “smart quotes” or converting your Madlib to plain text. See “Loading a Madlib” for more details.
+    For long Madlibs, we recommend writing your Madlib outside of the program and then moving the file to the “inputs” folder to be loaded. We currently support Word Docx and Text files as inputs. Be aware that certain formatting choices in Word may not be supported and may lead to encoding errors. If something doesn’t look right, try turning off special Word characters such as “smart quotes” or converting your Madlib to plain text. See “Loading a Madlib” for more details.
+    
+    NOTE: Copying and pasting text from Word documents into a text file may not be sufficient to resolve these errors.
     
     If you'd like to add a title at the top of your Madlib, we recommend using our title tag to let the program know that it is there. Simply enter the following at the top of your file:
     

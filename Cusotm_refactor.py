@@ -747,10 +747,10 @@ class MadlibApp:
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
 
-        if self.load_mode==False: #manual input, show it, no hide needed
-            self.display.insert(tk.END, "\nHere is your Madlib:\n" + self.raw_in)
+        if not self.load_mode: #manual input, show it, no hide needed
+            self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.raw_in)
         else: #load, use button to reveal
-            self.display.insert(tk.END, "\nYou are about to play:\n" + self.title + "\n\n")
+            self.display.insert(tk.END, "\nYou are about to play:\n\n" + self.title + "\n\n")
             self.spbtn = tk.Button(button_frame, command=lambda: self.spoiler(), text="SPOIL",
                             bg="#F23F3F",
                             fg="white")  # defines each button with frame,
@@ -758,14 +758,14 @@ class MadlibApp:
                      sticky="ew")
 
 
-        #Yes button
+        #plain input save
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save plain text input", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(4), text="Save Word doc input",
                         bg="#3b9dd3",
-                        fg="white")  # defines each button with frame, todo: add a "file type choice" window
+                        fg="white")  # defines each button with frame,
         btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # no button
@@ -1006,7 +1006,7 @@ class MadlibApp:
 
     def html_file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",
+        w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
                      fg="black")
         w.pack(pady=10)
         # buttons for Welcome menu selection
@@ -1049,7 +1049,7 @@ class MadlibApp:
                 self.filled = self.title + "\n\n" + self.filled
             self.file_write(self.normalize_quotes(self.filled), base, 'outputs', '.txt')  # todo: add title
             w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
-                base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',
+                base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
                          width=80, height=10, bg="#d0e7ff",
                          fg="black")
             w.pack(pady=10)
@@ -1059,14 +1059,14 @@ class MadlibApp:
         elif md==1: #html save
             
             self.file_write(self.html_out, base, 'outputs',
-                            '.html')  # todo: include selected (or loaded) title and formatting from terminal version
+                            '.html')
             w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(
                 base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',
-                         width=80, height=10, bg="#d0e7ff",
+                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
                          fg="black")
             w.pack(pady=10)
             self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3",
-                                        fg="white")
+                                        fg="white") #todo: add button grid and "back to menu" for file confirmations, beware of "laready has slaves" errors
             self.submit_btn.pack(pady=10)
         elif md==2: #word document outputs
             # Full path to save the document
@@ -1094,7 +1094,7 @@ class MadlibApp:
             # Save the document
             doc.save(full_path)
             w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
-                base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',
+                base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
                          width=80, height=10, bg="#d0e7ff",
                          fg="black")
             w.pack(pady=10)
@@ -1105,7 +1105,7 @@ class MadlibApp:
             self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')  # todo: decide if this should be done in file_choice
             w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(
                 base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
-                         width=80, height=10, bg="#d0e7ff",
+                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
                          fg="black")
             w.pack(pady=10)
             self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_second(),
@@ -1140,7 +1140,7 @@ class MadlibApp:
             doc.save(full_path)
             w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
                 base) + '.docx in your \"inputs\" folder.\nNow let\'s play it!',
-                         width=80, height=10, bg="#d0e7ff",
+                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
                          fg="black")
             w.pack(pady=10)
             self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_second(),
@@ -1152,7 +1152,7 @@ class MadlibApp:
                             '.txt')  # todo: include selected (or loaded) title and formatting from terminal version
             w = tk.Label(self.root, text='Invalid save case found, please contact the developer.\n In the meantime, your mandlib has been saved to: ' + str(
                 base) + '.txt in your \"outputs\" folder, but it won\'t be pretty.',
-                         width=80, height=10, bg="#d0e7ff",
+                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
                          fg="black")
             w.pack(pady=10)
             self.submit_btn = tk.Button(self.root, text="Ok", command=lambda: self.reset(), bg="#3b9dd3",
