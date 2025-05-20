@@ -545,8 +545,9 @@ class MadlibApp:
         self.next_prompt()
 
     def spoiler(self): #inserts madlib input text to display if the user chooses to spoil a loaded madlib
-        self.display.insert(tk.END, "\n\n" + self.title + "\n\n"+self.raw_in)
-        self.spbtn.destroy()
+        self.display.delete("1.0", tk.END) #clears warning message
+        self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.title + "\n\n"+self.raw_in)
+        self.spbtn.destroy() #destroys spoiler button
 
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
