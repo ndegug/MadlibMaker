@@ -270,28 +270,30 @@ class MadlibApp:
                                                  fg="black", wrap=tk.WORD)
         self.display.pack(pady=10, padx=5)
         self.display.insert(tk.END, content)
-        #self.display.insert(tk.END, content.replace("\\n", "\n"))
         self.display.config(state='disabled')  # Make it read-only
-        # buttons for Welcome menu selection
+
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
 
-        if lv==True: #second level of menus, currently only used in specifics of writing madlibs, change to an int if more are added
+        if lv: #second level of menus, currently only used in specifics of writing madlibs, change to an int if more are added
+            # back to write instructions button
             btn = tk.Button(button_frame, command=lambda: self.write_instructions_menu(), text="< Back to writing madlibs",
                             bg="#3b9dd3", fg="white")
             btn.grid(row=1, column=1, padx=2, pady=2,
                      sticky="ew")
+            #back to instructions from lv2 end instructions
             btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="<< Back to Instructions",
                         bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+                        fg="white")  # defines each button with frame
             btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
+            #back to menu from lv2 end instructions
             btn = tk.Button(button_frame, command=lambda: self.reset(), text="<<< Back to main menu",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
             btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
-        else: #normal end instructions
+        else: #normal end instructions, only back to menu and back to instructions
             btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="< Back to Instructions",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
@@ -302,15 +304,12 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
             btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
-    def setup_first_window(self):
+    def setup_first_window(self): #setup manual input window
         for widget in self.root.winfo_children():
             widget.destroy()
         l = tk.Label(self.root, text='Type your Madlib below!', font=("Arial", 12, "bold"), fg="black")
         l.pack(pady=5)
-        #self.input_entry = tk.Entry(self.root, width=60)
-        #self.input_entry.pack(pady=20)
 
-        #for widget in self.root.winfo_children(): widget.destroy() #removes pre-existing widgets
 
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black") #defines the text input field, size, color of font and background
         self.input_entry.pack(pady=10)# sets the verticle spacing given between the input field and other successive elements
@@ -337,16 +336,15 @@ class MadlibApp:
         self.display.pack(pady=10)
 
         self.input_entry.bind("<KeyRelease>", self.sync_display) #syncs display on every key release
-        #tk.Button(self.root, text="Submit", command=self.advance_from_first).pack()
 
     def sync_display(self, event=None): #syncs text between manual entry and display
         self.display.delete(1.0, tk.END) #clears the display before updating with current text (from row 1 char 0 to the end)
         self.display.insert(tk.END, self.input_entry.get()) #inserts text from the end (which is the start of the field after delete) to
-    def insert_keyword(self, keyword):
-        #self.input_entry.insert(tk.END, keyword + " ") #inputs keyword to text with a space automatically after it
+    def insert_keyword(self, keyword):#inserts a keyword into active input field
         self.input_entry.insert(tk.END, keyword) #inputs keyword without a space (do not have both lines active)
         self.sync_display() #adds the keyword to the display
-    def advance_from_first(self):
+    def advance_from_first(self): #handles input data
+        # grabs manual input if manual
         if self.load_mode == False:#manual input
             self.raw_in = self.input_entry.get()
         elif self.load_mode == True: #from file
@@ -354,23 +352,17 @@ class MadlibApp:
         else:
             self.dummyscreen('Invalid mode for advance_from_first()')
 
-        #self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', self.raw_in)
-        self.userMadlib= self.raw_in.split(' ')
-        self.prompt_words = iter(self.userMadlib)
-        #self.outlist = []
+        self.userMadlib= self.raw_in.split(' ') #splits madlib body into array by spaces
+        self.prompt_words = iter(self.userMadlib) #sets up iteration
+
         # Extract and sort custom keys
         all_custom_matches = re.findall(r'/ct(\d+)(?:_\d+)?', self.raw_in)
         self.custom_keys = sorted(set(f"/ct{id}" for id in all_custom_matches), key=lambda x: int(x[3:]))
 
-
-        if self.custom_keys and self.custom=={}:
-
-            self.custom_configure_window() #configure customs, file_choice will be executted as well
-        else: #if manual input and no others are needed
+        if self.custom_keys and self.custom=={}:#if customs detected
+            self.custom_configure_window() #configure customs, file_choice will be executed as well
+        else: #if no others are needed
             self.title_check()
-            #self.file_choice()
-        #else:
-        #    self.advance_to_second()
 
     def title_check(self):
         if self.title:
