@@ -207,6 +207,7 @@ class MadlibApp:
                                     fg="white")
         btn.pack(pady=10)
         self.root.mainloop()  # deploys the GUI screen till closed
+
     def write_instructions_menu(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
@@ -538,21 +539,19 @@ class MadlibApp:
         except StopIteration:
             self.third_window()
 
-    def advance_to_second(self):
+    def advance_to_second(self): #advance to second window, start word prompting when selection is made
         self.second_window()
         self.next_prompt()
-    def spoiler(self):
+
+    def spoiler(self): #inserts madlib input text to display if the user chooses to spoil a loaded madlib
         self.display.insert(tk.END, self.raw_in)
         self.spbtn.destroy()
 
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0",
-                                            fg="black")
+        self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black")
         self.display.pack(pady=20)
-        # buttons for Welcome menu selection
-        w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
-                     fg="black")
+        w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff", fg="black")
         w.pack(pady=5)
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
@@ -578,7 +577,7 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
-        # no button
+        # play without saving button
         btn = tk.Button(button_frame, command=lambda: self.advance_to_second(), text="Play without saving", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
