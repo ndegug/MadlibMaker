@@ -127,10 +127,10 @@ prewriting_custom_configurations = """
 printing_madlibs= """
     The Madlib maker can convert your Madlib from its input format to a file that will allow you to print a traditionally styled Madlib on paper with real blanks.
     
-    After composing or loading a Madlib input, select "print physical" when prompted. If the Madlib input does not have a title, you will be asked if you want to add one.
+    After composing or loading a Madlib input, select "Print Physical" when prompted. If the Madlib input does not have a title, you will be asked if you want to add one.
     
     If you choose to save your file when prompted, you will be asked to compose a filename. Once confirmed, your Madlib will be saved to the "outputs" folder and will have the extension ".html" Do this for long Madlibs that you'd like to reuse later.
     
-    Whether you decide to save the file or not, the program will open your file into your default browser. Use said browser's print feature to print your Madlib. This is typically done by entering the menu on the top right and selecting "print" 
+    Whether you decide to save the file or not, the program will open your file into your default browser. Use said browser's print feature to print your Madlib. This is typically done by entering the menu on the top right and selecting "Print" 
     
     Enjoy the original, authentic experience of filling in a Madlib together with your friends!"""

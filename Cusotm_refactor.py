@@ -773,7 +773,7 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
-        btn = tk.Button(button_frame, command=lambda: self.advance_to_html(), text="Print HTML",
+        btn = tk.Button(button_frame, command=lambda: self.advance_to_html(), text="Print Physical",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=3, padx=2, pady=2,
