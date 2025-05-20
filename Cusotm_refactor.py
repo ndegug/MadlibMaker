@@ -805,32 +805,25 @@ class MadlibApp:
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
         self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.save_file(1), bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
-    def save_file(self,md): # saveing input and output
+    def save_file(self,md): # saving input and output
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         if md==0: #plain save
             if self.title:
                 self.filled = self.title + "\n\n" + self.filled
             self.file_write(self.normalize_quotes(self.filled), base, 'outputs', '.txt')
-            w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
-                base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
-                         width=80, height=10, bg="#d0e7ff",
-                         fg="black")
+            w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
+                         width=80, height=10, bg="#d0e7ff",fg="black")
             w.pack(pady=10)
-            self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3",
-                                        fg="white")
+            self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
             self.submit_btn.pack(pady=10)
         elif md==1: #html save
             
-            self.file_write(self.html_out, base, 'outputs',
-                            '.html')
-            w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(
-                base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',
-                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
-                         fg="black")
+            self.file_write(self.html_out, base, 'outputs','.html')
+            w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',
+                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
             w.pack(pady=10)
-            self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3",
-                                        fg="white") #todo: add button grid and "back to menu" for file confirmations, beware of "laready has slaves" errors
+            self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3", fg="white") #todo: add button grid and "back to menu" for file confirmations, beware of "aready has slaves" errors
             self.submit_btn.pack(pady=10)
         elif md==2: #word document outputs
             # Full path to save the document
@@ -867,13 +860,10 @@ class MadlibApp:
             self.submit_btn.pack(pady=10)
         elif md==3: #save and play inputs plain text
             self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')  # todo: decide if this should be done in file_choice
-            w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(
-                base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
-                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
-                         fg="black")
+            w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
+                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
             w.pack(pady=10)
-            self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_second(),
-                                        bg="#3b9dd3", fg="white")
+            self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_second(), bg="#3b9dd3", fg="white")
             self.submit_btn.pack(pady=10)
         elif md==4: #save and play Word docx inputs
             full_path = os.path.join('inputs', base + '.docx')
@@ -914,23 +904,20 @@ class MadlibApp:
 
             self.file_write(self.html_out + self.normalize_quotes(self.filled), base, 'outputs',
                             '.txt')  # todo: include selected (or loaded) title and formatting from terminal version
-            w = tk.Label(self.root, text='Invalid save case found, please contact the developer.\n In the meantime, your mandlib has been saved to: ' + str(
-                base) + '.txt in your \"outputs\" folder, but it won\'t be pretty.',
-                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
-                         fg="black")
+            w = tk.Label(self.root, text='Invalid save case found, please contact the developer.\n In the meantime, your mandlib has been saved to: ' + str(base) + '.txt in your \"outputs\" folder, but it won\'t be pretty.',
+                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
             w.pack(pady=10)
-            self.submit_btn = tk.Button(self.root, text="Ok", command=lambda: self.reset(), bg="#3b9dd3",
-                                        fg="white")
+            self.submit_btn = tk.Button(self.root, text="Ok", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
             self.submit_btn.pack(pady=10)
-    def html_view(self):
 
-        self.root.destroy()  # closes the gui entirely todo: decide whether to quit the window here
+    def html_view(self): #notification of opening HTML in browser
+        self.root.destroy()  # closes the gui entirely
         messagebox.showinfo("Thank you.", "We'll uploaded your madlib to your browser, you can print it from there.")
         with tempfile.NamedTemporaryFile("w", delete=False, suffix=".html") as f:
             f.write(self.html_out)
             webbrowser.open(f.name)
 if __name__ == "__main__":
-    root = tk.Tk()
-    root.title("Madlib App")
-    app = MadlibApp(root)
-    root.mainloop()
+    root = tk.Tk() #initiate tkinter root
+    root.title("Madlib App") #title root (all windows)
+    app = MadlibApp(root) #create app instance
+    root.mainloop() #continue till closed
