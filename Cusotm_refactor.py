@@ -276,8 +276,24 @@ class MadlibApp:
 
         # Welcome Menu
         # welcome text
-        w = tk.Label(self.root, text='Hello, Welcome to the Madlib Maker', width=80, height=10, bg="#d0e7ff", fg="black")
+        w = tk.Label(self.root, text='Hello, Welcome to the Madlib Maker',font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
+        w.pack(  pady=(15), padx=(15))
+        w = tk.Label(self.root, text='What would you like to do\ntoday?', width=24,
+                     height=3, bg="#d0e7ff", fg="black")
         w.pack(pady=10)
+        #w = scrolledtext.ScrolledText(self.root, font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
+        #w.pack(pady=10)
+
+        #font configs
+        #w.tag_configure("bold", font=("Arial", 12, "bold"),justify='center')
+        #w.tag_configure("plain", font=("Arial", 12),justify='center')
+        # Insert both styled and plain text
+        #w.insert(tk.END, "\nHello!\nWelcome to the Madlib Maker!\n","bold")
+        #w.insert(tk.END, "\nWhat would you like to do today?","plain")
+
+        # Optionally disable editing
+        #w.config(state='disabled')
+
         # buttons for Welcome menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
@@ -305,6 +321,7 @@ class MadlibApp:
         # Welcome Menu
         # welcome text
         w = tk.Label(self.root, text='What would you like to learn about?', width=80, height=10, bg="#d0e7ff", fg="black")
+
         w.pack(pady=10)
         # buttons for Welcome menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
