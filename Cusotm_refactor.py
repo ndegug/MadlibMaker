@@ -364,38 +364,38 @@ class MadlibApp:
         else: #if no others are needed
             self.title_check()
 
-    def title_check(self):
+    def title_check(self): #check if title is set
         if self.title:
-            self.file_choice()
+            self.file_choice() #advance to input preview
         else:
-            self.title_write()
-    def title_write(self):
+            self.title_write() #write title
+    def title_write(self): #write title
         for widget in self.root.winfo_children():
             widget.destroy()
         tk.Label(self.root, text="Would you like to title your Madlib?\n Type it here and click enter or \"skip\" to skip this step.", font=("Arial", 12, "bold")).pack()
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
         self.input_entry.bind("<Return>",
-                              lambda event: self.title_saver())
+                              lambda event: self.title_saver()) #"enter" key submits title
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
-        # Yes button
+        # Submit button to save title
         btn = tk.Button(button_frame, command=lambda: self.title_saver(), text="Submit", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
-        # no button
+        # Skip button, go to input preview
         btn = tk.Button(button_frame, command=lambda: self.file_choice(), text="Skip",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")
-        #self.root.mainloop()  # deploys the GUI screen till closed
-    def title_saver(self):
+
+    def title_saver(self): #saves title
         self.title = self.input_entry.get().strip()
         self.file_choice()
-    def custom_configure_window(self):
+    def custom_configure_window(self): #custom word configure window
         for widget in self.root.winfo_children():
             widget.destroy()
 
@@ -405,20 +405,20 @@ class MadlibApp:
 
         self.custom_entry = tk.Entry(self.root, width=40,font=("Arial", 12), bg="#d0e7ff", fg="black")
         self.custom_entry.bind("<Return>",
-                               lambda event: self.save_custom_word())  # allows the "enter" key to submit the keyword
+                               lambda event: self.save_custom_word())  # allows the "enter" key to submit the custom word
         self.custom_entry.pack(pady=10)
         self.custom_button = tk.Button(self.root, text="Enter",bg="#3b9dd3", fg="white", command=self.save_custom_word)
         self.custom_button.pack(pady=5)
 
-        self.prompt_next_custom()
+        self.prompt_next_custom() #prompt the next custom word in the display
         self.root.mainloop()  # deploys the GUI screen till closed
 
-    def prompt_next_custom(self):
+    def prompt_next_custom(self): #promts each custom word in display
         if self.custom_index < len(self.custom_keys):
-            current_key = self.custom_keys[self.custom_index]
-            self.display.insert(tk.END, f"Custom {current_key[3:]}: ")
+            current_key = self.custom_keys[self.custom_index] #grab the custom key based on index
+            self.display.insert(tk.END, f"Custom {current_key[3:]}: ") #inserts each prompt with the entry based on ID number
         else:
-            self.title_check()
+            self.title_check() #with all customs configured, advance to title check
 
 
     def save_custom_word(self):
