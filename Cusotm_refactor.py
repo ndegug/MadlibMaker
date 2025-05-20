@@ -794,20 +794,16 @@ class MadlibApp:
 
     def html_file_name(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)', width=80, height=10,
-                     bg="#d0e7ff",
-                     fg="black")
+        w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)', width=80, height=10, bg="#d0e7ff", fg="black")
         w.pack(pady=10)
         # buttons for file naming menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
-        self.input_entry.bind("<Return>",
-                              lambda event: self.output_save(1))  # allows the "enter" key to submit the keyword
+        self.input_entry.bind("<Return>", lambda event: self.output_save(1))  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
-        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.output_save(1), bg="#3b9dd3",
-                                    fg="white")
+        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.output_save(1), bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
     def output_save(self,md): #todo: rename to generic save name
         base = self.input_entry.get().strip()
