@@ -696,13 +696,11 @@ class MadlibApp:
         self.submit_btn = tk.Button(self.root, text="Submit", command=self.process_invalid_html, bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
 
-    def  html_replace(self): #todo: decide between original (had length bugs) and "_C." if "_C" then refactor keyword replacement to match this
+    def  html_replace(self): #todo: fully comment
         try:
             while True:
                 self.current_word = next(self.html_words)
-                final = '[undefined]'
-                if re.findall(unnumbered, self.current_word) and not re.findall(numbered,
-                                                                                self.current_word) and not re.findall(
+                if re.findall(unnumbered, self.current_word) and not re.findall(numbered, self.current_word) and not re.findall(
                         customreg, self.current_word):
                     regkey = re.findall(unnumbered, self.current_word)
                     realkey = ''.join(regkey)
@@ -731,7 +729,6 @@ class MadlibApp:
                     realkey = ''.join(regkey)
                     base = ''.join(re.findall(customreg, self.current_word))
                     num = ''.join(re.findall(r'_(\d+)', self.current_word))
-                    #num = ''.join(re.findall(r'\d+', self.current_word))
                     htword = htmlsample.replace('underscript', self.custom[base] + ' (' + num + ')')
                     final = self.current_word.replace(realkey, htword, 1)
 
@@ -756,48 +753,43 @@ class MadlibApp:
         except StopIteration:
             self.html_post_process()
 
-    def advance_to_html(self):
-        #user_input = self.raw_in
-        #self.userMadlib = re.findall(r'/\w+\d*_[0-9]+|/\w+\d*|[^\s\w]|[\w]+', user_input)
-        self.userMadlib=self.raw_in.split(' ')
-        self.html_words = iter(self.userMadlib)
-        self.invalid_html_window()
-        self. html_replace()
+    def advance_to_html(self): #prepare and send madlib input to convert to HTML
+        self.userMadlib=self.raw_in.split(' ') #split madlib input by spaces
+        self.html_words = iter(self.userMadlib) #set up iteration
+        self.invalid_html_window() # prepair window for user inputs when keys invalid
+        self. html_replace() # run html replacement
 
-    def process_invalid_html(self):
+    def process_invalid_html(self): #grabs user input submitted when key is found invalid during html replacement
         user_text = self.input_entry.get().strip()
         self.input_entry.delete(0, tk.END)
-        user_ht = htmlsample.replace('underscript', user_text)
+        user_ht = htmlsample.replace('underscript', user_text) #substitute the word "underscript" in html sample for word under the underset
         self.htlist.append(user_ht)
         self. html_replace()
+
     def html_post_process(self):
-        for widget in self.root.winfo_children():
-            widget.destroy()
-        self.html_out = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.htlist))
-        if self.title:
+        for widget in self.root.winfo_children(): widget.destroy()
+        self.html_out = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.htlist)) #join body with punctuation
+        if self.title: #if title exists, place it in heading format string
             self.html_out = htmlhead.replace('heading', self.title, 1) + self.html_out + ' </p></body></html>'
         else:
             self.html_out = htmlhead_notitle + self.html_out + ' </p></body></html>'
-        self.html_file_choice()
+        self.html_file_choice() #prompt save decision
 
-    def html_file_choice(self):
+    def html_file_choice(self): #screen for deciding whether to save html output
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
-                     fg="black")
+        w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
         w.pack(pady=10)
-        # buttons for Welcome menu selection
+        # button frame
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
-        #Yes button
+        #Save button
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(1), text="Save", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
-        # no button
-        btn = tk.Button(button_frame, command=lambda: self.html_view(), text="Print without saving", bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
-        btn.grid(row=1, column=2, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid
+        # Print without save button
+        btn = tk.Button(button_frame, command=lambda: self.html_view(), text="Print without saving", bg="#3b9dd3", fg="white")  # defines each button with frame,
+        btn.grid(row=1, column=2, padx=2, pady=2, sticky="ew")  # defines the button's location on the grid
         self.root.mainloop()  # deploys the GUI screen till closed
 
     def html_file_name(self):
