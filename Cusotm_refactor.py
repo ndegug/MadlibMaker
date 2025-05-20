@@ -590,50 +590,21 @@ class MadlibApp:
                  sticky="ew")  # defines the button's location on the grid
         self.root.mainloop()  # deploys the GUI screen till closed
     def process_next_keyword(self):
-        user_text = self.input_entry.get().strip()
-        self.display.insert(tk.END, f"{user_text}\n")
-        self.input_entry.delete(0, tk.END)
-        if user_text and self.save_flag == False:
-            self.outlist.append(re.sub(self.save_key, user_text, self.current_word))
-        elif user_text and self.save_flag == True:
-            self.outlist.append(re.sub(self.save_key, user_text, self.current_word))
-            numword_dic[self.save_key]=user_text
-            self.save_flag=False
+        user_text = self.input_entry.get().strip() #grab user text
+        self.display.insert(tk.END, f"{user_text}\n") #display next to prompt in display
+        self.input_entry.delete(0, tk.END) #delete current entry in entry field
+        if user_text and self.save_flag == False: #not a numbered word or custom to save
+            self.outlist.append(re.sub(self.save_key, user_text, self.current_word)) #substitute and append
+        elif user_text and self.save_flag == True: #numbered word to save
+            self.outlist.append(re.sub(self.save_key, user_text, self.current_word)) #substitute and append
+            numword_dic[self.save_key]=user_text #save numbered word
+            self.save_flag=False #turn off save flag
         else:
             pass
-        self.next_prompt()
+        self.next_prompt() #get next prompt
 
-    def normalize_quotes(self, text):
+    def normalize_quotes(self, text): #normalizes curly quotes from Word docs when printing text files
         return text.replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
-    def smart_join(self, words):  # removes spaces surrounding punctuation
-        result = ""
-        prev_word = ""
-        quote_flag = False  # indicates being part of a quote segment
-        for i, word in enumerate(words):
-            word=self.normalize_quotes(word)
-            if i == 0:  # first word, no space before
-                result += word
-                if word=="\"":  # if the first element is a quote, turn on quote flag
-                    quote_flag = True
-            elif re.match(r"[.,!?;:\']", word) or re.match(r"[\']", prev_word):  # If it's punctuation, don't add space
-                result += word
-            elif word=="\"" and quote_flag == False:  # Open quote, space before, turn on quote flag
-                result += " " + word
-                quote_flag = True
-            elif word=="\"" and quote_flag == True:  # close quote, no space before, turn off quote flag
-                result += word
-                quote_flag = False
-            elif prev_word=="\"" and quote_flag == True:  # word after open quote, no leading space
-                result += word
-            # elif re.match(r"[\"]", prev_word) and quote_flag==False: #word after close quote, no leading space, turn off quote flag
-            #    result += " " + word
-
-            else:
-                result += " " + word
-            prev_word = word
-        return result
-
-
 
     def third_window(self):  #decide whether to save filled output
         for widget in self.root.winfo_children():
@@ -806,7 +777,6 @@ class MadlibApp:
     def html_post_process(self):
         for widget in self.root.winfo_children():
             widget.destroy()
-        #self.html_out=self.smart_join(self.htlist)
         self.html_out = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.htlist))
         if self.title:
             self.html_out = htmlhead.replace('heading', self.title, 1) + self.html_out + ' </p></body></html>'
