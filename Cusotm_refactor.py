@@ -119,12 +119,12 @@ class MadlibApp:
         except Exception as e:
             messagebox.showerror("File Error", f"Could not read file:\n{e}")
 
-    def folders(self):
+    def folders(self): #creates input and output folders if none exist
         if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
             os.mkdir(os.path.join(os.getcwd(), "inputs"))
         if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
             os.mkdir(os.path.join(os.getcwd(), "outputs"))
-    def dummyscreen(self,name):
+    def dummyscreen(self,name): #placeholder for menus-to-be
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         text = "This is the screen for " + str(name)
         w = tk.Label(self.root, text=text, width=80, height=10, bg="#d0e7ff", fg="black")
@@ -132,61 +132,47 @@ class MadlibApp:
         self.root.mainloop()  # deploys the GUI screen till closed
 
     def file_write(self, content, name_of_file, path, ext):
-        completeName = os.path.join(path, name_of_file + ext)
-        f = open(completeName, "w")
-        f.write(content)
-        f.close()
-    def escape(self):
-        return
-    def welcomeMenuHandler(self):
+        completeName = os.path.join(path, name_of_file + ext) #filepath with name and extension
+        f = open(completeName, "w") #open file with path
+        f.write(content) #insert contents
+        f.close() #close the file
+
+    def welcomeMenuHandler(self): #Welcome menu
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
 
-        # Welcome Menu
         # welcome text
         w = tk.Label(self.root, text='Hello!\n Welcome to the Madlib Maker',font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
         w.pack(pady=(15))
+        #smaller label to prompt choice
         w = tk.Label(self.root, text='What would you like to do\ntoday?', width=24,
                      height=3, bg="#d0e7ff", fg="black")
         w.pack(pady=10)
-        #w = scrolledtext.ScrolledText(self.root, font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
-        #w.pack(pady=10)
-
-        #font configs
-        #w.tag_configure("bold", font=("Arial", 12, "bold"),justify='center')
-        #w.tag_configure("plain", font=("Arial", 12),justify='center')
-        # Insert both styled and plain text
-        #w.insert(tk.END, "\nHello!\nWelcome to the Madlib Maker!\n","bold")
-        #w.insert(tk.END, "\nWhat would you like to do today?","plain")
-
-        # Optionally disable editing
-        #w.config(state='disabled')
 
         # buttons for Welcome menu selection
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # manual input button
         btn = tk.Button(button_frame, command=lambda: self.setup_first_window(), text="Manual Input", bg="#3b9dd3",
-                        fg="white")  # defines each button with frame, todo: add argument: command= enterMadlibManual()
+                        fg="white")  # defines each button with frame
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # Load inputs button
         btn = tk.Button(button_frame, command=lambda: self.load_input_file(), text="Load a Madlib",
                         bg="#3b9dd3",
-                        fg="white")  # defines each button with frame, todo: add argument: command= [file namer function]
+                        fg="white")  # defines each button with frame
         btn.grid(row=1, column=2, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")
         # Instruction menu button
         btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="Instructions",
                         bg="#3b9dd3",
-                        fg="white")  # defines each button with frame, todo: add argument: command= instructionsMenuHandler()
+                        fg="white")  # defines each button with frame
         btn.grid(row=1, column=3, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")
         self.root.mainloop()  # deploys the GUI screen till closed
-    def instruct_main(self):
+    def instruct_main(self): #Instructions top menu
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
 
-        # Welcome Menu
-        # welcome text
+        # Instructions text
         w = tk.Label(self.root, text='What would you like to learn about?', font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
 
         w.pack(pady=10)
@@ -197,28 +183,30 @@ class MadlibApp:
         btn = tk.Button(button_frame, command=lambda: self.end_instructions(how_to_play_madlibs, False), text="How to play Madlibs", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
-        # Load inputs button todo: integrate all other instruction menus
+                 sticky="ew")  # defines the button's location on the grid
+        # How to write instruct button
         btn = tk.Button(button_frame, command=lambda: self.write_instructions_menu(), text="How to write madlibs",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
-        # Instruction menu button
+                 sticky="ew")  # defines the button's location on the grid
+        # Loading madlib instruct button
         btn = tk.Button(button_frame, command=lambda: self.end_instructions(loading_a_madlib,False), text="Loading a madlib",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=3, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
+        # printing madlib instruct button
         btn = tk.Button(button_frame, command=lambda: self.end_instructions(printing_madlibs,False), text="Printing madlibs",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=4, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
+        #back to menu from instruct 1
         btn= tk.Button(self.root, text="< Back to main menu", command=lambda: self.reset(), bg="#3b9dd3",
                                     fg="white")
         btn.pack(pady=10)
-        self.root.mainloop()  # deploys the GUI screen till closed #todo: test if needed
+        self.root.mainloop()  # deploys the GUI screen till closed
     def write_instructions_menu(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
