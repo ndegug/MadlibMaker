@@ -389,7 +389,6 @@ class MadlibApp:
         if self.title:
             self.file_choice()
         else:
-            print("no title")
             self.title_write()
     def title_write(self):
         for widget in self.root.winfo_children():
@@ -440,11 +439,8 @@ class MadlibApp:
             current_key = self.custom_keys[self.custom_index]
             self.display.insert(tk.END, f"Custom {current_key[3:]}: ")
         else:
-            #print("No more Customs")
             self.title_check()
-            #self.file_choice()
-            #self.second_window()
-            #self.next_prompt()
+
 
     def save_custom_word(self):
         current_key = self.custom_keys[self.custom_index]
@@ -542,7 +538,6 @@ class MadlibApp:
                     #self.save_key = realkey
                     return
                 elif realkey in numword_dic:
-                    print("I'm a saved word " + str(realkey) + " " + str(numword_dic[realkey]))
                     self.current_word = re.sub(realkey, numword_dic[realkey], self.current_word)
                     # numbered cust saved
                 elif base not in self.custom:
@@ -602,7 +597,6 @@ class MadlibApp:
 
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        print(self.title)
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0",
                                             fg="black")
         self.display.pack(pady=20)
@@ -653,7 +647,6 @@ class MadlibApp:
         elif user_text and self.save_flag == True:
             self.outlist.append(re.sub(self.save_key, user_text, self.current_word))
             numword_dic[self.save_key]=user_text
-            #print("I'm saving ",str(self.save_key),' as ',str(self.current_word))
             self.save_flag=False
         else:
             pass
