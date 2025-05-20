@@ -211,60 +211,59 @@ class MadlibApp:
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
                                                  fg="black", wrap=tk.WORD)
-        self.display.pack(pady=10, padx=5)
-        self.display.insert(tk.END, how_to_write_a_madlib)
-        #self.display.insert(tk.END, content.replace("\\n", "\n"))
+        self.display.pack(pady=10, padx=5) #display widget spacing, horizontal and vertical
+        self.display.insert(tk.END, how_to_write_a_madlib) #inserts "write madlibs" basic tutorial
         self.display.config(state='disabled')  # Make it read-only
-        # buttons for Welcome menu selection
+        # buttons frame
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Generic words
         btn = tk.Button(button_frame, command=lambda: self.end_instructions(generic_words_list,True), text="Generic words",
                         bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+                        fg="white")  # defines each button with frame
         btn.grid(row=1, column=0, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         #numbered words
         btn = tk.Button(button_frame, command=lambda: self.end_instructions(numbered_words,True),
                         text="Numbered words",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=1, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         # Custom words
         btn = tk.Button(button_frame, command=lambda: self.end_instructions(custom_words_basics,True),
                         text="Custom words basics",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         # numbered custom words
         btn = tk.Button(button_frame, command=lambda: self.end_instructions(numbered_custom_words,True),
                         text="Numbered custom words",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=3, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         # Custom dic
         btn = tk.Button(button_frame, command=lambda: self.end_instructions(prewriting_custom_configurations,True),
                         text="Preconfiguring custom words",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=4, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         # back button
 
         btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="< Back to Instructions",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=2, column=1, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         #back to menu button
         btn = tk.Button(button_frame, command=lambda: self.reset(), text="<< Back to main menu",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=2, column=3, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
     def end_instructions(self,content,lv):#generic window for instructions at the end of the instruction tree.
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
@@ -286,23 +285,23 @@ class MadlibApp:
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
             btn.grid(row=1, column=2, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
             btn = tk.Button(button_frame, command=lambda: self.reset(), text="<<< Back to main menu",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
             btn.grid(row=1, column=3, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         else: #normal end instructions
             btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="< Back to Instructions",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
             btn.grid(row=1, column=1, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
             btn = tk.Button(button_frame, command=lambda: self.reset(), text="<< Back to main menu",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
             btn.grid(row=1, column=3, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
     def setup_first_window(self):
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -325,7 +324,7 @@ class MadlibApp:
         col = 0
         for key, label in generic_words.items(): #for every generic word. Grabs the key (/adj) and label (adjective)
             btn = tk.Button(button_frame, text=label, command=lambda k=key: self.insert_keyword(k), bg="#3b9dd3", fg="white") #defines each button with frame
-            btn.grid(row=row, column=col, padx=2, pady=2, sticky="ew") #defines the button's location on the grid ("ew" centers all buttons to their grid position)
+            btn.grid(row=row, column=col, padx=2, pady=2, sticky="ew") #defines the button's location on the grid
             col += 1
             if col >= 10: #ten columns, then new row
                 col = 0
@@ -393,7 +392,7 @@ class MadlibApp:
         btn = tk.Button(button_frame, command=lambda: self.title_saver(), text="Submit", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         # no button
         btn = tk.Button(button_frame, command=lambda: self.file_choice(), text="Skip",
                         bg="#3b9dd3",
@@ -610,22 +609,22 @@ class MadlibApp:
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save plain text input", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(4), text="Save Word doc input",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=1, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         # no button
         btn = tk.Button(button_frame, command=lambda: self.advance_to_second(), text="Play without saving", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         btn = tk.Button(button_frame, command=lambda: self.advance_to_html(), text="Print Physical",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=3, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         self.root.mainloop()  # deploys the GUI screen till closed
     def process_next_keyword(self): #todo: use self.display.insert(tk.END, f"{user_input}\n") to show recorded word
         user_text = self.input_entry.get().strip()
@@ -695,17 +694,17 @@ class MadlibApp:
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(0), text="Save plain text", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(2), text="Save Word Doc", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=1, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         # no button
         btn = tk.Button(button_frame, command=lambda: self.reset(), text="Return to menu",
                         bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
     def output_file_name(self,md): #output file namer
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)',font=("Arial", 12, "bold"), width=80, height=10,
@@ -863,12 +862,12 @@ class MadlibApp:
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(1), text="Save", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=0, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         # no button
         btn = tk.Button(button_frame, command=lambda: self.html_view(), text="Print without saving", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+                 sticky="ew")  # defines the button's location on the grid
         self.root.mainloop()  # deploys the GUI screen till closed
 
     def html_file_name(self):
