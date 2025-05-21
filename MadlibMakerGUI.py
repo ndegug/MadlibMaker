@@ -568,8 +568,19 @@ class MadlibApp:
 
         if not self.load_mode: #manual input, show it, no hide needed
             self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.title + "\n\n"+self.raw_in)
+            # plain input save
+            btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save plain text input",
+                            bg="#3b9dd3",
+                            fg="white")  # defines each button with frame,
+            btn.grid(row=1, column=0, padx=2, pady=2,
+                     sticky="ew")  # defines the button's location on the grid
+            btn = tk.Button(button_frame, command=lambda: self.output_file_name(4), text="Save Word doc input",
+                            bg="#3b9dd3",
+                            fg="white")  # defines each button with frame,
+            btn.grid(row=1, column=1, padx=2, pady=2,
+                     sticky="ew")  # defines the button's location on the grid
         else: #load, use button to reveal
-            self.display.insert(tk.END, "\n   Your Madlib is ready to play. If you are the author, click \"SPOIL\" to preview it. Otherwise, we recommend you click \"Play without Saving\" to play it blind.")
+            self.display.insert(tk.END, "\n   Your Madlib is ready to play. If you are the author, click \"SPOIL\" to preview it. Otherwise, we recommend you click \"Play\" to play it blind.")
             self.spbtn = tk.Button(button_frame, command=lambda: self.spoiler(), text="SPOIL",
                             bg="#F23F3F",
                             fg="white")  # defines each button with frame,
@@ -577,18 +588,9 @@ class MadlibApp:
                      sticky="ew")
 
 
-        #plain input save
-        btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save plain text input", bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
-        btn.grid(row=1, column=0, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid
-        btn = tk.Button(button_frame, command=lambda: self.output_file_name(4), text="Save Word doc input",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
-        btn.grid(row=1, column=1, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid
+
         # play without saving button
-        btn = tk.Button(button_frame, command=lambda: self.advance_to_second(), text="Play without saving", bg="#3b9dd3",
+        btn = tk.Button(button_frame, command=lambda: self.advance_to_second(), text="Play", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
