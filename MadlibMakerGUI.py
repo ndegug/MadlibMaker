@@ -39,7 +39,7 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
         self.load_mode = True #begin load mode
-        label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 12, "bold"),width=100, height=5, bg="#d0e7ff",
+        label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 12, "bold"),width=70, height=5, bg="#d0e7ff",
                          fg="black")
         label.pack(pady=10)
 
@@ -51,10 +51,15 @@ class MadlibApp:
         files = [f for f in os.listdir(inputs_path) if f.endswith('.txt') or f.endswith('.docx')] #grabs all files in inputs
 
         if not files: #edge case of no valid input files
-            no_files_label = tk.Label(self.root, text="No input files found in the 'inputs' folder.",
-                                      font=("Arial", 12))
+            no_files_label = tk.Label(self.root, text="No input files found in the 'inputs' folder.\nPlace one into the folder and click \"Refresh\"", font=("Arial", 12))
             no_files_label.pack(pady=10)
-            return
+        else:
+            no_files_label = tk.Label(self.root,
+                                      text="Don't see your file? Place it in the \"inputs\" folder  and click \"Refresh\"",
+                                      font=("Arial", 12))
+            no_files_label.pack(pady=5)
+
+            #return
 
         button_frame = tk.Frame(self.root)
         button_frame.pack(pady=10)
@@ -72,6 +77,9 @@ class MadlibApp:
             if col >= 5:  # max number of columns, then new row
                 col = 0
                 row += 1
+        rfbtn = tk.Button(self.root, text="Refresh", command=lambda: self.load_input_file(), bg="#3b9dd3",
+                          fg="white")
+        rfbtn.pack(pady=10)
 
     def process_input_file_3(self, path): #todo: comment lines
         custom_dict = {} #temporary custom dic storage
@@ -176,7 +184,7 @@ class MadlibApp:
         w = tk.Label(self.root, text='What would you like to learn about?', font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
 
         w.pack(pady=10)
-        # buttons for Welcome menu selection
+        # buttons for instructions
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # How to play instruct
@@ -429,7 +437,7 @@ class MadlibApp:
             self.custom[current_key] = user_input #adds user input to custom dictionary for current key
             self.custom_entry.delete(0, tk.END) #deletes user input from the input field
             self.custom_index += 1 #updates the custom keys index
-            self.display.insert(tk.END, f"{user_input}\n") #append user input to display for reference todo: add this to main word entries
+            self.display.insert(tk.END, f"{user_input}\n") #append user input to display for reference
             self.prompt_next_custom() #prompt the next custom word to be configured
 
     def second_window(self): #generates Madlib play/fill window
