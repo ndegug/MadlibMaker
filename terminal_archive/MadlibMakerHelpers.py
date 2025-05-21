@@ -114,7 +114,7 @@ def file_read():
         customfile = filename.replace('.txt', '_cts.txt')
         base_name = filename.replace('.txt', '')
         # reading main content file
-        choice = os.path.join('inputs', filename)
+        choice = os.path.join('../inputs', filename)
         my_file = open(choice, "r")
         cont = my_file.read()
     else:
@@ -126,15 +126,15 @@ def file_read():
         quit()
 
     inputList = cont.split(" ")
-    if os.path.exists(os.path.join('inputs', customfile)):
-        choice = os.path.join('inputs', customfile)
+    if os.path.exists(os.path.join('../inputs', customfile)):
+        choice = os.path.join('../inputs', customfile)
         with open(choice) as f:
             data = f.read()
         custom = json.loads(data.replace("\'", "\""))
         f.close()
-    elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
+    elif not os.path.exists(os.path.join('../inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
         cust_config(inputList)
-        file_write(str(custom), base_name, 'inputs', '_cts.txt')
+        file_write(str(custom), base_name, '../inputs', '_cts.txt')
     else:
         pass
 

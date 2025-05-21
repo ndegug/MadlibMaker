@@ -1,5 +1,5 @@
-from MadlibMakerHelpers import *
-from long_strings import *
+from terminal_archive.MadlibMakerHelpers import *
+from terminal_archive.long_strings import *
 from past.builtins import raw_input
 
 custom = {}
@@ -7,16 +7,16 @@ custom = {}
 
 def customWordsFilter(inputList, base_name, saveFileOverride):
     customfile = base_name + "_cts.txt"
-    if os.path.exists(os.path.join('inputs', customfile)):
-        choice = os.path.join('inputs', customfile)
+    if os.path.exists(os.path.join('../inputs', customfile)):
+        choice = os.path.join('../inputs', customfile)
         with open(choice) as f:
             data = f.read()
         custom = json.loads(data.replace("\'", "\""))
         f.close()
-    elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
+    elif not os.path.exists(os.path.join('../inputs', customfile)) and re.search(customreg, str(inputList)) is not None:
         custom = cust_config(inputList)
         if saveFileOverride:
-            file_write(str(custom), base_name, 'inputs', '_cts.txt')
+            file_write(str(custom), base_name, '../inputs', '_cts.txt')
     else:
         custom = None
     return custom
@@ -205,7 +205,7 @@ def enterMadlibFile(filename):
         customfile = filename.replace('.txt', '_cts.txt')
         base_name = filename.replace('.txt', '')
         # reading main content file
-        choice = os.path.join('inputs', filename)
+        choice = os.path.join('../inputs', filename)
         my_file = open(choice, "r", encoding="utf8") # new comma case
         cont = my_file.read()
     else:
@@ -230,7 +230,7 @@ def madlibMainMenuHandler(choice, userMadlib, custom):
         choice = raw_input("Would you like to save this filled madlib to the \"outputs\" folder?\n")
         if choice == 'yes':
             filename = raw_input("What do you wish to name the file? (do not type the extension): ")
-            file_write(' '.join(filledMadlib), filename, 'outputs', '.txt')
+            file_write(' '.join(filledMadlib), filename, '../outputs', '.txt')
             print("Your filled madlib has been saved to the outputs folder, have a good day!")
         elif choice == 'no' or choice == '':
             print("Have a good day!")
@@ -244,7 +244,7 @@ def madlibMainMenuHandler(choice, userMadlib, custom):
         head = raw_input("What would you like to title this madlib?\n")
         latfill = htmlhead.replace('heading', head, 1) + latfill + ' </p></body></html>'
         filename = raw_input("What do you wish to name the file? (do not type the extension):\n")
-        file_write(latfill, filename, 'outputs', '.html')
+        file_write(latfill, filename, '../outputs', '.html')
         print("An HTML coded version of your unfilled madlib has been saved to the outputs folder, "
               "drag the file into your browser to view it. Print the file using your respective browser's print "
               "feature.\n "
@@ -291,7 +291,7 @@ def welcomeMenuHandler(choice):
         savequest = raw_input("Would you like to save?\n")
         if savequest == "yes":
             base_name = raw_input("Enter your desired filename (without extention)\:\n")
-            file_write(' '.join(userMadlib), base_name, 'inputs', '.txt')
+            file_write(' '.join(userMadlib), base_name, '../inputs', '.txt')
         elif savequest == "no":
             save_manual_file = False
         else:

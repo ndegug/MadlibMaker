@@ -74,14 +74,14 @@ class MadlibApp: #todo interface with fillmadlib
 
     def customWordsFilter(self, inputList, base_name, saveFileOverride):
         customfile = base_name + "_cts.txt"
-        if os.path.exists(os.path.join('inputs', customfile)):
-            choice = os.path.join('inputs', customfile)
+        if os.path.exists(os.path.join('../inputs', customfile)):
+            choice = os.path.join('../inputs', customfile)
             with open(choice) as f:
                 data = f.read()
             local_custom = json.loads(data.replace("\'", "\""))
             f.close()
-        elif not os.path.exists(os.path.join('inputs', customfile)) and re.search(customreg,
-                                                                                  str(inputList)) is not None:
+        elif not os.path.exists(os.path.join('../inputs', customfile)) and re.search(customreg,
+                                                                                     str(inputList)) is not None:
             local_custom = self.cust_config(inputList)
             if saveFileOverride:
                 self.dummyscreen('filewrite()')
