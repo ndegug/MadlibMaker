@@ -356,7 +356,7 @@ class MadlibApp:
         self.submit_btn = tk.Button(self.root, text="Submit", command=self.advance_from_first, bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
         #define display
-        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black")
+        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         self.display.pack(pady=10)
 
         self.input_entry.bind("<KeyRelease>", self.sync_display) #syncs display on every key release
@@ -423,7 +423,7 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
 
-        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black")
+        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         self.display.pack(pady=10)
         self.display.insert(tk.END, "Custom words detected, please configure them.\n")
 
@@ -460,7 +460,7 @@ class MadlibApp:
         tk.Label(self.root, text="Give us a/an:", font=("Arial", 12, "bold")).pack()
 
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
-                                                 fg="black")
+                                                 fg="black", wrap=tk.WORD)
         self.display.pack(pady=10, padx=5)
         tk.Label(self.root, text="Your entry:", font=("Arial", 12)).pack()
         # define and create entry field for user's entry for a word
@@ -635,7 +635,7 @@ class MadlibApp:
     def third_window(self):  #decide whether to save filled output
         for widget in self.root.winfo_children():
             widget.destroy()
-        display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black")
+        display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         display.pack(pady=20)
         self.filled = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist)) #rejoins output array without spacing between words and punctuation
 
@@ -710,7 +710,7 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
 
-        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black")
+        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         self.display.pack(pady=10)
         # define and create entry field for user's entry for a word
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
