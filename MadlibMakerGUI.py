@@ -1,5 +1,5 @@
 import tkinter as tk #main GUI tools
-from tkinter import scrolledtext, messagebox
+from tkinter import scrolledtext, messagebox, filedialog
 import webbrowser #for opening html files in browser
 import tempfile #for WORD input file analysis
 import re #regular expression library for substituting words
@@ -61,15 +61,19 @@ class MadlibApp:
 
             #return
 
+        btn = tk.Button(self.root, text="Browse for File", command=self.browse_and_load_file, font=("Arial", 12),
+                        bg="#3b9dd3", fg="white")
+        btn.pack()
         button_frame = tk.Frame(self.root)
         button_frame.pack(pady=10)
+
 
         row = 0  # initializes row and column counters for button grid
         col = 0
         for filename in files: #generate buttons for all files
             full_path = os.path.join(inputs_path, filename)
             btn = tk.Button(button_frame, text=filename, font=("Arial", 12),
-                            command=lambda path=full_path: self.process_input_file_3(path), bg="#3b9dd3",
+                            command=lambda path=full_path: self.process_input_file(path), bg="#3b9dd3",
                         fg="white")
             btn.grid(row=row, column=col, padx=2, pady=2,
                      sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
@@ -81,7 +85,18 @@ class MadlibApp:
                           fg="white")
         rfbtn.pack(pady=10)
 
-    def process_input_file_3(self, path): #todo: comment lines
+    def browse_and_load_file(self):
+        # Open a file dialog for the user to select a file
+        path = filedialog.askopenfilename(
+            title="Select a Madlib File",
+            filetypes=[("All Files", "*.*"),("Text Files", "*.txt"), ("Word Documents", "*.docx")]
+        )
+
+        # If a file was selected, process it
+        if path:
+            self.process_input_file(path)
+
+    def process_input_file(self, path): #todo: comment lines
         custom_dict = {} #temporary custom dic storage
         title_text = "" #temporary title storage
         file_path = path
