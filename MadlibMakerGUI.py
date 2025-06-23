@@ -1,5 +1,6 @@
 import tkinter as tk #main GUI tools
 from tkinter import scrolledtext, messagebox, filedialog
+from tkinter import font as tkfont
 import webbrowser #for opening html files in browser
 import tempfile #for WORD input file analysis
 import re #regular expression library for substituting words
@@ -42,18 +43,42 @@ class MadlibApp:
 
 #todo: see if return functions can be moved out of class and onto another file, else, move pack commands to functions
     def hypno_button(self, frame, text, command=None):
-        canvas = tk.Canvas(frame, width=100, height=40, bg="#b0a7f1", highlightthickness=0)
+        # Define font
+        btn_font = ("Courier New", 10, "bold")
 
-        # Draw fake 3D chrome outline (light top/left, dark bottom/right)
-        canvas.create_rectangle(5, 5, 95, 35, fill="#aa8ddb", outline="#ffffff", width=2)  # light border
-        canvas.create_line(5, 35, 95, 35, fill="#3a1c5d", width=3)  # bottom shadow
-        canvas.create_line(95, 5, 95, 35, fill="#3a1c5d", width=3)  # right shadow
+        # Measure the width of the text using a font object
+        f = tkfont.Font(family="Courier New", size=10, weight="bold")
+        text_width = f.measure(text)
 
+        # Define padding and sizing
+        padding_x = 20  # extra width around text
+        padding_y = 12  # extra height
+        button_width = text_width + padding_x
+        button_height = 26 + padding_y
+
+        canvas = tk.Canvas(frame, width=button_width + 10, height=button_height + 10,
+                           bg="#b0a7f1", highlightthickness=0)
+
+        # Draw fake chrome outline
+        canvas.create_rectangle(
+            5, 5,
+            5 + button_width,
+            5 + button_height,
+            fill="#aa8ddb",
+            outline="#ffffff",
+            width=2
+        )
+        canvas.create_line(5, 5 + button_height, 5 + button_width, 5 + button_height,
+                           fill="#3a1c5d", width=3)  # bottom shadow
+        canvas.create_line(5 + button_width, 5, 5 + button_width, 5 + button_height,
+                           fill="#3a1c5d", width=3)  # right shadow
+
+        # Add button
         btn = tk.Button(
             canvas,
             text=text,
             command=command,
-            font=("Courier New", 10, "bold"),
+            font=btn_font,
             bg="#aa8ddb",
             fg="white",
             activebackground="#9c6ddb",
@@ -61,7 +86,7 @@ class MadlibApp:
             relief="flat",
             highlightthickness=0
         )
-        btn.place(x=8, y=7, width=84, height=26)
+        btn.place(x=8, y=8, width=button_width - 6, height=button_height - 8)
 
         return canvas
 
@@ -88,7 +113,7 @@ class MadlibApp:
 
     # Title style block (hypnospace-themed heading)
     def hypno_label(self, text, h, w, s):
-        title = tk.Label(
+        label = tk.Label(
             self.root,
             text=text,
             font=("Courier New", s, "bold"),
@@ -99,7 +124,7 @@ class MadlibApp:
             padx=15,
             pady=4
         )
-        return title
+        return label
 
     def hypno_header(self, text):
         header = tk.Frame(root, bg="#676ec3", height=30)
@@ -130,8 +155,6 @@ class MadlibApp:
         #w = tk.Label(self.root, text='Hello!\n Welcome to the Madlib Maker',font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
 
         self.hypno_header("Welcome to...")
-
-
         w = self.hypno_label('The Madlib Maker',5,60, 14)
         w.pack(pady=(15),padx=(10))
         #smaller label to prompt choice
@@ -140,23 +163,19 @@ class MadlibApp:
         w.pack(pady=10)
 
         # buttons for Welcome menu selection
-        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#b0a7f1")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # manual input button
-        btn = tk.Button(button_frame, command=lambda: self.setup_manual_window(), text="Manual Input", bg="#3b9dd3",
-                        fg="white")  # defines each button with frame
-        btn.grid(row=1, column=0, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+        #btn = tk.Button(button_frame, command=lambda: self.setup_manual_window(), text="Manual Input", bg="#3b9dd3", fg="white")  # defines each button with frame
+        btn= self.hypno_button(button_frame, "Manual Input", command=lambda: self.setup_manual_window())
+        btn.grid(row=1, column=0, padx=2, pady=2, sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # Load inputs button
-        btn = tk.Button(button_frame, command=lambda: self.load_input_file(), text="Load a Madlib",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame
-        btn.grid(row=1, column=2, padx=2, pady=2,
-                 sticky="ew")
+        #btn = tk.Button(button_frame, command=lambda: self.load_input_file(), text="Load a Madlib", bg="#3b9dd3", fg="white")  # defines each button with frame
+        btn = self.hypno_button(button_frame, "Load a Madlib", command=lambda: self.load_input_file())
+        btn.grid(row=1, column=2, padx=2, pady=2, sticky="ew")
         # Instruction menu button
-        btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="Instructions",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame
+        #btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="Instructions", bg="#3b9dd3", fg="white")  # defines each button with frame
+        btn= self.hypno_button(button_frame, "Instructions", command=lambda: self.instruct_main())
         btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")
         self.root.mainloop()  # deploys the GUI screen till closed
