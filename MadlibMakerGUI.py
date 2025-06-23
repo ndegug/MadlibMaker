@@ -5,6 +5,8 @@ import webbrowser #for opening html files in browser
 import tempfile #for WORD input file analysis
 import re #regular expression library for substituting words
 import os #for file and folder writing and reading
+
+from Temp_files.doinow import hypno_scroll
 from long_strings_gui import * #collection of long strings
 from docx import Document #for writing and reading word docs
 from docx.shared import Pt #for word doc formatting
@@ -221,8 +223,8 @@ class MadlibApp:
 
     def write_instructions_menu(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
-                                                 fg="black", wrap=tk.WORD)
+        #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+        self.display= self.hypno_scroll(10,80)
         self.display.pack(pady=10, padx=5) #display widget spacing, horizontal and vertical
         self.display.insert(tk.END, how_to_write_a_madlib) #inserts "write madlibs" basic tutorial
         self.display.config(state='disabled')  # Make it read-only
@@ -230,50 +232,46 @@ class MadlibApp:
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Generic words
-        btn = tk.Button(button_frame, command=lambda: self.end_instructions(generic_words_list,True), text="Generic words",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame
+        #btn = tk.Button(button_frame, command=lambda: self.end_instructions(generic_words_list,True), text="Generic words",bg="#3b9dd3",fg="white")  # defines each button with frame
+        btn = self.hypno_button(button_frame, 'Generic words',
+                                command=lambda: self.end_instructions(generic_words_list,True))
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         #numbered words
-        btn = tk.Button(button_frame, command=lambda: self.end_instructions(numbered_words,True),
-                        text="Numbered words",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        #btn = tk.Button(button_frame, command=lambda: self.end_instructions(numbered_words,True), text="Numbered words", bg="#3b9dd3", fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame, 'Numbered Words',
+                                command=lambda: self.end_instructions(numbered_words,True))
         btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # Custom words
-        btn = tk.Button(button_frame, command=lambda: self.end_instructions(custom_words_basics,True),
-                        text="Custom words basics",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        #btn = tk.Button(button_frame, command=lambda: self.end_instructions(custom_words_basics,True),text="Custom words basics",bg="#3b9dd3",fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame, 'Custom words basics',
+                                command=lambda: self.end_instructions(custom_words_basics,True))
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # numbered custom words
-        btn = tk.Button(button_frame, command=lambda: self.end_instructions(numbered_custom_words,True),
-                        text="Numbered custom words",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        #btn = tk.Button(button_frame, command=lambda: self.end_instructions(numbered_custom_words,True),  text="Numbered custom words",  bg="#3b9dd3",fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame, 'Numbered Custom Words',
+                                command=lambda: self.end_instructions(numbered_custom_words,True))
         btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # Custom dic
-        btn = tk.Button(button_frame, command=lambda: self.end_instructions(prewriting_custom_configurations,True),
-                        text="Preconfiguring custom words",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        #btn = tk.Button(button_frame, command=lambda: self.end_instructions(prewriting_custom_configurations,True),text="Preconfiguring custom words",bg="#3b9dd3",fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame, 'Preconfiguring custom words',
+                                command=lambda: self.end_instructions(prewriting_custom_configurations,True))
         btn.grid(row=1, column=4, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # back button
 
-        btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="< Back to Instructions",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        #btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="< Back to Instructions",bg="#3b9dd3",fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame, '< Back to Instructions',
+                                command=lambda: self.instruct_main())
         btn.grid(row=2, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         #back to menu button
-        btn = tk.Button(button_frame, command=lambda: self.reset(), text="<< Back to main menu",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        #btn = tk.Button(button_frame, command=lambda: self.reset(), text="<< Back to main menu",bg="#3b9dd3",fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame, '<< Back to main menu',
+                                command=lambda: self.reset())
         btn.grid(row=2, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
 
