@@ -19,6 +19,7 @@ tail = "(_[0-9])"
 class MadlibApp:
     def __init__(self, root):
         self.root = root
+        root.configure(bg="#b0a7f1")  # pastel purple background
         self.reset()
 #PREREQUISITES
     def reset(self):
@@ -38,6 +39,51 @@ class MadlibApp:
             os.mkdir(os.path.join(os.getcwd(), "inputs"))
         if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
             os.mkdir(os.path.join(os.getcwd(), "outputs"))
+
+    def hypno_button(self, master, text, command=None):
+        canvas = tk.Canvas(master, width=100, height=40, bg="#b0a7f1", highlightthickness=0)
+
+        # Draw fake 3D chrome outline (light top/left, dark bottom/right)
+        canvas.create_rectangle(5, 5, 95, 35, fill="#aa8ddb", outline="#ffffff", width=2)  # light border
+        canvas.create_line(5, 35, 95, 35, fill="#3a1c5d", width=3)  # bottom shadow
+        canvas.create_line(95, 5, 95, 35, fill="#3a1c5d", width=3)  # right shadow
+
+        btn = tk.Button(
+            canvas,
+            text=text,
+            command=command,
+            font=("Courier New", 10, "bold"),
+            bg="#aa8ddb",
+            fg="white",
+            activebackground="#9c6ddb",
+            bd=0,
+            relief="flat",
+            highlightthickness=0
+        )
+        btn.place(x=8, y=7, width=84, height=26)
+
+        return canvas
+
+    def hypno_entry(self, w):
+        entry = tk.Entry(
+            root,
+            font=("Courier New", 10),
+            width=w,
+            bg="#ffffd4",
+            fg="black",
+            bd=2)
+        return entry
+
+    def hypno_scroll(self, h, w):
+        text_area = scrolledtext.ScrolledText(
+            root,
+            width=w,
+            height=h,
+            wrap="word",
+            font=("Courier New", 10),
+            bg="#ffffd4"
+        )
+        return text_area
 
     def dummyscreen(self,name): #placeholder for menus-to-be
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
