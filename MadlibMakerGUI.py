@@ -65,7 +65,7 @@ class MadlibApp:
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # manual input button
-        btn = tk.Button(button_frame, command=lambda: self.setup_first_window(), text="Manual Input", bg="#3b9dd3",
+        btn = tk.Button(button_frame, command=lambda: self.setup_manual_window(), text="Manual Input", bg="#3b9dd3",
                         fg="white")  # defines each button with frame
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
@@ -332,7 +332,7 @@ class MadlibApp:
             messagebox.showerror("File Error", f"Could not read file:\n{e}")
 
 #MANUAL INPUT
-    def setup_first_window(self): #setup manual input window
+    def setup_manual_window(self): #setup manual input window
         for widget in self.root.winfo_children():
             widget.destroy()
         l = tk.Label(self.root, text='Type your Madlib below!', font=("Arial", 12, "bold"), fg="black")
@@ -498,7 +498,7 @@ class MadlibApp:
 
 
         # play without saving button
-        btn = tk.Button(button_frame, command=lambda: self.advance_to_second(), text="Play", bg="#3b9dd3",
+        btn = tk.Button(button_frame, command=lambda: self.advance_to_play(), text="Play", bg="#3b9dd3",
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
@@ -515,11 +515,11 @@ class MadlibApp:
         self.spbtn.destroy() #destroys spoiler button
 
 #PLAY WINDOW
-    def advance_to_second(self): #advance to second window, start word prompting when selection is made
-        self.second_window()
+    def advance_to_play(self): #advance to second window, start word prompting when selection is made
+        self.play_window()
         self.next_prompt()
 
-    def second_window(self): #generates Madlib play/fill window
+    def play_window(self): #generates Madlib play/fill window
         for widget in self.root.winfo_children():widget.destroy()
         tk.Label(self.root, text="Give us a/an:", font=("Arial", 12, "bold")).pack()
 
@@ -639,10 +639,10 @@ class MadlibApp:
             self.outlist.append(self.current_word)
             self.next_prompt()
         except StopIteration:
-            self.third_window()
+            self.filled_window()
 
 #FILLED WINDOW
-    def third_window(self):  #decide whether to save filled output
+    def filled_window(self):  #decide whether to save filled output
         for widget in self.root.winfo_children():
             widget.destroy()
         display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
@@ -758,7 +758,7 @@ class MadlibApp:
             w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
                          width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
             w.pack(pady=10)
-            self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_second(), bg="#3b9dd3", fg="white")
+            self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_play(), bg="#3b9dd3", fg="white")
             self.submit_btn.pack(pady=10)
         elif md==4: #save and play Word docx inputs
             full_path = os.path.join('inputs', base + '.docx')
@@ -792,7 +792,7 @@ class MadlibApp:
                          width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
                          fg="black")
             w.pack(pady=10)
-            self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_second(),
+            self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_play(),
                                         bg="#3b9dd3", fg="white")
             self.submit_btn.pack(pady=10)
         else: #all invalids
