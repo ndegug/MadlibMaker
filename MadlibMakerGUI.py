@@ -87,7 +87,7 @@ class MadlibApp:
         return text_area
 
     # Title style block (hypnospace-themed heading)
-    def hypno_title(self, text, h, w, command=None):
+    def hypno_title(self, text, h, w):
         title = tk.Label(
             self.root,
             text=text,
