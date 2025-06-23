@@ -40,7 +40,7 @@ class MadlibApp:
         if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
             os.mkdir(os.path.join(os.getcwd(), "outputs"))
 
-#todo: see if return functions can be moved out of class and onto another file
+#todo: see if return functions can be moved out of class and onto another file, else, move pack commands to functions
     def hypno_button(self, frame, text, command=None):
         canvas = tk.Canvas(frame, width=100, height=40, bg="#b0a7f1", highlightthickness=0)
 
@@ -87,19 +87,33 @@ class MadlibApp:
         return text_area
 
     # Title style block (hypnospace-themed heading)
-    def hypno_title(self, text, h, w):
+    def hypno_label(self, text, h, w, s):
         title = tk.Label(
             self.root,
             text=text,
-            font=("Courier New", 14, "bold"),
+            font=("Courier New", s, "bold"),
             fg="#9e316e",
             bg="#f5e97c",  # pastel yellow
             height=h,
             width=w,
-            padx=6,
+            padx=15,
             pady=4
         )
         return title
+
+    def hypno_header(self, text):
+        header = tk.Frame(root, bg="#676ec3", height=30)
+        header.pack(fill="x", side="top")
+
+        header_label = tk.Label(
+            header,
+            text=text,
+            bg="#676ec3",
+            fg="white",
+            font=("Courier New", 12, "bold")
+        )
+
+        header_label.pack(side="left", padx=10)
 
     def dummyscreen(self,name): #placeholder for menus-to-be
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
@@ -114,11 +128,15 @@ class MadlibApp:
 
         # welcome text
         #w = tk.Label(self.root, text='Hello!\n Welcome to the Madlib Maker',font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
-        w = self.hypno_title('Hello!\n Welcome to the Madlib Maker',5,60)
+
+        self.hypno_header("Welcome to...")
+
+
+        w = self.hypno_label('The Madlib Maker',5,60, 14)
         w.pack(pady=(15),padx=(10))
         #smaller label to prompt choice
-        w = tk.Label(self.root, text='What would you like to do\ntoday?', width=24,
-                     height=3, bg="#d0e7ff", fg="black")
+        #w = tk.Label(self.root, text='What would you like to do\ntoday?', width=24,height=3, bg="#d0e7ff", fg="black")
+        w = self.hypno_label('What would you like to do today?', None, None, 12)
         w.pack(pady=10)
 
         # buttons for Welcome menu selection
