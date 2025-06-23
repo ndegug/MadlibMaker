@@ -40,8 +40,8 @@ class MadlibApp:
         if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
             os.mkdir(os.path.join(os.getcwd(), "outputs"))
 
-    def hypno_button(self, master, text, command=None):
-        canvas = tk.Canvas(master, width=100, height=40, bg="#b0a7f1", highlightthickness=0)
+    def hypno_button(self, frame, text, command=None):
+        canvas = tk.Canvas(frame, width=100, height=40, bg="#b0a7f1", highlightthickness=0)
 
         # Draw fake 3D chrome outline (light top/left, dark bottom/right)
         canvas.create_rectangle(5, 5, 95, 35, fill="#aa8ddb", outline="#ffffff", width=2)  # light border
@@ -66,7 +66,7 @@ class MadlibApp:
 
     def hypno_entry(self, w):
         entry = tk.Entry(
-            root,
+            self.root,
             font=("Courier New", 10),
             width=w,
             bg="#ffffd4",
@@ -76,7 +76,7 @@ class MadlibApp:
 
     def hypno_scroll(self, h, w):
         text_area = scrolledtext.ScrolledText(
-            root,
+            self.root,
             width=w,
             height=h,
             wrap="word",
@@ -98,6 +98,7 @@ class MadlibApp:
 
         # welcome text
         w = tk.Label(self.root, text='Hello!\n Welcome to the Madlib Maker',font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
+
         w.pack(pady=(15))
         #smaller label to prompt choice
         w = tk.Label(self.root, text='What would you like to do\ntoday?', width=24,
