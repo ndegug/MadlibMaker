@@ -15,10 +15,7 @@ numbered = "(/...[0-9]+)"
 customreg = "(/ct[0-9]+)"
 numcustreg = "(/ct[0-9]+_[0-9]+)"
 tail = "(_[0-9])"
-htmlsample = '<span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: ' \
-             'center;"><span style="display: block; padding: 0 0.2em;">__________</span><span style="display: block; ' \
-             'font-size: 70%; line-height: 1em; padding: 0 0.2em;"><span style="position: relative; line-height: 1em; ' \
-             'margin-top: -.2em; top: -.2em;">underscript</span></span></span>'
+
 class MadlibApp:
     def __init__(self, root):
         self.root = root

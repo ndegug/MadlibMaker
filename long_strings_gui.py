@@ -2,6 +2,10 @@ htmlhead = '<html><head></head><body><h1> heading </h1><style>h1 {text-align: ce
            '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
 htmlhead_notitle = '<html><head></head><body><style>h1 {text-align: center;}p.big {  line-height: ' \
            '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
+htmlsample = '<span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: ' \
+             'center;"><span style="display: block; padding: 0 0.2em;">__________</span><span style="display: block; ' \
+             'font-size: 70%; line-height: 1em; padding: 0 0.2em;"><span style="position: relative; line-height: 1em; ' \
+             'margin-top: -.2em; top: -.2em;">underscript</span></span></span>'
 generic_words = { # reminder: do not add any keywords that are the same as ignored words
                  '/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/ver': 'Verb', '/vng': 'Verb ending in \"ing\"', '/ved': 'Past tense verb',
