@@ -35,17 +35,20 @@ class MadlibApp:
         self.title = '' #madlib title
         self.load_mode = False  # decides mode (False=write or True=load)
         self.welcomeMenuHandler() #welcome menu
+
     def folders(self): #creates input and output folders if none exist
         if not os.path.isdir(os.path.join(os.getcwd(), "inputs")):
             os.mkdir(os.path.join(os.getcwd(), "inputs"))
         if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
             os.mkdir(os.path.join(os.getcwd(), "outputs"))
+
     def dummyscreen(self,name): #placeholder for menus-to-be
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         text = "This is the screen for " + str(name)
         w = tk.Label(self.root, text=text, width=80, height=10, bg="#d0e7ff", fg="black")
         w.pack(pady=10)
         self.root.mainloop()  # deploys the GUI screen till closed
+
 #MAIN MENU
     def welcomeMenuHandler(self): #Welcome menu
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
@@ -79,6 +82,7 @@ class MadlibApp:
         btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")
         self.root.mainloop()  # deploys the GUI screen till closed
+
 #INSTRUCTIONS
     def instruct_main(self): #Instructions top menu
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
@@ -118,6 +122,7 @@ class MadlibApp:
                                     fg="white")
         btn.pack(pady=10)
         self.root.mainloop()  # deploys the GUI screen till closed
+
     def write_instructions_menu(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
@@ -175,6 +180,7 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
         btn.grid(row=2, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
+
     def end_instructions(self,content,lv):#generic window for instructions at the end of the instruction tree.
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
@@ -215,6 +221,7 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
             btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
+
 #READING FILES
     def load_input_file(self):
         # Clear existing widgets if necessary
@@ -266,6 +273,7 @@ class MadlibApp:
         rfbtn = tk.Button(self.root, text="Refresh", command=lambda: self.load_input_file(), bg="#3b9dd3",
                           fg="white")
         rfbtn.pack(pady=10)
+
     def browse_and_load_file(self):
         # Open a file dialog for the user to select a file
         path = filedialog.askopenfilename(
@@ -276,6 +284,7 @@ class MadlibApp:
         # If a file was selected, process it
         if path:
             self.process_input_file(path)
+
     def process_input_file(self, path): #todo: comment lines
         custom_dict = {} #temporary custom dic storage
         title_text = "" #temporary title storage
@@ -355,12 +364,15 @@ class MadlibApp:
         self.display.pack(pady=10)
 
         self.input_entry.bind("<KeyRelease>", self.sync_display) #syncs display on every key release
+
     def sync_display(self, event=None): #syncs text between manual entry and display todo: verify why "event" is needed but not used in function
         self.display.delete(1.0, tk.END) #clears the display before updating with current text (from row 1 char 0 to the end)
         self.display.insert(tk.END, self.input_entry.get()) #inserts text from the end (which is the start of the field after delete) to
+
     def insert_keyword(self, keyword):#inserts a keyword into active input field
         self.input_entry.insert(tk.END, keyword) #inputs keyword without a space (do not have both lines active)
         self.sync_display() #adds the keyword to the display
+
     def advance_from_first(self): #handles input data
         # grabs manual input if manual
         if self.load_mode == False:#manual input
@@ -381,12 +393,14 @@ class MadlibApp:
             self.custom_configure_window() #configure customs, file_choice will be executed as well
         else: #if no others are needed
             self.title_check()
+
 #TITLE MAKERS
     def title_check(self): #check if title is set
         if self.title:
             self.file_choice() #advance to input preview
         else:
             self.title_write() #write title
+
     def title_write(self): #write title
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -409,9 +423,11 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")
+
     def title_saver(self): #saves title
         self.title = self.input_entry.get().strip()
         self.file_choice()
+
 #CUSTOM PROCESSING
     def custom_configure_window(self): #custom word configure window
         for widget in self.root.winfo_children():
@@ -430,12 +446,14 @@ class MadlibApp:
 
         self.prompt_next_custom() #prompt the next custom word in the display
         self.root.mainloop()  # deploys the GUI screen till closed
+
     def prompt_next_custom(self): #promts each custom word in display
         if self.custom_index < len(self.custom_keys):
             current_key = self.custom_keys[self.custom_index] #grab the custom key based on sequential index
             self.display.insert(tk.END, f"Custom {current_key[3:]}: ") #inserts each prompt with the entry based on ID number
         else:
             self.title_check() #with all customs configured, advance to title check
+
     def save_custom_word(self): #saves custom word to custom dictionary
         current_key = self.custom_keys[self.custom_index]
         user_input = self.custom_entry.get().strip()
@@ -445,6 +463,7 @@ class MadlibApp:
             self.custom_index += 1 #updates the custom keys index
             self.display.insert(tk.END, f"{user_input}\n") #append user input to display for reference
             self.prompt_next_custom() #prompt the next custom word to be configured
+
 #UNFILLED WINDOW
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
@@ -489,14 +508,17 @@ class MadlibApp:
         btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         self.root.mainloop()  # deploys the GUI screen till closed
+
     def spoiler(self): #inserts madlib input text to display if the user chooses to spoil a loaded madlib
         self.display.delete("1.0", tk.END) #clears warning message
         self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.title + "\n\n"+self.raw_in)
         self.spbtn.destroy() #destroys spoiler button
+
 #PLAY WINDOW
     def advance_to_second(self): #advance to second window, start word prompting when selection is made
         self.second_window()
         self.next_prompt()
+
     def second_window(self): #generates Madlib play/fill window
         for widget in self.root.winfo_children():widget.destroy()
         tk.Label(self.root, text="Give us a/an:", font=("Arial", 12, "bold")).pack()
@@ -515,6 +537,7 @@ class MadlibApp:
         self.submit_btn = tk.Button(self.root, text="Submit", command=self.process_next_keyword, bg="#3b9dd3",
                                     fg="white")
         self.submit_btn.pack(pady=10)
+
     def process_next_keyword(self):
         user_text = self.input_entry.get().strip() #grab user text
         self.display.insert(tk.END, f"{user_text}\n") #display next to prompt in display
@@ -528,6 +551,7 @@ class MadlibApp:
         else:
             pass
         self.next_prompt() #get next prompt
+
     def next_prompt(self): #iterates through each word of the madlib array, returns when user input is needed todo: complete comments
         try:
             self.current_word = next(self.prompt_words)
@@ -616,6 +640,7 @@ class MadlibApp:
             self.next_prompt()
         except StopIteration:
             self.third_window()
+
 #FILLED WINDOW
     def third_window(self):  #decide whether to save filled output
         for widget in self.root.winfo_children():
@@ -650,6 +675,7 @@ class MadlibApp:
                         fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
+
     def output_file_name(self,md): #output file namer
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)',font=("Arial", 12, "bold"), width=80, height=10,
@@ -672,6 +698,7 @@ class MadlibApp:
         self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.save_file(md), bg="#3b9dd3",
                                         fg="white")
         self.submit_btn.pack(pady=10)
+
 #SAVING OUTPUTS
     def save_file(self,md): # saving input and output
         base = self.input_entry.get().strip()
@@ -777,19 +804,23 @@ class MadlibApp:
             w.pack(pady=10)
             self.submit_btn = tk.Button(self.root, text="Ok", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
             self.submit_btn.pack(pady=10)
+
     def normalize_quotes(self, text): #normalizes curly quotes from Word docs when printing text files
         return text.replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
+
     def file_write(self, content, name_of_file, path, ext):
         completeName = os.path.join(path, name_of_file + ext) #filepath with name and extension
         f = open(completeName, "w") #open file with path
         f.write(content) #insert contents
         f.close() #close the file
+
 #HTML PROCESSING/CONVERSION
     def advance_to_html(self): #prepare and send madlib input to convert to HTML
         self.userMadlib=self.raw_in.split(' ') #split madlib input by spaces
         self.html_words = iter(self.userMadlib) #set up iteration
         self.invalid_html_window() # prepair window for user inputs when keys invalid
         self. html_replace() # run html replacement
+
     def html_replace(self): #todo: fully comment
         try:
             while True:
@@ -846,6 +877,7 @@ class MadlibApp:
 
         except StopIteration:
             self.html_post_process()
+
     def invalid_html_window(self):
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -860,12 +892,14 @@ class MadlibApp:
 
         self.submit_btn = tk.Button(self.root, text="Submit", command=self.process_invalid_html, bg="#3b9dd3", fg="white")
         self.submit_btn.pack(pady=10)
+
     def process_invalid_html(self): #grabs user input submitted when key is found invalid during html replacement
         user_text = self.input_entry.get().strip()
         self.input_entry.delete(0, tk.END)
         user_ht = htmlsample.replace('underscript', user_text) #substitute the word "underscript" in html sample for word under the underset
         self.htlist.append(user_ht)
         self. html_replace()
+
     def html_post_process(self):
         for widget in self.root.winfo_children(): widget.destroy()
         self.html_out = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.htlist)) #join body with punctuation
@@ -874,6 +908,7 @@ class MadlibApp:
         else:
             self.html_out = htmlhead_notitle + self.html_out + ' </p></body></html>'
         self.html_file_choice() #prompt save decision
+
     def html_file_choice(self): #screen for deciding whether to save html output
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
@@ -890,6 +925,7 @@ class MadlibApp:
         btn = tk.Button(button_frame, command=lambda: self.html_view(), text="Print without saving", bg="#3b9dd3", fg="white")  # defines each button with frame,
         btn.grid(row=1, column=2, padx=2, pady=2, sticky="ew")  # defines the button's location on the grid
         self.root.mainloop()  # deploys the GUI screen till closed
+
     def html_view(self): #notification of opening HTML in browser
         self.root.destroy()  # closes the gui entirely
         messagebox.showinfo("Thank you.", "We'll uploaded your madlib to your browser, you can print it from there.")
