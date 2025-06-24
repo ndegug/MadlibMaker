@@ -41,6 +41,26 @@ class MadlibApp:
         if not os.path.isdir(os.path.join(os.getcwd(), "outputs")):
             os.mkdir(os.path.join(os.getcwd(), "outputs"))
 
+    def shadow_shine(self,frame,h,w):
+        canvas = tk.Canvas(frame, width=w + 10, height=h + 10,
+                           bg="#9bc7f5", highlightthickness=0)
+
+        # Draw fake chrome outline
+        canvas.create_rectangle(  # todo Make blue/chrome, widen, then add a shaddow/shine affect on top of that
+            5, 5,
+            5 + w,
+            5 + h,
+            fill="#aa8ddb",
+            outline="#ffffff",
+            width=2
+        )
+        canvas.create_line(5, 5 + h, 5 + w, 5 + h,
+                           fill="#3a1c5d", width=3)  # bottom shadow
+        canvas.create_line(5 + w, 5, 5 + w, 5 + h,
+                           fill="#3a1c5d", width=3)  # right shadow
+        return canvas
+
+
 #todo: see if return functions can be moved out of class and onto another file, else, move pack commands to functions
     def hypno_button(self, frame, text, command=None): #todo: fully comment
         # Define font
@@ -56,23 +76,23 @@ class MadlibApp:
         button_width = text_width + padding_x
         button_height = 26 + padding_y
 
-        canvas = tk.Canvas(frame, width=button_width + 10, height=button_height + 10,
-                           bg="#9bc7f5", highlightthickness=0)
+        #canvas = tk.Canvas(frame, width=button_width + 10, height=button_height + 10, bg="#9bc7f5", highlightthickness=0)
 
         # Draw fake chrome outline
-        canvas.create_rectangle(#todo Make blue/chrome, widen, then add a shaddow/shine affect on top of that
-            5, 5,
-            5 + button_width,
-            5 + button_height,
-            fill="#aa8ddb",
-            outline="#ffffff",
-            width=2
-        )
-        canvas.create_line(5, 5 + button_height, 5 + button_width, 5 + button_height,
-                           fill="#3a1c5d", width=3)  # bottom shadow
-        canvas.create_line(5 + button_width, 5, 5 + button_width, 5 + button_height,
-                           fill="#3a1c5d", width=3)  # right shadow
+        #canvas.create_rectangle(#todo Make blue/chrome, widen, then add a shaddow/shine affect on top of that
+        #    5, 5,
+        #    5 + button_width,
+        #    5 + button_height,
+        #    fill="#aa8ddb",
+        #     outline="#ffffff",
+        #     width=2
+        # )
+        # canvas.create_line(5, 5 + button_height, 5 + button_width, 5 + button_height,
+        #                    fill="#3a1c5d", width=3)  # bottom shadow
+        # canvas.create_line(5 + button_width, 5, 5 + button_width, 5 + button_height,
+        #                    fill="#3a1c5d", width=3)  # right shadow
 
+        canvas=self.shadow_shine(frame,button_height,button_width)
         # Add button
         btn = tk.Button(
             canvas,
