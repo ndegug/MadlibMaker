@@ -6,7 +6,6 @@ import tempfile #for WORD input file analysis
 import re #regular expression library for substituting words
 import os #for file and folder writing and reading
 
-from Temp_files.doinow import hypno_scroll
 from long_strings_gui import * #collection of long strings
 from docx import Document #for writing and reading word docs
 from docx.shared import Pt #for word doc formatting
@@ -229,7 +228,7 @@ class MadlibApp:
         self.display.insert(tk.END, how_to_write_a_madlib) #inserts "write madlibs" basic tutorial
         self.display.config(state='disabled')  # Make it read-only
         # buttons frame
-        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#b0a7f1")   # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Generic words
         #btn = tk.Button(button_frame, command=lambda: self.end_instructions(generic_words_list,True), text="Generic words",bg="#3b9dd3",fg="white")  # defines each button with frame
@@ -240,7 +239,7 @@ class MadlibApp:
         #numbered words
         #btn = tk.Button(button_frame, command=lambda: self.end_instructions(numbered_words,True), text="Numbered words", bg="#3b9dd3", fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame, 'Numbered Words',
-                                command=lambda: self.end_instructions(numbered_words,True))
+                                command=lambda: self.end_instructions(numbered_words,True)) #todo: resolve this button being off center
         btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # Custom words
@@ -270,49 +269,42 @@ class MadlibApp:
                  sticky="ew")  # defines the button's location on the grid
         #back to menu button
         #btn = tk.Button(button_frame, command=lambda: self.reset(), text="<< Back to main menu",bg="#3b9dd3",fg="white")  # defines each button with frame,
-        btn = self.hypno_button(button_frame, '<< Back to main menu',
-                                command=lambda: self.reset())
-        btn.grid(row=2, column=3, padx=2, pady=2,
-                 sticky="ew")  # defines the button's location on the grid
+        btn = self.hypno_button(button_frame, '<< Back to main menu', command=lambda: self.reset())
+        btn.grid(row=2, column=3, padx=2, pady=2, sticky="ew")  # defines the button's location on the grid
 
     def end_instructions(self,content,lv):#generic window for instructions at the end of the instruction tree.
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
-                                                 fg="black", wrap=tk.WORD)
+        #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",fg="black", wrap=tk.WORD)
+        self.display=self.hypno_scroll(10, 80)
         self.display.pack(pady=10, padx=5)
         self.display.insert(tk.END, content)
         self.display.config(state='disabled')  # Make it read-only
 
-        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#b0a7f1")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
 
         if lv: #second level of menus, currently only used in specifics of writing madlibs, change to an int if more are added
             # back to write instructions button
-            btn = tk.Button(button_frame, command=lambda: self.write_instructions_menu(), text="< Back to writing madlibs",
-                            bg="#3b9dd3", fg="white")
-            btn.grid(row=1, column=1, padx=2, pady=2,
-                     sticky="ew")
+            #btn = tk.Button(button_frame, command=lambda: self.write_instructions_menu(), text="< Back to writing madlibs", bg="#3b9dd3", fg="white")
+            btn = self.hypno_button(button_frame, '< Back to writing Madlibs',command=lambda: self.write_instructions_menu())
+            btn.grid(row=1, column=1, padx=2, pady=2, sticky="ew")
             #back to instructions from lv2 end instructions
-            btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="<< Back to Instructions",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame
+            #btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="<< Back to Instructions", bg="#3b9dd3", fg="white")  # defines each button with frame
+            btn = self.hypno_button(button_frame, '<< Back to Instructions',  command=lambda: self.instruct_main())
             btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
             #back to menu from lv2 end instructions
-            btn = tk.Button(button_frame, command=lambda: self.reset(), text="<<< Back to main menu",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+            #btn = tk.Button(button_frame, command=lambda: self.reset(), text="<<< Back to main menu", bg="#3b9dd3", fg="white")  # defines each button with frame,
+            btn = self.hypno_button(button_frame, '<<< Back to main menu', command=lambda: self.reset())
             btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         else: #normal end instructions, only back to menu and back to instructions
-            btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="< Back to Instructions",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+            #btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="< Back to Instructions", bg="#3b9dd3", fg="white")  # defines each button with frame,
+            btn = self.hypno_button(button_frame, '< Back to Instructions', command=lambda: self.instruct_main())
             btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
-            btn = tk.Button(button_frame, command=lambda: self.reset(), text="<< Back to main menu",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+            #btn = tk.Button(button_frame, command=lambda: self.reset(), text="<< Back to main menu", bg="#3b9dd3", fg="white")  # defines each button with frame,
+            btn = self.hypno_button(button_frame, '<< Back to main menu', command=lambda: self.reset())
             btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
 
