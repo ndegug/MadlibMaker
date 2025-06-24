@@ -60,7 +60,7 @@ class MadlibApp:
                            bg="#9bc7f5", highlightthickness=0)
 
         # Draw fake chrome outline
-        canvas.create_rectangle(
+        canvas.create_rectangle(#todo Make blue/chrome, widen, then add a shaddow/shine affect on top of that
             5, 5,
             5 + button_width,
             5 + button_height,
