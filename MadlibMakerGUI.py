@@ -6,6 +6,7 @@ import tempfile #for WORD input file analysis
 import re #regular expression library for substituting words
 import os #for file and folder writing and reading
 
+from Temp_files.doinow import hypno_button
 from long_strings_gui import * #collection of long strings
 from docx import Document #for writing and reading word docs
 from docx.shared import Pt #for word doc formatting
@@ -241,7 +242,7 @@ class MadlibApp:
         #btn = tk.Button(button_frame, command=lambda: self.end_instructions(numbered_words,True), text="Numbered words", bg="#3b9dd3", fg="white")  # defines each button with frame,
 
         btn = self.hypno_button(button_frame, 'Numbered Words',
-                                command=lambda: self.end_instructions(numbered_words,True)) #todo: resolve this button being off center
+                                command=lambda: self.end_instructions(numbered_words,True))
         btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # Custom words
@@ -317,8 +318,8 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
         self.load_mode = True #begin load mode
-        label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 12, "bold"),width=70, height=5, bg="#d0e7ff",
-                         fg="black")
+        #label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 12, "bold"),width=70, height=5, bg="#d0e7ff", fg="black")
+        label = self.hypno_label("Select a file to load:",5,70,12)
         label.pack(pady=10)
 
         inputs_path = os.path.join(os.getcwd(), "inputs")
@@ -329,20 +330,22 @@ class MadlibApp:
         files = [f for f in os.listdir(inputs_path) if f.endswith('.txt') or f.endswith('.docx')] #grabs all files in inputs
 
         if not files: #edge case of no valid input files
-            no_files_label = tk.Label(self.root, text="No input files found in the 'inputs' folder.\nPlace one into the folder and click \"Refresh\"", font=("Arial", 12))
+            #no_files_label = tk.Label(self.root, text="No input files found in the 'inputs' folder.\nPlace one into the folder and click \"Refresh\"", font=("Arial", 12))
+            no_files_label = self.hypno_label("No input files found in the 'inputs' folder.\nPlace one into the folder and click \"Refresh\" or Browse for it instead.",None,None,12)
             no_files_label.pack(pady=10)
         else:
-            no_files_label = tk.Label(self.root,
-                                      text="Don't see your file? Place it in the \"inputs\" folder  and click \"Refresh\"",
-                                      font=("Arial", 12))
+            #no_files_label = tk.Label(self.root,text="Don't see your file? Place it in the \"inputs\" folder  and click \"Refresh\"",font=("Arial", 12))
+            no_files_label = self.hypno_label(
+                "Don't see your file? Place it in the \"inputs\" folder  and click \"Refresh\" or Browse for it instead", None,
+                None, 12)
             no_files_label.pack(pady=5)
 
             #return
 
-        btn = tk.Button(self.root, text="Browse for File", command=self.browse_and_load_file, font=("Arial", 12),
-                        bg="#3b9dd3", fg="white")
+        #btn = tk.Button(self.root, text="Browse for File", command=self.browse_and_load_file, font=("Arial", 12), bg="#3b9dd3", fg="white")
+        btn = self.hypno_button(self.root,"Browse for File",command=self.browse_and_load_file)
         btn.pack()
-        button_frame = tk.Frame(self.root)
+        button_frame = tk.Frame(self.root, bg="#b0a7f1")  # defines the button frame
         button_frame.pack(pady=10)
 
 
@@ -350,17 +353,15 @@ class MadlibApp:
         col = 0
         for filename in files: #generate buttons for all files
             full_path = os.path.join(inputs_path, filename)
-            btn = tk.Button(button_frame, text=filename, font=("Arial", 12),
-                            command=lambda path=full_path: self.process_input_file(path), bg="#3b9dd3",
-                        fg="white")
-            btn.grid(row=row, column=col, padx=2, pady=2,
-                     sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+            #btn = tk.Button(button_frame, text=filename, font=("Arial", 12),command=lambda path=full_path: self.process_input_file(path), bg="#3b9dd3",fg="white")
+            btn = self.hypno_button(button_frame, filename, command=lambda path=full_path: self.process_input_file(path))
+            btn.grid(row=row, column=col, padx=2, pady=2, sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
             col += 1
             if col >= 5:  # max number of columns, then new row
                 col = 0
                 row += 1
-        rfbtn = tk.Button(self.root, text="Refresh", command=lambda: self.load_input_file(), bg="#3b9dd3",
-                          fg="white")
+        #rfbtn = tk.Button(self.root, text="Refresh", command=lambda: self.load_input_file(), bg="#3b9dd3",fg="white")
+        rfbtn = self.hypno_button(self.root, "refresh", command=lambda: self.load_input_file())
         rfbtn.pack(pady=10)
 
     def browse_and_load_file(self):
