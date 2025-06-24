@@ -50,7 +50,7 @@ class MadlibApp:
             5, 5,
             5 + w,
             5 + h,
-            fill="#aa8ddb",
+            fill="#9ac7f5",
             outline="#ffffff",
             width=2
         )
@@ -58,6 +58,11 @@ class MadlibApp:
                            fill="#3a1c5d", width=3)  # bottom shadow
         canvas.create_line(5 + w, 5, 5 + w, 5 + h,
                            fill="#3a1c5d", width=3)  # right shadow
+        #8990f5
+        canvas.create_line(5, 2 + h, 5 + w, 2 + h,
+                           fill="#8990f5", width=3)  # bottom half-shadow
+        canvas.create_line(2 + w, (h+5)*.5, 2 + w, h+5,
+                           fill="#8990f5", width=3)  # right half-shadow
         return canvas
 
 
