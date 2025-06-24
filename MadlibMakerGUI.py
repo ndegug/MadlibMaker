@@ -5,8 +5,6 @@ import webbrowser #for opening html files in browser
 import tempfile #for WORD input file analysis
 import re #regular expression library for substituting words
 import os #for file and folder writing and reading
-
-from Temp_files.doinow import hypno_button
 from long_strings_gui import * #collection of long strings
 from docx import Document #for writing and reading word docs
 from docx.shared import Pt #for word doc formatting
@@ -22,7 +20,7 @@ tail = "(_[0-9])"
 class MadlibApp:
     def __init__(self, root):
         self.root = root
-        root.configure(bg="#b0a7f1")  # pastel purple background
+        root.configure(bg="#9bc7f5")  # pastel chrome/blue background
         self.reset()
 #PREREQUISITES
     def reset(self):
@@ -59,7 +57,7 @@ class MadlibApp:
         button_height = 26 + padding_y
 
         canvas = tk.Canvas(frame, width=button_width + 10, height=button_height + 10,
-                           bg="#b0a7f1", highlightthickness=0)
+                           bg="#9bc7f5", highlightthickness=0)
 
         # Draw fake chrome outline
         canvas.create_rectangle(
@@ -166,7 +164,7 @@ class MadlibApp:
         w.pack(pady=10)
 
         # buttons for Welcome menu selection
-        button_frame = tk.Frame(self.root, bg="#b0a7f1")  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # manual input button
         #btn = tk.Button(button_frame, command=lambda: self.setup_manual_window(), text="Manual Input", bg="#3b9dd3", fg="white")  # defines each button with frame
@@ -192,7 +190,7 @@ class MadlibApp:
         w = self.hypno_label('What would you like to learn about?', 10,80,12)
         w.pack(pady=10)
         # buttons for instructions
-        button_frame = tk.Frame(self.root, bg="#b0a7f1")  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # How to play instruct
         #btn = tk.Button(button_frame, command=lambda: self.end_instructions(how_to_play_madlibs, False), text="How to play Madlibs", bg="#3b9dd3",fg="white")  # defines each button with frame,
@@ -215,7 +213,7 @@ class MadlibApp:
         btn.grid(row=1, column=4, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         #back to menu from instruct 1
-        #button_frame = tk.Frame(self.root, bg="#b0a7f1")  # RE-defines the button frame specifically for back-to-menu button
+        #button_frame = tk.Frame(self.root, bg="#9bc7f5")  # RE-defines the button frame specifically for back-to-menu button
         #button_frame.pack(pady=5)  # for all button frames
         #btn= tk.Button(self.root, text="< Back to main menu", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
         btn= self.hypno_button(button_frame, '< Back to main menu', command=lambda: self.reset())
@@ -230,7 +228,7 @@ class MadlibApp:
         self.display.insert(tk.END, how_to_write_a_madlib) #inserts "write madlibs" basic tutorial
         self.display.config(state='disabled')  # Make it read-only
         # buttons frame
-        button_frame = tk.Frame(self.root, bg="#b0a7f1")   # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#9bc7f5")   # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Generic words
         #btn = tk.Button(button_frame, command=lambda: self.end_instructions(generic_words_list,True), text="Generic words",bg="#3b9dd3",fg="white")  # defines each button with frame
@@ -264,7 +262,7 @@ class MadlibApp:
         btn.grid(row=1, column=4, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # back button
-        button_frame = tk.Frame(self.root, bg="#b0a7f1")  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         #btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="< Back to Instructions",bg="#3b9dd3",fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame, '< Back to Instructions',
@@ -284,7 +282,7 @@ class MadlibApp:
         self.display.insert(tk.END, content)
         self.display.config(state='disabled')  # Make it read-only
 
-        button_frame = tk.Frame(self.root, bg="#b0a7f1")  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
 
         if lv: #second level of menus, currently only used in specifics of writing madlibs, change to an int if more are added
@@ -345,7 +343,7 @@ class MadlibApp:
         #btn = tk.Button(self.root, text="Browse for File", command=self.browse_and_load_file, font=("Arial", 12), bg="#3b9dd3", fg="white")
         btn = self.hypno_button(self.root,"Browse for File",command=self.browse_and_load_file)
         btn.pack()
-        button_frame = tk.Frame(self.root, bg="#b0a7f1")  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=10)
 
 
