@@ -17,6 +17,7 @@ customreg = "(/ct[0-9]+)"
 numcustreg = "(/ct[0-9]+_[0-9]+)"
 tail = "(_[0-9])"
 
+
 class MadlibApp:
     def __init__(self, root):
         self.root = root
@@ -60,9 +61,9 @@ class MadlibApp:
                            fill="#3a1c5d", width=3)  # right shadow
         #todo: future enhancement: use inputs for additional hues
         canvas.create_line(5, 2 + h, 3 + w, 2 + h,
-                           fill="#8990f5", width=3)  # bottom half-shadow
+                           fill=darker("#9ac7f5"), width=3)  # bottom half-shadow
         canvas.create_line(2 + w, (h+5)*.5, 2 + w, h+2,
-                           fill="#8990f5", width=3)  # right half-shadow
+                           fill=darker("#9ac7f5"), width=3)  # right half-shadow
         return canvas
 
 
@@ -1029,6 +1030,19 @@ class MadlibApp:
         with tempfile.NamedTemporaryFile("w", delete=False, suffix=".html") as f:
             f.write(self.html_out)
             webbrowser.open(f.name)
+
+def darker(hex_color: str, factor: float = 0.85) -> str:
+    if not hex_color.startswith("#") or len(hex_color) != 7:
+        raise ValueError("Colour must be in the form '#RRGGBB'.")
+
+    hex_color = hex_color.lstrip("#")
+    r, g, b = (int(hex_color[i : i + 2], 16) for i in (0, 2, 4))
+
+    r = max(0, min(255, int(r * factor)))
+    g = max(0, min(255, int(g * factor)))
+    b = max(0, min(255, int(b * factor)))
+
+    return f"#{r:02x}{g:02x}{b:02x}"
 
 if __name__ == "__main__":
     root = tk.Tk() #initiate tkinter root
