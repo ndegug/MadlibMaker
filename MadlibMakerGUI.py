@@ -5,6 +5,7 @@ import webbrowser #for opening html files in browser
 import tempfile #for WORD input file analysis
 import re #regular expression library for substituting words
 import os #for file and folder writing and reading
+
 from long_strings_gui import * #collection of long strings
 from docx import Document #for writing and reading word docs
 from docx.shared import Pt #for word doc formatting
@@ -433,32 +434,37 @@ class MadlibApp:
     def setup_manual_window(self): #setup manual input window
         for widget in self.root.winfo_children():
             widget.destroy()
-        l = tk.Label(self.root, text='Type your Madlib below!', font=("Arial", 12, "bold"), fg="black")
+        #l = tk.Label(self.root, text='Type your Madlib below!', font=("Arial", 12, "bold"), fg="black")
+        l = self.hypno_label("Type your Madlbib below",None,None,12)
         l.pack(pady=5)
 
 
         self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black") #defines the text input field, size, color of font and background
         self.input_entry.pack(pady=10)# sets the verticle spacing given between the input field and other successive elements
         self.input_entry.focus_set()  # This sets focus so the cursor appears in the field
-        l = tk.Label(self.root, text='Use these buttons to quick-drop a keyword!', font=("Arial", 12), fg="black")
+        #l = tk.Label(self.root, text='Use these buttons to quick-drop a keyword!', font=("Arial", 12), fg="black")
+        l = self.hypno_label("Use these buttons to drop a keyword",None,None,12)
         l.pack(pady=5)
-        button_frame = tk.Frame(self.root) #defines the button frame
+        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)
 
         row = 0 #initializes row and column counters for button grid
         col = 0
         for key, label in generic_words.items(): #for every generic word. Grabs the key (/adj) and label (adjective)
-            btn = tk.Button(button_frame, text=label, command=lambda k=key: self.insert_keyword(k), bg="#3b9dd3", fg="white") #defines each button with frame
+            #btn = tk.Button(button_frame, text=label, command=lambda k=key: self.insert_keyword(k), bg="#3b9dd3", fg="white") #defines each button with frame
+            btn = self.hypno_button(button_frame,label,command=lambda k=key: self.insert_keyword(k))
             btn.grid(row=row, column=col, padx=2, pady=2, sticky="ew") #defines the button's location on the grid
             col += 1
             if col >= 10: #ten columns, then new row
                 col = 0
                 row += 1
         #define submit button, command to advance to next screen
-        self.submit_btn = tk.Button(self.root, text="Submit", command=self.advance_from_first, bg="#3b9dd3", fg="white")
+        #self.submit_btn = tk.Button(self.root, text="Submit", command=self.advance_from_first, bg="#3b9dd3", fg="white")
+        self.submit_btn = self.hypno_button(self.root,"Submit",command=self.advance_from_first)
         self.submit_btn.pack(pady=10)
         #define display
-        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+        #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+        self.display = self.hypno_scroll(10,80)
         self.display.pack(pady=10)
 
         self.input_entry.bind("<KeyRelease>", self.sync_display) #syncs display on every key release
