@@ -46,7 +46,7 @@ class MadlibApp:
                            bg="#9bc7f5", highlightthickness=0)
 
         # Draw fake chrome outline
-        canvas.create_rectangle(  # todo Make blue/chrome, widen, then add a shaddow/shine affect on top of that
+        canvas.create_rectangle(
             5, 5,
             5 + w,
             5 + h,
@@ -58,10 +58,10 @@ class MadlibApp:
                            fill="#3a1c5d", width=3)  # bottom shadow
         canvas.create_line(5 + w, 5, 5 + w, 5 + h,
                            fill="#3a1c5d", width=3)  # right shadow
-        #8990f5
-        canvas.create_line(5, 2 + h, 5 + w, 2 + h,
+        #todo: future enhancement: use inputs for additional hues
+        canvas.create_line(5, 2 + h, 3 + w, 2 + h,
                            fill="#8990f5", width=3)  # bottom half-shadow
-        canvas.create_line(2 + w, (h+5)*.5, 2 + w, h+5,
+        canvas.create_line(2 + w, (h+5)*.5, 2 + w, h+2,
                            fill="#8990f5", width=3)  # right half-shadow
         return canvas
 
@@ -80,22 +80,6 @@ class MadlibApp:
         padding_y = 12  # extra height
         button_width = text_width + padding_x
         button_height = 26 + padding_y
-
-        #canvas = tk.Canvas(frame, width=button_width + 10, height=button_height + 10, bg="#9bc7f5", highlightthickness=0)
-
-        # Draw fake chrome outline
-        #canvas.create_rectangle(#todo Make blue/chrome, widen, then add a shaddow/shine affect on top of that
-        #    5, 5,
-        #    5 + button_width,
-        #    5 + button_height,
-        #    fill="#aa8ddb",
-        #     outline="#ffffff",
-        #     width=2
-        # )
-        # canvas.create_line(5, 5 + button_height, 5 + button_width, 5 + button_height,
-        #                    fill="#3a1c5d", width=3)  # bottom shadow
-        # canvas.create_line(5 + button_width, 5, 5 + button_width, 5 + button_height,
-        #                    fill="#3a1c5d", width=3)  # right shadow
 
         canvas=self.shadow_shine(frame,button_height,button_width)
         # Add button
