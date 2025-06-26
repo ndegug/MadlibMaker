@@ -425,7 +425,7 @@ class MadlibApp:
             self.title = title_text
             self.custom = custom_dict
             self.raw_in=madlib_text
-            self.advance_from_first()
+            self.advance_from_manual()
 
         except Exception as e:
             messagebox.showerror("File Error", f"Could not read file:\n{e}")
@@ -461,32 +461,34 @@ class MadlibApp:
                 row += 1
 
         #define submit button, command to advance to next screen
-        #self.submit_btn = tk.Button(self.root, text="Submit", command=self.advance_from_first, bg="#3b9dd3", fg="white")
-        self.submit_btn = self.hypno_button(self.root,"Submit",command=self.advance_from_first)
+        #self.submit_btn = tk.Button(self.root, text="Submit", command=self.advance_from_manual, bg="#3b9dd3", fg="white")
+        self.submit_btn = self.hypno_button(self.root,"Submit",command=self.advance_from_manual)
         self.submit_btn.pack(pady=10)
         #define display
         #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
-        self.display = self.hypno_scroll(10,80) #todo: block edits
+        self.display = self.hypno_scroll(10,80)
         self.display.pack(pady=10)
-
+        self.display.configure(state='disabled')#disables edits
         self.input_entry.bind("<KeyRelease>", self.sync_display) #syncs display on every key release
 
     def sync_display(self, event=None): #syncs text between manual entry and display todo: verify why "event" is needed but not used in function
+        self.display.configure(state='normal') #re-enables edits for syncing
         self.display.delete(1.0, tk.END) #clears the display before updating with current text (from row 1 char 0 to the end)
         self.display.insert(tk.END, self.input_entry.get()) #inserts text from the end (which is the start of the field after delete) to
+        self.display.configure(state='disabled')  # re-disables after syncing 
 
     def insert_keyword(self, keyword):#inserts a keyword into active input field
         self.input_entry.insert(tk.END, keyword) #inputs keyword without a space (do not have both lines active)
         self.sync_display() #adds the keyword to the display
 
-    def advance_from_first(self): #handles input data
+    def advance_from_manual(self): #handles input data
         # grabs manual input if manual
         if self.load_mode == False:#manual input
             self.raw_in = self.input_entry.get()
         elif self.load_mode == True: #from file
             pass
         else:
-            self.dummyscreen('Invalid mode for advance_from_first()')
+            self.dummyscreen('Invalid mode for advance_from_manual()')
 
         self.userMadlib= self.raw_in.split(' ') #splits madlib body into array by spaces
         self.prompt_words = iter(self.userMadlib) #sets up iteration
@@ -580,7 +582,7 @@ class MadlibApp:
         self.display = self.hypno_scroll(20,80)
         self.display.pack(pady=20)
         #w = tk.Label(self.root, text='What would you like to do?', width=40, height=5, bg="#d0e7ff", fg="black")
-        w = self.hypno_label("What would you like to do?",5,40,None)
+        w = self.hypno_label("What would you like to do?",5,40,12)
         w.pack(pady=5)
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
