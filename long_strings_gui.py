@@ -18,6 +18,7 @@ generic_words = { # reminder: do not add any keywords that are the same as ignor
                  '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
                  '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid',
                  '/emo': 'Emotion', '/noi': 'noise', '/eve': 'Event', '/fos': 'Plural food', '/fur': 'Furniture'}
+
 ignored_words = ['/her', '/she', '/She']  # words that resemble generic words that will be ignored
 #todo: insert return and tab characters where needed
 how_to_play_madlibs = """

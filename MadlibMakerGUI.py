@@ -111,7 +111,7 @@ class MadlibApp:
             bd=2)
         return entry
 
-    def hypno_scroll(self, h, w):
+    def hypno_scroll(self, h, w): #todo: add option to enable/disable edits
         text_area = scrolledtext.ScrolledText(
             self.root,
             width=w,
@@ -439,32 +439,34 @@ class MadlibApp:
         l.pack(pady=5)
 
 
-        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black") #defines the text input field, size, color of font and background
+        #self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black") #defines the text input field, size, color of font and background
+        self.input_entry = self.hypno_entry(80)
         self.input_entry.pack(pady=10)# sets the verticle spacing given between the input field and other successive elements
         self.input_entry.focus_set()  # This sets focus so the cursor appears in the field
         #l = tk.Label(self.root, text='Use these buttons to quick-drop a keyword!', font=("Arial", 12), fg="black")
         l = self.hypno_label("Use these buttons to drop a keyword",None,None,12)
         l.pack(pady=5)
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
-        button_frame.pack(pady=5)
+        button_frame.pack(pady=5, padx=15)
 
         row = 0 #initializes row and column counters for button grid
         col = 0
         for key, label in generic_words.items(): #for every generic word. Grabs the key (/adj) and label (adjective)
-            #btn = tk.Button(button_frame, text=label, command=lambda k=key: self.insert_keyword(k), bg="#3b9dd3", fg="white") #defines each button with frame
-            btn = self.hypno_button(button_frame,label,command=lambda k=key: self.insert_keyword(k))
+            btn = tk.Button(button_frame, text=label, command=lambda k=key: self.insert_keyword(k), bg="#aa8ddb", fg="white") #defines each button with frame
+            #btn = self.hypno_button(button_frame,label,command=lambda k=key: self.insert_keyword(k)) #todo: reslove left justification or remove
             btn.grid(row=row, column=col, padx=2, pady=2, sticky="ew") #defines the button's location on the grid
             col += 1
             if col >= 10: #ten columns, then new row
                 col = 0
                 row += 1
+
         #define submit button, command to advance to next screen
         #self.submit_btn = tk.Button(self.root, text="Submit", command=self.advance_from_first, bg="#3b9dd3", fg="white")
         self.submit_btn = self.hypno_button(self.root,"Submit",command=self.advance_from_first)
         self.submit_btn.pack(pady=10)
         #define display
         #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
-        self.display = self.hypno_scroll(10,80)
+        self.display = self.hypno_scroll(10,80) #todo: block edits
         self.display.pack(pady=10)
 
         self.input_entry.bind("<KeyRelease>", self.sync_display) #syncs display on every key release
