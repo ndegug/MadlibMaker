@@ -5,7 +5,6 @@ import webbrowser #for opening html files in browser
 import tempfile #for WORD input file analysis
 import re #regular expression library for substituting words
 import os #for file and folder writing and reading
-
 from long_strings_gui import * #collection of long strings
 from docx import Document #for writing and reading word docs
 from docx.shared import Pt #for word doc formatting
@@ -17,6 +16,7 @@ numbered = "(/...[0-9]+)"
 customreg = "(/ct[0-9]+)"
 numcustreg = "(/ct[0-9]+_[0-9]+)"
 tail = "(_[0-9])"
+WarnRed="#F23F3F"
 
 
 class MadlibApp:
@@ -69,7 +69,7 @@ class MadlibApp:
 
 
 #todo: see if return functions can be moved out of class and onto another file, else, move pack commands to functions
-    def hypno_button(self, frame, text, command=None): #todo: fully comment
+    def hypno_button(self, frame, text, command=None,color: str="#aa8ddb"): #todo: fully comment
         # Define font
         btn_font = ("Courier New", 10, "bold")
 
@@ -90,7 +90,7 @@ class MadlibApp:
             text=text,
             command=command,
             font=btn_font,
-            bg="#aa8ddb",
+            bg=color,
             fg="white",
             activebackground="#9c6ddb",
             bd=0,
@@ -539,15 +539,18 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
 
-        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+        #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+        self.display = self.hypno_scroll(10,80)
         self.display.pack(pady=10)
         self.display.insert(tk.END, "Custom words detected, please configure them.\n")
 
-        self.custom_entry = tk.Entry(self.root, width=40,font=("Arial", 12), bg="#d0e7ff", fg="black")
+        #self.custom_entry = tk.Entry(self.root, width=40,font=("Arial", 12), bg="#d0e7ff", fg="black")
+        self.custom_entry = self.hypno_entry(40)
         self.custom_entry.bind("<Return>",
                                lambda event: self.save_custom_word())  # allows the "enter" key to submit the custom word
         self.custom_entry.pack(pady=10)
-        self.custom_button = tk.Button(self.root, text="Enter",bg="#3b9dd3", fg="white", command=self.save_custom_word)
+        #self.custom_button = tk.Button(self.root, text="Enter",bg="#3b9dd3", fg="white", command=self.save_custom_word)
+        self.custom_button = self.hypno_button(self.root,"Enter",command=self.save_custom_word)
         self.custom_button.pack(pady=5)
 
         self.prompt_next_custom() #prompt the next custom word in the display
@@ -573,9 +576,11 @@ class MadlibApp:
 #UNFILLED WINDOW
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+        #self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+        self.display = self.hypno_scroll(20,80)
         self.display.pack(pady=20)
-        w = tk.Label(self.root, text='What would you like to do?', width=40, height=5, bg="#d0e7ff", fg="black")
+        #w = tk.Label(self.root, text='What would you like to do?', width=40, height=5, bg="#d0e7ff", fg="black")
+        w = self.hypno_label("What would you like to do?",5,40,None)
         w.pack(pady=5)
         button_frame = tk.Frame(self.root)  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
@@ -583,21 +588,24 @@ class MadlibApp:
         if not self.load_mode: #manual input, show it, no hide needed
             self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.title + "\n\n"+self.raw_in)
             # plain input save
-            btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save plain text input",
-                            bg="#3b9dd3",
-                            fg="white")  # defines each button with frame,
+            # btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save plain text input",
+            #                 bg="#3b9dd3",
+            #                 fg="white")  # defines each button with frame,
+            btn = self.hypno_button(button_frame,"Save plain text input",command=lambda: self.output_file_name(3))
             btn.grid(row=1, column=0, padx=2, pady=2,
                      sticky="ew")  # defines the button's location on the grid
-            btn = tk.Button(button_frame, command=lambda: self.output_file_name(4), text="Save Word doc input",
-                            bg="#3b9dd3",
-                            fg="white")  # defines each button with frame,
+            # btn = tk.Button(button_frame, command=lambda: self.output_file_name(4), text="Save Word doc input",
+            #                 bg="#3b9dd3",
+            #                 fg="white")  # defines each button with frame,
+            btn = self.hypno_button(button_frame,"Save Word doc input",command=lambda: self.output_file_name(4))
             btn.grid(row=1, column=1, padx=2, pady=2,
                      sticky="ew")  # defines the button's location on the grid
         else: #load, use button to reveal
             self.display.insert(tk.END, "\n   Your Madlib is ready to play. If you are the author, click \"SPOIL\" to preview it. Otherwise, we recommend you click \"Play\" to play it blind.")
-            self.spbtn = tk.Button(button_frame, command=lambda: self.spoiler(), text="SPOIL",
-                            bg="#F23F3F",
-                            fg="white")  # defines each button with frame,
+            # self.spbtn = tk.Button(button_frame, command=lambda: self.spoiler(), text="SPOIL",
+            #                 bg="#F23F3F",
+            #                 fg="white")  # defines each button with frame,
+            self.spbtn = self.hypno_button(button_frame,"SPOIL",command=lambda: self.spoiler(),color="#F23F3F")
             self.spbtn.grid(row=1, column=4, padx=2, pady=2,
                      sticky="ew")
 
