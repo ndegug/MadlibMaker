@@ -515,7 +515,7 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
         # tk.Label(self.root, text="Would you like to title your Madlib?\n Type it here and click enter or \"skip\" to skip this step.", font=("Arial", 12, "bold")).pack()
-        self.hypno_label("Would you like to title your Madlib?",None,None,12)
+        self.hypno_label("Would you like to title your Madlib?",None,None,12).pack()
         #self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
         self.input_entry = self.hypno_entry(80)
         self.input_entry.bind("<Return>",
@@ -812,25 +812,26 @@ class MadlibApp:
 
     def output_file_name(self,md): #output file namer
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)',font=("Arial", 12, "bold"), width=80, height=10,
-                     bg="#d0e7ff",
-                     fg="black")
+        # w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)',font=("Arial", 12, "bold"), width=80, height=10,
+        #              bg="#d0e7ff",
+        #              fg="black")
+        w = self.hypno_label("Enter the filename you\'d like to save to (no extension)",10,80,12)
         w.pack(pady=10)
         # buttons for file naming menu selection
-        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
-        button_frame.pack(pady=5)  # for all button frames
+        # button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
+        # button_frame.pack(pady=5)  # for all button frames
         # buttons for file naming menu selection
-        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
-        button_frame.pack(pady=5)  # for all button frames
 
 
-        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        # self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        self.input_entry = self.hypno_entry(80)
         self.input_entry.bind("<Return>",
                                   lambda event: self.save_file(md))  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
         self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.save_file(md), bg="#3b9dd3",
                                         fg="white")
+        self.submit_btn = self.hypno_button(self.root,"Submit",command=lambda: self.save_file(md))
         self.submit_btn.pack(pady=10)
 
 #SAVING OUTPUTS
