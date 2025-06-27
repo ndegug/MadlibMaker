@@ -518,7 +518,7 @@ class MadlibApp:
                               lambda event: self.title_saver()) #"enter" key submits title
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
-        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Submit button to save title
         btn = tk.Button(button_frame, command=lambda: self.title_saver(), text="Submit", bg="#3b9dd3",
@@ -584,7 +584,7 @@ class MadlibApp:
         #w = tk.Label(self.root, text='What would you like to do?', width=40, height=5, bg="#d0e7ff", fg="black")
         w = self.hypno_label("What would you like to do?",5,40,12)
         w.pack(pady=5)
-        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
 
         if not self.load_mode: #manual input, show it, no hide needed
@@ -614,13 +614,15 @@ class MadlibApp:
 
 
         # play without saving button
-        btn = tk.Button(button_frame, command=lambda: self.advance_to_play(), text="Play", bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        # btn = tk.Button(button_frame, command=lambda: self.advance_to_play(), text="Play", bg="#3b9dd3",
+        #                 fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame,"Play", command=lambda: self.advance_to_play())
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
-        btn = tk.Button(button_frame, command=lambda: self.advance_to_html(), text="Print Physical",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        # btn = tk.Button(button_frame, command=lambda: self.advance_to_html(), text="Print Physical",
+        #                 bg="#3b9dd3",
+        #                 fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame,"Print Physical",command=lambda: self.advance_to_html())
         btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         self.root.mainloop()  # deploys the GUI screen till closed
@@ -637,21 +639,26 @@ class MadlibApp:
 
     def play_window(self): #generates Madlib play/fill window
         for widget in self.root.winfo_children():widget.destroy()
-        tk.Label(self.root, text="Give us a/an:", font=("Arial", 12, "bold")).pack()
+        #tk.Label(self.root, text="Give us a/an:", font=("Arial", 12, "bold")).pack()
+        self.hypno_label("Give us a/an:", None, None, 12).pack()
 
-        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
-                                                 fg="black", wrap=tk.WORD)
+        # self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
+        #                                          fg="black", wrap=tk.WORD)
+        self.display= self.hypno_scroll(10,80)
         self.display.pack(pady=10, padx=5)
-        tk.Label(self.root, text="Your entry:", font=("Arial", 12)).pack()
+        #tk.Label(self.root, text="Your entry:", font=("Arial", 12)).pack()
+        self.hypno_label("Your Entry",None,None,12).pack()
         # define and create entry field for user's entry for a word
-        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=40, bg="#d0e7ff", fg="black")
+        # self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=40, bg="#d0e7ff", fg="black")
+        self.input_entry = self.hypno_entry(40)
         self.input_entry.bind("<Return>",
                               lambda event: self.process_next_keyword())  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
 
-        self.submit_btn = tk.Button(self.root, text="Submit", command=self.process_next_keyword, bg="#3b9dd3",
-                                    fg="white")
+        # self.submit_btn = tk.Button(self.root, text="Submit", command=self.process_next_keyword, bg="#3b9dd3",
+        #                             fg="white")
+        self.submit_btn=self.hypno_button(self.root,"Submit",command=self.process_next_keyword)
         self.submit_btn.pack(pady=10)
 
     def process_next_keyword(self):
@@ -773,7 +780,7 @@ class MadlibApp:
                      fg="black")
         w.pack(pady=5)
         # buttons for filled madlib save selection
-        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Plain text
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(0), text="Save plain text", bg="#3b9dd3",
@@ -799,10 +806,10 @@ class MadlibApp:
                      fg="black")
         w.pack(pady=10)
         # buttons for file naming menu selection
-        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # buttons for file naming menu selection
-        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
 
 
@@ -1030,7 +1037,7 @@ class MadlibApp:
         w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
         w.pack(pady=10)
         # button frame
-        button_frame = tk.Frame(self.root)  # defines the button frame
+        button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         #Save button
         btn = tk.Button(button_frame, command=lambda: self.output_file_name(1), text="Save", bg="#3b9dd3",
