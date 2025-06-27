@@ -5,6 +5,8 @@ import webbrowser #for opening html files in browser
 import tempfile #for WORD input file analysis
 import re #regular expression library for substituting words
 import os #for file and folder writing and reading
+
+from Temp_files.doinow import hypno_button
 from long_strings_gui import * #collection of long strings
 from docx import Document #for writing and reading word docs
 from docx.shared import Pt #for word doc formatting
@@ -512,8 +514,10 @@ class MadlibApp:
     def title_write(self): #write title
         for widget in self.root.winfo_children():
             widget.destroy()
-        tk.Label(self.root, text="Would you like to title your Madlib?\n Type it here and click enter or \"skip\" to skip this step.", font=("Arial", 12, "bold")).pack()
-        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        # tk.Label(self.root, text="Would you like to title your Madlib?\n Type it here and click enter or \"skip\" to skip this step.", font=("Arial", 12, "bold")).pack()
+        self.hypno_label("Would you like to title your Madlib?",None,None,12)
+        #self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        self.input_entry = self.hypno_entry(80)
         self.input_entry.bind("<Return>",
                               lambda event: self.title_saver()) #"enter" key submits title
         self.input_entry.pack(pady=10)
@@ -521,14 +525,16 @@ class MadlibApp:
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Submit button to save title
-        btn = tk.Button(button_frame, command=lambda: self.title_saver(), text="Submit", bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        # btn = tk.Button(button_frame, command=lambda: self.title_saver(), text="Submit", bg="#3b9dd3",
+        #                 fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame,"Submit",command=lambda: self.title_saver())
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # Skip button, go to input preview
-        btn = tk.Button(button_frame, command=lambda: self.file_choice(), text="Skip",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        # btn = tk.Button(button_frame, command=lambda: self.file_choice(), text="Skip",
+        #                 bg="#3b9dd3",
+        #                 fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame, "Skip", command=lambda: self.file_choice())
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")
 
@@ -768,7 +774,8 @@ class MadlibApp:
     def filled_window(self):  #decide whether to save filled output
         for widget in self.root.winfo_children():
             widget.destroy()
-        display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+        #display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+        display = self.hypno_scroll(20,80)
         display.pack(pady=20)
         self.filled = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist)) #rejoins output array without spacing between words and punctuation
 
@@ -776,26 +783,30 @@ class MadlibApp:
         if self.title: #display title if it exists
             display.insert(tk.END, "\n\n"+self.title)
         display.insert(tk.END, "\n\n"+self.filled)
-        w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
-                     fg="black")
+        # w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
+        #              fg="black")
+        w = self.hypno_label("What would you like to do with it?",5,40,12)
         w.pack(pady=5)
         # buttons for filled madlib save selection
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Plain text
-        btn = tk.Button(button_frame, command=lambda: self.output_file_name(0), text="Save plain text", bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        # btn = tk.Button(button_frame, command=lambda: self.output_file_name(0), text="Save plain text", bg="#3b9dd3",
+        #                 fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame, "Save plain text", command=lambda: self.output_file_name(0))
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         #Word doc
-        btn = tk.Button(button_frame, command=lambda: self.output_file_name(2), text="Save Word Doc", bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        # btn = tk.Button(button_frame, command=lambda: self.output_file_name(2), text="Save Word Doc", bg="#3b9dd3",
+        #                 fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame, "Save Word Doc", command=lambda: self.output_file_name(2))
         btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # Back to menu
-        btn = tk.Button(button_frame, command=lambda: self.reset(), text="Return to menu",
-                        bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        # btn = tk.Button(button_frame, command=lambda: self.reset(), text="Return to menu",
+        #                 bg="#3b9dd3",
+        #                 fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame, "Return to menu", command=lambda: self.reset())
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
 
