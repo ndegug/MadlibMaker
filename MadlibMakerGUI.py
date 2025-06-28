@@ -829,8 +829,8 @@ class MadlibApp:
                                   lambda event: self.save_file(md))  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
-        self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.save_file(md), bg="#3b9dd3",
-                                        fg="white")
+        # self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.save_file(md), bg="#3b9dd3",
+        #                                 fg="white")
         self.submit_btn = self.hypno_button(self.root,"Submit",command=lambda: self.save_file(md))
         self.submit_btn.pack(pady=10)
 
@@ -842,11 +842,13 @@ class MadlibApp:
             if self.title:
                 self.filled = self.title + "\n\n" + self.filled
             self.file_write(self.normalize_quotes(self.filled), base, 'outputs', '.txt')
-            w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
-                         width=80, height=10, bg="#d0e7ff",fg="black")
+            # w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
+            #              width=80, height=10, bg="#d0e7ff",fg="black")
+            w = self.hypno_label("Your filled madlib has been saved to: " + str(base) + ".txt in your \"outputs\" folder.\nWe hope you liked it!",10,80,12)
             w.pack(pady=10)
-            self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
-            self.submit_btn.pack(pady=10)
+            # self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
+            # self.submit_btn.pack(pady=10)
+            self.hypno_button(self.root,"Back to Menu",command=lambda: self.reset()).pack(pady=10)
         elif md==1: #html save
 
             self.file_write(self.html_out, base, 'outputs','.html')
