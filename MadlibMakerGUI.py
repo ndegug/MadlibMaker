@@ -6,7 +6,6 @@ import tempfile #for WORD input file analysis
 import re #regular expression library for substituting words
 import os #for file and folder writing and reading
 
-from Temp_files.doinow import hypno_button
 from long_strings_gui import * #collection of long strings
 from docx import Document #for writing and reading word docs
 from docx.shared import Pt #for word doc formatting
@@ -113,7 +112,7 @@ class MadlibApp:
             bd=2)
         return entry
 
-    def hypno_scroll(self, h, w): #todo: add option to enable/disable edits
+    def hypno_scroll(self, h, w):
         text_area = scrolledtext.ScrolledText(
             self.root,
             width=w,
@@ -855,7 +854,8 @@ class MadlibApp:
             w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',
                          width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
             w.pack(pady=10)
-            self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3", fg="white") #todo: add button grid and "back to menu" for file confirmations, beware of "aready has slaves" errors
+            #self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3", fg="white")
+            self.submit_btn = self.hypno_button(self.root, "Let's Go",command=lambda: self.html_view())#todo: add button grid and "back to menu" for file confirmations, beware of "aready has slaves" errors
             self.submit_btn.pack(pady=10)
         elif md==2: #word document outputs
             # Full path to save the document
@@ -882,21 +882,19 @@ class MadlibApp:
 
             # Save the document
             doc.save(full_path)
-            w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
-                base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
-                         width=80, height=10, bg="#d0e7ff",
-                         fg="black")
+            # w = tk.Label(self.root, text='Your filled mandlib has been saved to: ' + str(
+            #     base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
+            #              width=80, height=10, bg="#d0e7ff",
+            #              fg="black")
+            w = self.hypno_label(self.root, 'Your filled mandlib has been saved to: ' + str(base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',10,80,12)
             w.pack(pady=10)
-            self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3",
-                                        fg="white")
-            self.submit_btn.pack(pady=10)
+            self.hypno_button(self.root,"Back to Menu",command=lambda: self.reset()).pack(pady=10)
         elif md==3: #save and play inputs plain text
             self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')
             w = tk.Label(self.root, text='Your mandlib has been saved to: ' + str(base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
                          width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
             w.pack(pady=10)
-            self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_play(), bg="#3b9dd3", fg="white")
-            self.submit_btn.pack(pady=10)
+            self.submit_btn = self.hypno_button(self.root,"Back to Menu", command=lambda: self.advance_to_play()).pack(pady=10)
         elif md==4: #save and play Word docx inputs
             full_path = os.path.join('inputs', base + '.docx')
 
