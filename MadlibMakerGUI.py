@@ -1023,15 +1023,18 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
 
-        self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+        # self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+        self.display = self.hypno_scroll(10,80)
         self.display.pack(pady=10)
         # define and create entry field for user's entry for a word
-        self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        # self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
+        self.input_entry = self.hypno_entry(80)
         self.input_entry.bind("<Return>", lambda event: self.process_invalid_html())  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
 
-        self.submit_btn = tk.Button(self.root, text="Submit", command=self.process_invalid_html, bg="#3b9dd3", fg="white")
+        # self.submit_btn = tk.Button(self.root, text="Submit", command=self.process_invalid_html, bg="#3b9dd3", fg="white")
+        self.submit_btn = self.hypno_button(self.root,"Submit", command=self.process_invalid_html)
         self.submit_btn.pack(pady=10)
 
     def process_invalid_html(self): #grabs user input submitted when key is found invalid during html replacement
