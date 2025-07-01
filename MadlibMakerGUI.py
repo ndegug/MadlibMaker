@@ -329,7 +329,7 @@ class MadlibApp:
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.display=self.hypno_scroll(10, 80)
         self.display.pack(pady=10, padx=5)
-        self.display.insert(tk.END, "big thanks")
+        self.display.insert(tk.END, credits)
         self.display.config(state='disabled')  # Make it read-only
 
         # button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame

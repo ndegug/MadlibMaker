@@ -139,3 +139,17 @@ printing_madlibs= """
     Whether you decide to save the file or not, the program will open your file into your default browser. Use said browser's print feature to print your Madlib. This is typically done by entering the menu on the top right and selecting "Print" 
     
     Enjoy the original, authentic experience of filling in a Madlib together with your friends!"""
+credits="""
+    This game was made by Nick DeGugs, but this is dedicated to those who inspired every piece of this program.
+    
+    Thank you to Ian and Anthony of Smosh for showing me how much fun it is to write my own Mad Libs. If by some miracle you see this and you’re still running your show, feel free to use this program to streamline the next episode of Smosh Libs!
+    
+    Thank you to my high school friend. Your pompous and toxically positive attitude towards life inspired me to write all sorts of Mad Libs in which you were thrown to the wolves for everyone else’s amusement. Before I knew it, I had so many ideas for Mad Libs that I needed to build a tool to streamline their production, which became the program you see today. May the knives of my jokes twist in your flesh forever more.
+    
+    Thank you to my brother who introduced me to Python. Had he not been there, I’d still be bashing my head, trying to get this to work in C++, the most needy and pretentious of all computer languages I’ve ever seen.
+    
+    Thank you to the artists at No More Robots for inspiring the visual style through their amazing game, Hypnospace Outlaw. I morn its canceled sequel, Dreamsetlerz, and the chance to promote it here. If you, dear player, have not played their games, show the team some love on their Steam page.
+    
+    Thank you to my amazing alpha tester, who inspired me to revamp this program for the pleasure of talented artists and authors like you. 
+
+"""
