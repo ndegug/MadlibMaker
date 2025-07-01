@@ -886,7 +886,7 @@ class MadlibApp:
             #     base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
             #              width=80, height=10, bg="#d0e7ff",
             #              fg="black")
-            w = self.hypno_label(self.root, 'Your filled madlib has been saved to: ' + str(base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',10,80,12)
+            w = self.hypno_label('Your filled madlib has been saved to: ' + str(base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',10,80,12)
             w.pack(pady=10)
             self.hypno_button(self.root,"Back to Menu",command=lambda: self.reset()).pack(pady=10)
         elif md==3: #save and play inputs plain text
@@ -946,7 +946,7 @@ class MadlibApp:
             self.submit_btn = self.hypno_button(self.root,"Ok",command=lambda: self.reset())
             self.submit_btn.pack(pady=10)
 
-    def normalize_quotes(self, text): #normalizes curly quotes from Word docs when printing text files
+    def normalize_quotes(self, text): #normalizes curly quotes from Word docs when printing text files todo: convert to an external function
         return text.replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
 
     def file_write(self, content, name_of_file, path, ext):
