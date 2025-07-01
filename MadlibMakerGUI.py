@@ -192,6 +192,9 @@ class MadlibApp:
         btn= self.hypno_button(button_frame, "Instructions", command=lambda: self.instruct_main())
         btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")
+
+        btn=self.hypno_button(self.root,"Credits & Special Thanks", command=lambda: self.credits())
+        btn.pack()
         self.root.mainloop()  # deploys the GUI screen till closed
 
 #INSTRUCTIONS
@@ -322,7 +325,17 @@ class MadlibApp:
             btn = self.hypno_button(button_frame, '<< Back to main menu', command=lambda: self.reset())
             btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
+    def credits(self): #place for credits and special thanks
+        for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        self.display=self.hypno_scroll(10, 80)
+        self.display.pack(pady=10, padx=5)
+        self.display.insert(tk.END, "big thanks")
+        self.display.config(state='disabled')  # Make it read-only
 
+        # button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
+        # button_frame.pack(pady=5)  # for all button frames
+        btn = self.hypno_button(self.root, '<< Back to main menu', command=lambda: self.reset())
+        btn.pack()
 #READING FILES
     def load_input_file(self):
         # Clear existing widgets if necessary
