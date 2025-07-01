@@ -112,14 +112,15 @@ class MadlibApp:
             bd=2)
         return entry
 
-    def hypno_scroll(self, h, w):
+    def hypno_scroll(self, h, w, bg_color: str="#ffffd4",fg_color=None):
         text_area = scrolledtext.ScrolledText(
             self.root,
             width=w,
             height=h,
             wrap="word",
             font=("Courier New", 10),
-            bg="#ffffd4",
+            bg=bg_color,
+            fg=fg_color,
             padx=15
         )
         return text_area
@@ -453,8 +454,7 @@ class MadlibApp:
         row = 0 #initializes row and column counters for button grid
         col = 0
         for key, label in generic_words.items(): #for every generic word. Grabs the key (/adj) and label (adjective)
-            btn = tk.Button(button_frame, text=label, command=lambda k=key: self.insert_keyword(k), bg="#aa8ddb", fg="white") #defines each button with frame
-            #btn = self.hypno_button(button_frame,label,command=lambda k=key: self.insert_keyword(k)) #todo: reslove left justification or remove
+            btn = tk.Button(button_frame, text=label, command=lambda k=key: self.insert_keyword(k), bg="#aa8ddb", fg="white") #defines each button with frame todo: Consider a unique color for this
             btn.grid(row=row, column=col, padx=2, pady=2, sticky="ew") #defines the button's location on the grid
             col += 1
             if col >= 10: #ten columns, then new row
@@ -467,7 +467,7 @@ class MadlibApp:
         self.submit_btn.pack(pady=10)
         #define display
         #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
-        self.display = self.hypno_scroll(10,80)
+        self.display = self.hypno_scroll(10,80,"#2d092d","#948c95")
         self.display.pack(pady=10)
         self.display.configure(state='disabled')#disables edits
         self.input_entry.bind("<KeyRelease>", self.sync_display) #syncs display on every key release
@@ -949,7 +949,7 @@ class MadlibApp:
     def normalize_quotes(self, text): #normalizes curly quotes from Word docs when printing text files todo: convert to an external function
         return text.replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
 
-    def file_write(self, content, name_of_file, path, ext):
+    def file_write(self, content, name_of_file, path, ext): #writes the file todo: Consider making external
         completeName = os.path.join(path, name_of_file + ext) #filepath with name and extension
         f = open(completeName, "w") #open file with path
         f.write(content) #insert contents
