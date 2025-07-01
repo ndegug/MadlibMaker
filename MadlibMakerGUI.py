@@ -1055,18 +1055,21 @@ class MadlibApp:
 
     def html_file_choice(self): #screen for deciding whether to save html output
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
+        # w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
+        w = self.hypno_label("Before we print your Madlib, would you like to save it?",10,80,12)
         w.pack(pady=10)
         # button frame
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         #Save button
-        btn = tk.Button(button_frame, command=lambda: self.output_file_name(1), text="Save", bg="#3b9dd3",
-                        fg="white")  # defines each button with frame,
+        # btn = tk.Button(button_frame, command=lambda: self.output_file_name(1), text="Save", bg="#3b9dd3",
+        #                 fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame,"Save",command=lambda: self.output_file_name(1))
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # Print without save button
-        btn = tk.Button(button_frame, command=lambda: self.html_view(), text="Print without saving", bg="#3b9dd3", fg="white")  # defines each button with frame,
+        # btn = tk.Button(button_frame, command=lambda: self.html_view(), text="Print without saving", bg="#3b9dd3", fg="white")  # defines each button with frame,
+        btn = self.hypno_button(button_frame, "Print without Saving",command=lambda: self.html_view())
         btn.grid(row=1, column=2, padx=2, pady=2, sticky="ew")  # defines the button's location on the grid
         self.root.mainloop()  # deploys the GUI screen till closed
 
