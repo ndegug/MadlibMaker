@@ -947,7 +947,7 @@ class MadlibApp:
             #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
             w = self.hypno_label('Your madlib has been saved to: ' + str(base) + '.txt in your \"inputs\" folder.\nNow we can Play!',10,80,12)
             w.pack(pady=10)
-            self.submit_btn = self.hypno_button(self.root,"Back to Menu", command=lambda: self.advance_to_play()).pack(pady=10)
+            self.submit_btn = self.hypno_button(self.root,"Let's go!", command=lambda: self.advance_to_play()).pack(pady=10)
         elif md==4: #save and play Word docx inputs
             full_path = os.path.join('inputs', base + '.docx')
 
