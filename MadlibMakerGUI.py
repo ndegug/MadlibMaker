@@ -141,11 +141,11 @@ class MadlibApp:
         return label
 
     def hypno_header(self, text):
-        header = tk.Frame(root, bg="#676ec3", height=30)
-        header.pack(fill="x", side="top")
+        self.header = tk.Frame(root, bg="#676ec3", height=30)
+        self.header.pack(fill="x", side="top")
 
         header_label = tk.Label(
-            header,
+            self.header,
             text=text,
             bg="#676ec3",
             fg="white",
@@ -153,6 +153,20 @@ class MadlibApp:
         )
 
         header_label.pack(side="left", padx=10)
+
+
+    def head_btn(self, text, command=None):
+        exit_button = tk.Button(
+            self.header,
+            text=text,
+            bg="#d95fbc",
+            fg="white",
+            font=("Courier New", 10, "bold"),
+            relief="flat",
+            command=command
+
+        )
+        exit_button.pack(side="right", padx=5)
 
     def dummyscreen(self,name): #placeholder for menus-to-be
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
@@ -169,6 +183,7 @@ class MadlibApp:
         #w = tk.Label(self.root, text='Hello!\n Welcome to the Madlib Maker',font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
 
         self.hypno_header("Welcome to...")
+        self.head_btn("Reset",command=lambda: self.reset())
         # w = self.hypno_label('The Madlib Maker',5,60, 14)
         w = tk.Label(
             self.root,
