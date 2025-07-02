@@ -887,8 +887,9 @@ class MadlibApp:
         elif md==1: #html save
 
             self.file_write(self.html_out, base, 'outputs','.html')
-            w = tk.Label(self.root, text='Your madlib has been saved to: ' + str(base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',
-                         width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
+            # w = tk.Label(self.root, text='Your madlib has been saved to: ' + str(base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',
+            #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
+            w= self.hypno_label('Your madlib has been saved to: ' + str(base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',10,80,12)
             w.pack(pady=10)
             #self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3", fg="white")
             self.submit_btn = self.hypno_button(self.root, "Let's Go",command=lambda: self.html_view())#todo: add button grid and "back to menu" for file confirmations, beware of "aready has slaves" errors
