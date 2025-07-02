@@ -25,7 +25,7 @@ light_yellow="#ffffd4"
 
 dark_purp="#2d092d"
 
-fade_white="948c95"
+fade_white="#948c95"
 
 class MadlibApp:
     def __init__(self, root):
