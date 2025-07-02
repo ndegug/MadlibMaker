@@ -148,7 +148,7 @@ credits="""
     
     Thank you to my brother who introduced me to Python. Had he not been there, I’d still be bashing my head, trying to get this to work in C++, the most needy and pretentious of all computer languages I’ve ever seen.
     
-    Thank you to the artists at No More Robots for inspiring the visual style through their amazing game, Hypnospace Outlaw. I morn its canceled sequel, Dreamsetlerz, and the chance to promote it here. If you, dear player, have not played their games, show the team some love on their Steam page.
+    Thank you to the artists at No More Robots for inspiring the visual style through their amazing game, Hypnospace Outlaw. I morn its canceled sequel, Dreamsetler, and the chance to promote it here. If you, dear player, have not played their games, show the team some love on their Steam page.
     
     Thank you to my amazing alpha tester, who inspired me to revamp this program for the pleasure of talented artists and authors like you. 
 

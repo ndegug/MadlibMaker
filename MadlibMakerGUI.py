@@ -27,10 +27,14 @@ dark_purp="#2d092d"
 
 fade_white="#948c95"
 
+light_blue="#9bc7f5"
+
+dark_red="#9e316e"
+
 class MadlibApp:
     def __init__(self, root):
         self.root = root
-        root.configure(bg="#9bc7f5")  # pastel chrome/blue background
+        root.configure(bg=light_blue)  # pastel chrome/blue background
         self.reset()
 #PREREQUISITES
     def reset(self):
@@ -77,6 +81,19 @@ class MadlibApp:
 
 
 #todo: see if return functions can be moved out of class and onto another file, else, move pack commands to functions
+    def hypno_title(self, text):
+        w = tk.Label(
+            self.root,
+            text=text,
+            font=("Courier New", 40, "bold"),
+            fg=dark_red,
+            bg="#9bc7f5",
+            # height=5,
+            width=20,
+            padx=2,
+            # pady=4
+        )
+        w.pack(padx=(10))
     def hypno_button(self, frame, text, command=None,color: str="#aa8ddb"): #todo: fully comment
         # Define font
         btn_font = ("Courier New", 10, "bold")
@@ -133,13 +150,13 @@ class MadlibApp:
         return text_area
 
     # Title style block (hypnospace-themed heading)
-    def hypno_label(self, text, h, w, s):
+    def hypno_label(self, text, h, w, s, bg_color=past_yellow, font_color=dark_red):
         label = tk.Label(
             self.root,
             text=text,
             font=("Courier New", s, "bold"),
-            fg="#9e316e",
-            bg="#f5e97c",  # pastel yellow
+            fg=font_color,
+            bg=bg_color,
             height=h,
             width=w,
             padx=15, #formally 15
@@ -192,30 +209,32 @@ class MadlibApp:
         self.hypno_header("Welcome to...")
         self.head_btn("Reset",command=lambda: self.reset())
         # w = self.hypno_label('The Madlib Maker',5,60, 14)
-        w = tk.Label(
-            self.root,
-            text='The Madlib',
-            font=("Courier New", 40, "bold"),
-            fg="#9e316e",
-            bg="#9bc7f5",  # pastel yellow
-            #height=5,
-            width=20,
-            padx=2,
-            #pady=4
-        )
-        w.pack(padx=(10))
-        w = tk.Label(
-            self.root,
-            text='Maker',
-            font=("Courier New", 40, "bold"),
-            fg="#9e316e",
-            bg="#9bc7f5",  # pastel yellow
-            #height=5,
-            width=20,
-            padx=2,
-            #pady=4
-        )
-        w.pack(padx=(10))
+        # w = tk.Label(
+        #     self.root,
+        #     text='The Madlib',
+        #     font=("Courier New", 40, "bold"),
+        #     fg=dark_red,
+        #     bg="#9bc7f5",
+        #     #height=5,
+        #     width=20,
+        #     padx=2,
+        #     #pady=4
+        # )
+        # w.pack(padx=(10))
+        self.hypno_title("The Madlib")
+        # w = tk.Label(
+        #     self.root,
+        #     text='Maker',
+        #     font=("Courier New", 40, "bold"),
+        #     fg="#9e316e",
+        #     bg="#9bc7f5",  # pastel yellow
+        #     #height=5,
+        #     width=20,
+        #     padx=2,
+        #     #pady=4
+        # )
+        # w.pack(padx=(10))
+        self.hypno_title("Maker")
         #smaller label to prompt choice
         #w = tk.Label(self.root, text='What would you like to do\ntoday?', width=24,height=3, bg="#d0e7ff", fg="black")
         w = self.hypno_label('What would you like to do today?', None, None, 12)
@@ -495,7 +514,7 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
         #l = tk.Label(self.root, text='Type your Madlib below!', font=("Arial", 12, "bold"), fg="black")
-        l = self.hypno_label("Type your Madlbib below",None,None,12)
+        l = self.hypno_label("Type your Madlbib below",None,None,20,light_blue)
         l.pack(pady=5)
 
 
