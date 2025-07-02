@@ -891,7 +891,7 @@ class MadlibApp:
         # w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)',font=("Arial", 12, "bold"), width=80, height=10,
         #              bg="#d0e7ff",
         #              fg="black")
-        w = self.hypno_label("Enter the filename you\'d like to save to (no extension)",10,80,12)
+        w = self.hypno_label("Enter the filename you\'d like to save to (no extension)",5,60,12)
         w.pack(pady=10)
         # buttons for file naming menu selection
         # button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
@@ -920,7 +920,7 @@ class MadlibApp:
             self.file_write(self.normalize_quotes(self.filled), base, 'outputs', '.txt')
             # w = tk.Label(self.root, text='Your filled madlib has been saved to: ' + str(base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
             #              width=80, height=10, bg="#d0e7ff",fg="black")
-            w = self.hypno_label("Your filled madlib has been saved to: " + str(base) + ".txt in your \"outputs\" folder.\nWe hope you liked it!",10,80,12)
+            w = self.hypno_label("Your filled madlib has been saved to: " + str(base) + ".txt in your \"outputs\" folder.\nWe hope you liked it!",5,60,12)
             w.pack(pady=10)
             # self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
             # self.submit_btn.pack(pady=10)
@@ -930,7 +930,7 @@ class MadlibApp:
             self.file_write(self.html_out, base, 'outputs','.html')
             # w = tk.Label(self.root, text='Your madlib has been saved to: ' + str(base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',
             #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
-            w= self.hypno_label('Your madlib has been saved to: ' + str(base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',10,80,12)
+            w= self.hypno_label('Your madlib has been saved to: ' + str(base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',5,60,12)
             w.pack(pady=10)
             #self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3", fg="white")
             self.submit_btn = self.hypno_button(self.root, "Let's Go",command=lambda: self.html_view())#todo: add button grid and "back to menu" for file confirmations, beware of "aready has slaves" errors
@@ -964,15 +964,15 @@ class MadlibApp:
             #     base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
             #              width=80, height=10, bg="#d0e7ff",
             #              fg="black")
-            w = self.hypno_label('Your filled madlib has been saved to: ' + str(base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',10,80,12)
+            w = self.hypno_label('Your filled madlib has been saved to: ' + str(base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',5,60,12)
             w.pack(pady=10)
             self.hypno_button(self.root,"Back to Menu",command=lambda: self.reset()).pack(pady=10)
         elif md==3: #save and play inputs plain text
             self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')
             # w = tk.Label(self.root, text='Your madlib has been saved to: ' + str(base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
             #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
-            w = self.hypno_label('Your madlib has been saved to: ' + str(base) + '.txt in your \"inputs\" folder.\nNow we can Play!',10,80,12)
-            w.pack(pady=10)
+            w = self.hypno_label('Your madlib has been saved to:\n' + str(base) + '.txt\nin your \"inputs\" folder.\nNow we can Play!',5,60,12) #todo: consider unique frames for filename and message
+            w.pack(pady=10,padx=5)
             self.submit_btn = self.hypno_button(self.root,"Let's go!", command=lambda: self.advance_to_play()).pack(pady=10)
         elif md==4: #save and play Word docx inputs
             full_path = os.path.join('inputs', base + '.docx')
@@ -1005,8 +1005,8 @@ class MadlibApp:
             #     base) + '.docx in your \"inputs\" folder.\nNow let\'s play it!',
             #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
             #              fg="black")
-            w = self.hypno_label('Your filled madlib has been saved to: ' + str(
-                base) + '.docx in your \"inputs\" folder.\nNow let\'s play it!',10,80,12)
+            w = self.hypno_label('Your filled madlib has been saved to:\n' + str(
+                base) + '.docx\nin your \"inputs\" folder.\nNow let\'s play it!',5,60,12)
             w.pack(pady=10)
             # self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_play(),
             #                             bg="#3b9dd3", fg="white")
@@ -1018,7 +1018,8 @@ class MadlibApp:
                             '.txt')  #normalize quotes for text
             # w = tk.Label(self.root, text='Invalid save case found, please contact the developer.\n In the meantime, your madlib has been saved to: ' + str(base) + '.txt in your \"outputs\" folder, but it won\'t be pretty.',
             #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
-            w = self.hypno_label('Invalid save case found, please contact the developer.\n In the meantime, your madlib has been saved to: ',10,80,12)
+            w = self.hypno_label('Invalid save case found, please contact the developer.\n In the meantime, your madlib has been saved to:\n'+ str(
+                base)+'.txt\nin your \"outputs\" folder.',5,60,12)
             w.pack(pady=10)
             # self.submit_btn = tk.Button(self.root, text="Ok", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
             self.submit_btn = self.hypno_button(self.root,"Ok",command=lambda: self.reset())
