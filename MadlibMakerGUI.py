@@ -169,8 +169,31 @@ class MadlibApp:
         #w = tk.Label(self.root, text='Hello!\n Welcome to the Madlib Maker',font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
 
         self.hypno_header("Welcome to...")
-        w = self.hypno_label('The Madlib Maker',5,60, 14)
-        w.pack(pady=(15),padx=(10))
+        # w = self.hypno_label('The Madlib Maker',5,60, 14)
+        w = tk.Label(
+            self.root,
+            text='The Madlib',
+            font=("Courier New", 40, "bold"),
+            fg="#9e316e",
+            bg="#9bc7f5",  # pastel yellow
+            #height=5,
+            width=20,
+            padx=2,
+            #pady=4
+        )
+        w.pack(padx=(10))
+        w = tk.Label(
+            self.root,
+            text='Maker',
+            font=("Courier New", 40, "bold"),
+            fg="#9e316e",
+            bg="#9bc7f5",  # pastel yellow
+            #height=5,
+            width=20,
+            padx=2,
+            #pady=4
+        )
+        w.pack(padx=(10))
         #smaller label to prompt choice
         #w = tk.Label(self.root, text='What would you like to do\ntoday?', width=24,height=3, bg="#d0e7ff", fg="black")
         w = self.hypno_label('What would you like to do today?', None, None, 12)
