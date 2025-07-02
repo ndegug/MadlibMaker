@@ -19,6 +19,13 @@ numcustreg = "(/ct[0-9]+_[0-9]+)"
 tail = "(_[0-9])"
 WarnRed="#F23F3F"
 
+past_yellow= "#f5e97c"
+
+light_yellow="#ffffd4"
+
+dark_purp="#2d092d"
+
+fade_white="948c95"
 
 class MadlibApp:
     def __init__(self, root):
@@ -112,7 +119,7 @@ class MadlibApp:
             bd=2)
         return entry
 
-    def hypno_scroll(self, h, w, bg_color: str="#ffffd4",fg_color=None):
+    def hypno_scroll(self, h, w, bg_color: str=light_yellow,fg_color=None):
         text_area = scrolledtext.ScrolledText(
             self.root,
             width=w,
@@ -518,7 +525,7 @@ class MadlibApp:
         self.submit_btn.pack(pady=10)
         #define display
         #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
-        self.display = self.hypno_scroll(10,80,"#2d092d","#948c95")
+        self.display = self.hypno_scroll(10,80,dark_purp,"#948c95")
         self.display.pack(pady=10)
         self.display.configure(state='disabled')#disables edits
         self.input_entry.bind("<KeyRelease>", self.sync_display) #syncs display on every key release
