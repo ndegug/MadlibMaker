@@ -135,7 +135,7 @@ class MadlibApp:
             bg="#f5e97c",  # pastel yellow
             height=h,
             width=w,
-            padx=15,
+            padx=15, #formally 15
             pady=4
         )
         return label
@@ -226,8 +226,8 @@ class MadlibApp:
 
         # Instructions text
         #w = tk.Label(self.root, text='What would you like to learn about?', font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
-        w = self.hypno_label('What would you like to learn about?', 10,80,12)
-        w.pack(pady=10)
+        w = self.hypno_label('What would you like to learn about?', 2,40,12)
+        w.pack(pady=10,padx=5)
         # buttons for instructions
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
@@ -366,7 +366,7 @@ class MadlibApp:
             widget.destroy()
         self.load_mode = True #begin load mode
         #label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 12, "bold"),width=70, height=5, bg="#d0e7ff", fg="black")
-        label = self.hypno_label("Select a file to load:",5,70,12)
+        label = self.hypno_label("Select a file to load:",5,40,24)
         label.pack(pady=10)
 
         inputs_path = os.path.join(os.getcwd(), "inputs")
