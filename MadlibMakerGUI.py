@@ -920,7 +920,7 @@ class MadlibApp:
             self.file_write(self.normalize_quotes(self.filled), base, 'outputs', '.txt')
             # w = tk.Label(self.root, text='Your filled madlib has been saved to: ' + str(base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
             #              width=80, height=10, bg="#d0e7ff",fg="black")
-            w = self.hypno_label("Your filled madlib has been saved to: " + str(base) + ".txt in your \"outputs\" folder.\nWe hope you liked it!",5,60,12)
+            w = self.hypno_label("Your filled madlib has been saved to:\n" + str(base) + ".txt\nin your \"outputs\" folder.\nWe hope you liked it!",5,60,12)
             w.pack(pady=10)
             # self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
             # self.submit_btn.pack(pady=10)
@@ -964,7 +964,7 @@ class MadlibApp:
             #     base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
             #              width=80, height=10, bg="#d0e7ff",
             #              fg="black")
-            w = self.hypno_label('Your filled madlib has been saved to: ' + str(base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',5,60,12)
+            w = self.hypno_label('Your filled madlib has been saved to:\n' + str(base) + '.docx\nin your \"outputs\" folder.\nWe hope you liked it!',5,60,12)
             w.pack(pady=10)
             self.hypno_button(self.root,"Back to Menu",command=lambda: self.reset()).pack(pady=10)
         elif md==3: #save and play inputs plain text
