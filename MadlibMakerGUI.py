@@ -660,6 +660,7 @@ class MadlibApp:
 #UNFILLED WINDOW
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        self.hypno_header("Madlib Preview")
         #self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         self.display = self.hypno_scroll(20,80)
         self.display.pack(pady=20)
@@ -670,7 +671,8 @@ class MadlibApp:
         button_frame.pack(pady=5)  # for all button frames
 
         if not self.load_mode: #manual input, show it, no hide needed
-            self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.title + "\n\n"+self.raw_in)
+            self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.title + "\n\n"+self.raw_in) #todo: make this a label instead of text in the scroll
+
             # plain input save
             # btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save plain text input",
             #                 bg="#3b9dd3",
