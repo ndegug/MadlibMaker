@@ -661,22 +661,22 @@ class MadlibApp:
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.hypno_header("Madlib Preview")
-        #self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
-        self.display = self.hypno_scroll(20,80)
-        self.display.pack(pady=20)
-        #w = tk.Label(self.root, text='What would you like to do?', width=40, height=5, bg="#d0e7ff", fg="black")
-        w = self.hypno_label("What would you like to do?",5,40,12)
-        w.pack(pady=5)
+        w = self.hypno_label("What would you like to do?", 5, 40, 12)
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
-        button_frame.pack(pady=5)  # for all button frames
+
 
         if not self.load_mode: #manual input, show it, no hide needed
+            self.hypno_label(
+                "Here is your Madlib",2, 60, 20, light_yellow).pack(pady=5)
+            # self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+            self.display = self.hypno_scroll(20, 80)
+            self.display.pack(pady=20, padx=5)
+            # w = tk.Label(self.root, text='What would you like to do?', width=40, height=5, bg="#d0e7ff", fg="black")
+            #w = self.hypno_label("What would you like to do?", 5, 40, 12)
+            w.pack(pady=5)
+            button_frame.pack(pady=5)  # for all button frames
             self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.title + "\n\n"+self.raw_in) #todo: make this a label instead of text in the scroll
 
-            # plain input save
-            # btn = tk.Button(button_frame, command=lambda: self.output_file_name(3), text="Save plain text input",
-            #                 bg="#3b9dd3",
-            #                 fg="white")  # defines each button with frame,
             btn = self.hypno_button(button_frame,"Save plain text input",command=lambda: self.output_file_name(3))
             btn.grid(row=1, column=0, padx=2, pady=2,
                      sticky="ew")  # defines the button's location on the grid
@@ -687,7 +687,17 @@ class MadlibApp:
             btn.grid(row=1, column=1, padx=2, pady=2,
                      sticky="ew")  # defines the button's location on the grid
         else: #load, use button to reveal
-            self.display.insert(tk.END, "\n   Your Madlib is ready to play. If you are the author, click \"SPOIL\" to preview it. Otherwise, we recommend you click \"Play\" to play it blind.")
+            self.hypno_label("Your Madlib is ready to play!\nIf you are the author, click \"SPOIL\" to preview it.\nOtherwise, we recommend you click \"Play\" to play it blind.",5,60,12,light_yellow).pack(pady=5)
+            # self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+            self.display = self.hypno_scroll(5, 80)
+            self.display.pack(pady=20)
+            self.display.insert(tk.END,"???")
+            # w = tk.Label(self.root, text='What would you like to do?', width=40, height=5, bg="#d0e7ff", fg="black")
+            #w = self.hypno_label("What would you like to do?", 5, 40, 12)
+            w.pack(pady=5)
+            button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
+            button_frame.pack(pady=5)  # for all button frames
+            # self.display.insert(tk.END, "\n   Your Madlib is ready to play. If you are the author, click \"SPOIL\" to preview it. Otherwise, we recommend you click \"Play\" to play it blind.")
             # self.spbtn = tk.Button(button_frame, command=lambda: self.spoiler(), text="SPOIL",
             #                 bg="#F23F3F",
             #                 fg="white")  # defines each button with frame,
@@ -712,9 +722,11 @@ class MadlibApp:
         self.root.mainloop()  # deploys the GUI screen till closed
 
     def spoiler(self): #inserts madlib input text to display if the user chooses to spoil a loaded madlib
-        self.display.delete("1.0", tk.END) #clears warning message
-        self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.title + "\n\n"+self.raw_in)
-        self.spbtn.destroy() #destroys spoiler button
+        # self.display.delete("1.0", tk.END) #clears warning message
+        # self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.title + "\n\n"+self.raw_in)
+        # self.spbtn.destroy() #destroys spoiler button
+        self.load_mode=False
+        self.file_choice()
 
 #PLAY WINDOW
     def advance_to_play(self): #advance to second window, start word prompting when selection is made
