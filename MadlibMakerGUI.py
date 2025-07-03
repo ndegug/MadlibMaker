@@ -407,7 +407,7 @@ class MadlibApp:
             widget.destroy()
         self.load_mode = True #begin load mode
         #label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 12, "bold"),width=70, height=5, bg="#d0e7ff", fg="black")
-        label = self.hypno_label("Select a file to load:",5,40,24)
+        label = self.hypno_label("Select a file to load:",None,40,20)
         label.pack(pady=10)
 
         inputs_path = os.path.join(os.getcwd(), "inputs")
@@ -434,7 +434,7 @@ class MadlibApp:
         btn = self.hypno_button(self.root,"Browse for File",command=self.browse_and_load_file)
         btn.pack()
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
-        button_frame.pack(pady=10)
+        button_frame.pack()
 
 
         row = 0  # initializes row and column counters for button grid
@@ -443,9 +443,11 @@ class MadlibApp:
             full_path = os.path.join(inputs_path, filename)
             #btn = tk.Button(button_frame, text=filename, font=("Arial", 12),command=lambda path=full_path: self.process_input_file(path), bg="#3b9dd3",fg="white")
             btn = self.hypno_button(button_frame, filename, command=lambda path=full_path: self.process_input_file(path))
-            btn.grid(row=row, column=col, padx=2, pady=2, sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
+            btn.grid(row=row, column=col, sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
             col += 1
             if col >= 5:  # max number of columns, then new row
+                button_frame = tk.Frame(self.root, bg="#9bc7f5")  # New frame to ensure center justification
+                button_frame.pack()
                 col = 0
                 row += 1
         #rfbtn = tk.Button(self.root, text="Refresh", command=lambda: self.load_input_file(), bg="#3b9dd3",fg="white")
@@ -514,7 +516,7 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
         #l = tk.Label(self.root, text='Type your Madlib below!', font=("Arial", 12, "bold"), fg="black")
-        l = self.hypno_label("Type your Madlbib below",None,None,20,light_blue)
+        l = self.hypno_label("Type your Madlib below",None,None,20,light_blue)
         l.pack(pady=5)
 
 
@@ -663,11 +665,13 @@ class MadlibApp:
         self.hypno_header("Madlib Preview")
         w = self.hypno_label("What would you like to do?", 5, 40, 12)
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
+        self.hypno_label("Your Madlib is ready!",2, 40, 20, light_blue).pack(pady=5)
+
 
 
         if not self.load_mode: #manual input, show it, no hide needed
-            self.hypno_label(
-                "Here is your Madlib",2, 60, 20, light_yellow).pack(pady=5)
+            # self.hypno_label(
+            #     "Here is your Madlib",2, 60, 20, light_yellow).pack(pady=5)
             # self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
             self.display = self.hypno_scroll(20, 80)
             self.display.pack(pady=20, padx=5)
@@ -675,7 +679,7 @@ class MadlibApp:
             #w = self.hypno_label("What would you like to do?", 5, 40, 12)
             w.pack(pady=5)
             button_frame.pack(pady=5)  # for all button frames
-            self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.title + "\n\n"+self.raw_in) #todo: make this a label instead of text in the scroll
+            self.display.insert(tk.END, self.title + "\n\n"+self.raw_in)
 
             btn = self.hypno_button(button_frame,"Save plain text input",command=lambda: self.output_file_name(3))
             btn.grid(row=1, column=0, padx=2, pady=2,
@@ -687,9 +691,9 @@ class MadlibApp:
             btn.grid(row=1, column=1, padx=2, pady=2,
                      sticky="ew")  # defines the button's location on the grid
         else: #load, use button to reveal
-            self.hypno_label("Your Madlib is ready to play!\nIf you are the author, click \"SPOIL\" to preview it.\nOtherwise, we recommend you click \"Play\" to play it blind.",5,60,12,light_yellow).pack(pady=5)
+            self.hypno_label("If you are the author, click \"SPOIL\" to preview it.\nOtherwise, we recommend you click \"Play\" to play it blind.",5,60,12,light_blue).pack(pady=5)
             # self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
-            self.display = self.hypno_scroll(5, 80)
+            self.display = self.hypno_scroll(None, 60)
             self.display.pack(pady=20)
             self.display.insert(tk.END,"???")
             # w = tk.Label(self.root, text='What would you like to do?', width=40, height=5, bg="#d0e7ff", fg="black")
