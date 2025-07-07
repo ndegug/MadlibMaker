@@ -25,6 +25,10 @@ light_yellow="#ffffd4"
 
 dark_purp="#2d092d"
 
+mid_purp="#676ec3"
+
+light_purp="#aa8ddb"
+
 fade_white="#948c95"
 
 light_blue="#9bc7f5"
@@ -72,7 +76,6 @@ class MadlibApp:
                            fill="#3a1c5d", width=3)  # bottom shadow
         canvas.create_line(5 + w, 5, 5 + w, 5 + h,
                            fill="#3a1c5d", width=3)  # right shadow
-        #todo: future enhancement: use inputs for additional hues
         canvas.create_line(5, 2 + h, 3 + w, 2 + h,
                            fill=darker("#9ac7f5"), width=3)  # bottom half-shadow
         canvas.create_line(2 + w, (h+5)*.5, 2 + w, h+2,
@@ -159,12 +162,19 @@ class MadlibApp:
         fnt = tkfont.Font(family="Courier New",
                           size=font_size,
                           weight="bold")
-
+        lines = text.splitlines() or [""]
+        longest_line = max(lines, key=fnt.measure)
+        line_width_px = fnt.measure(longest_line)
+        line_height = fnt.metrics("linespace")
+        n_lines = len(lines)
+        #temporary nullify label height and width for new release todo: decide whether to remove inputs entirely
+        label_width= None
+        label_height = None
         # If caller passed None for size, fall back to auto‑measure
         if label_width is None:
-            label_width = fnt.measure(text) + 20  # 20 px extra padding
+            label_width  = line_width_px + 20   # horizontal padding
         if label_height is None:
-            label_height = fnt.metrics("linespace") + 12 + 26  # match old padding
+            label_height = n_lines * line_height + 12 + 26  # vertical padding
 
         # ------------------------------------------------------------------
         #  Canvas with chrome outline
@@ -175,19 +185,20 @@ class MadlibApp:
                       bg=frame["bg"],  # let the parent background show
                       highlightthickness=0)
 
-        # light top/left
+        # light top/left todo: add inputs for additional hues
+        top_hue=light_purp #hue of the top and left lines
         c.create_rectangle(5, 5,
                            5 + label_width,
                            5 + label_height,
                            fill=bg_color,
-                           outline="#ffffff", width=5)
+                           outline=top_hue, width=5)
         # deep shadow bottom/right
         c.create_line(7, 5 + label_height,
                       7 + label_width, 5 + label_height,
-                      fill="#3a1c5d", width=5)
+                      fill=darker(dark_red), width=5)
         c.create_line(5 + label_width, 7,
                       5 + label_width, 7 + label_height,
-                      fill="#3a1c5d", width=5)
+                      fill=darker(dark_red), width=5)
 
         # optional half‑shadow for extra gloss
 
@@ -450,7 +461,7 @@ class MadlibApp:
             widget.destroy()
         self.load_mode = True #begin load mode
         #label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 12, "bold"),width=70, height=5, bg="#d0e7ff", fg="black")
-        label = self.hypno_label("Select a file to load:",None,40,20)
+        label = self.hypno_label("Select a file to load:",None,None,20)
         label.pack(pady=10)
 
         inputs_path = os.path.join(os.getcwd(), "inputs")
@@ -559,7 +570,7 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
         #l = tk.Label(self.root, text='Type your Madlib below!', font=("Arial", 12, "bold"), fg="black")
-        l = self.hypno_label("Type your Madlib below",None,None,20,light_blue)
+        l = self.hypno_label("Type your Madlib below",None,None,20)
         l.pack(pady=5)
 
 
@@ -706,9 +717,9 @@ class MadlibApp:
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.hypno_header("Madlib Preview")
-        w = self.hypno_label("What would you like to do?", 5, 40, 12)
+        w = self.hypno_label("What would you like to do?", None, None, 12)
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
-        self.hypno_label("Your Madlib is ready!",2, 40, 20, light_blue).pack(pady=5)
+        self.hypno_label("Your Madlib is ready!",None, None, 20).pack(pady=5)
 
 
 
@@ -734,7 +745,7 @@ class MadlibApp:
             btn.grid(row=1, column=1, padx=2, pady=2,
                      sticky="ew")  # defines the button's location on the grid
         else: #load, use button to reveal
-            self.hypno_label("If you are the author, click \"SPOIL\" to preview it.\nOtherwise, we recommend you click \"Play\" to play it blind.",5,60,12,light_blue).pack(pady=5)
+            self.hypno_label("If you are the author, click \"SPOIL\" to preview it.\nOtherwise, we recommend you click \"Play\" to play it blind.",None,None,12).pack(pady=5)
             # self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
             self.display = self.hypno_scroll(None, 60)
             self.display.pack(pady=20)
@@ -922,7 +933,7 @@ class MadlibApp:
         display.insert(tk.END, "\n\n"+self.filled)
         # w = tk.Label(self.root, text='What would you like to do with it?', width=40, height=5, bg="#d0e7ff",
         #              fg="black")
-        w = self.hypno_label("What would you like to do with it?",5,40,12)
+        w = self.hypno_label("What would you like to do with it?",None,None,12)
         w.pack(pady=5)
         # buttons for filled madlib save selection
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
@@ -952,7 +963,7 @@ class MadlibApp:
         # w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)',font=("Arial", 12, "bold"), width=80, height=10,
         #              bg="#d0e7ff",
         #              fg="black")
-        w = self.hypno_label("Enter the filename you\'d like to save to (no extension)",5,60,12)
+        w = self.hypno_label("Enter the filename you\'d like to save to (no extension)",None,None,12)
         w.pack(pady=10)
         # buttons for file naming menu selection
         # button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
@@ -981,7 +992,7 @@ class MadlibApp:
             self.file_write(self.normalize_quotes(self.filled), base, 'outputs', '.txt')
             # w = tk.Label(self.root, text='Your filled madlib has been saved to: ' + str(base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
             #              width=80, height=10, bg="#d0e7ff",fg="black")
-            w = self.hypno_label("Your filled madlib has been saved to:\n" + str(base) + ".txt\nin your \"outputs\" folder.\nWe hope you liked it!",5,60,12)
+            w = self.hypno_label("Your filled madlib has been saved to:\n" + str(base) + ".txt\nin your \"outputs\" folder.\nWe hope you liked it!",None,None,12)
             w.pack(pady=10)
             # self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
             # self.submit_btn.pack(pady=10)
@@ -991,7 +1002,7 @@ class MadlibApp:
             self.file_write(self.html_out, base, 'outputs','.html')
             # w = tk.Label(self.root, text='Your madlib has been saved to: ' + str(base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',
             #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
-            w= self.hypno_label('Your madlib has been saved to: ' + str(base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',5,60,12)
+            w= self.hypno_label('Your madlib has been saved to: ' + str(base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',None,None,12)
             w.pack(pady=10)
             #self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3", fg="white")
             self.submit_btn = self.hypno_button(self.root, "Let's Go",command=lambda: self.html_view())#todo: add button grid and "back to menu" for file confirmations, beware of "aready has slaves" errors
@@ -1025,14 +1036,14 @@ class MadlibApp:
             #     base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
             #              width=80, height=10, bg="#d0e7ff",
             #              fg="black")
-            w = self.hypno_label('Your filled madlib has been saved to:\n' + str(base) + '.docx\nin your \"outputs\" folder.\nWe hope you liked it!',5,60,12)
+            w = self.hypno_label('Your filled madlib has been saved to:\n' + str(base) + '.docx\nin your \"outputs\" folder.\nWe hope you liked it!',None,None,12)
             w.pack(pady=10)
             self.hypno_button(self.root,"Back to Menu",command=lambda: self.reset()).pack(pady=10)
         elif md==3: #save and play inputs plain text
             self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')
             # w = tk.Label(self.root, text='Your madlib has been saved to: ' + str(base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
             #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
-            w = self.hypno_label('Your madlib has been saved to:\n' + str(base) + '.txt\nin your \"inputs\" folder.\nNow we can Play!',5,60,12) #todo: consider unique frames for filename and message
+            w = self.hypno_label('Your madlib has been saved to:\n' + str(base) + '.txt\nin your \"inputs\" folder.\nNow we can Play!',None,None,12) #todo: consider unique frames for filename and message
             w.pack(pady=10,padx=5)
             self.submit_btn = self.hypno_button(self.root,"Let's go!", command=lambda: self.advance_to_play()).pack(pady=10)
         elif md==4: #save and play Word docx inputs
@@ -1067,7 +1078,7 @@ class MadlibApp:
             #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
             #              fg="black")
             w = self.hypno_label('Your filled madlib has been saved to:\n' + str(
-                base) + '.docx\nin your \"inputs\" folder.\nNow let\'s play it!',5,60,12)
+                base) + '.docx\nin your \"inputs\" folder.\nNow let\'s play it!',None,None,12)
             w.pack(pady=10)
             # self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_play(),
             #                             bg="#3b9dd3", fg="white")
@@ -1080,7 +1091,7 @@ class MadlibApp:
             # w = tk.Label(self.root, text='Invalid save case found, please contact the developer.\n In the meantime, your madlib has been saved to: ' + str(base) + '.txt in your \"outputs\" folder, but it won\'t be pretty.',
             #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
             w = self.hypno_label('Invalid save case found, please contact the developer.\n In the meantime, your madlib has been saved to:\n'+ str(
-                base)+'.txt\nin your \"outputs\" folder.',5,60,12)
+                base)+'.txt\nin your \"outputs\" folder.',None,None,12)
             w.pack(pady=10)
             # self.submit_btn = tk.Button(self.root, text="Ok", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
             self.submit_btn = self.hypno_button(self.root,"Ok",command=lambda: self.reset())
@@ -1196,7 +1207,7 @@ class MadlibApp:
     def html_file_choice(self): #screen for deciding whether to save html output
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         # w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
-        w = self.hypno_label("Before we print your Madlib, would you like to save it?",10,80,12)
+        w = self.hypno_label("Before we print your Madlib, would you like to save it?",None,None,12)
         w.pack(pady=10)
         # button frame
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
