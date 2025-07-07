@@ -150,19 +150,62 @@ class MadlibApp:
         return text_area
 
     # Title style block (hypnospace-themed heading)
-    def hypno_label(self, text, h, w, s, bg_color=past_yellow, font_color=dark_red):
-        label = tk.Label(
-            self.root,
-            text=text,
-            font=("Courier New", s, "bold"),
-            fg=font_color,
-            bg=bg_color,
-            height=h,
-            width=w,
-            padx=15, #formally 15
-            pady=4
-        )
-        return label
+    def hypno_label(self, text, label_height, label_width, font_size, bg_color=past_yellow, fg_color=dark_red):
+        frame = root
+        # ------------------------------------------------------------------
+        #  Font setup
+        # ------------------------------------------------------------------
+        btn_font = ("Courier New", font_size, "bold")
+        fnt = tkfont.Font(family="Courier New",
+                          size=font_size,
+                          weight="bold")
+
+        # If caller passed None for size, fall back to auto‑measure
+        if label_width is None:
+            label_width = fnt.measure(text) + 20  # 20 px extra padding
+        if label_height is None:
+            label_height = fnt.metrics("linespace") + 12 + 26  # match old padding
+
+        # ------------------------------------------------------------------
+        #  Canvas with chrome outline
+        # ------------------------------------------------------------------
+        c = tk.Canvas(frame,
+                      width=label_width + 10,
+                      height=label_height + 10,
+                      bg=frame["bg"],  # let the parent background show
+                      highlightthickness=0)
+
+        # light top/left
+        c.create_rectangle(5, 5,
+                           5 + label_width,
+                           5 + label_height,
+                           fill=bg_color,
+                           outline="#ffffff", width=5)
+        # deep shadow bottom/right
+        c.create_line(7, 5 + label_height,
+                      7 + label_width, 5 + label_height,
+                      fill="#3a1c5d", width=5)
+        c.create_line(5 + label_width, 7,
+                      5 + label_width, 7 + label_height,
+                      fill="#3a1c5d", width=5)
+
+        # optional half‑shadow for extra gloss
+
+        # ------------------------------------------------------------------
+        #  Drop the real Label on top
+        # ------------------------------------------------------------------
+        lbl = tk.Label(c,
+                       text=text,
+                       font=btn_font,
+                       bg=bg_color,
+                       fg=fg_color,
+                       bd=0,
+                       highlightthickness=0)
+        lbl.place(x=8, y=8,
+                  width=label_width - 6,
+                  height=label_height - 8)
+
+        return c
 
     def hypno_header(self, text):
         self.header = tk.Frame(root, bg="#676ec3", height=30)
