@@ -320,6 +320,7 @@ class MadlibApp:
     def instruct_main(self): #Instructions top menu
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.hypno_header("Instructions")
+        self.head_btn("Reset", command=lambda: self.reset())
         # Instructions text
         w = self.hypno_label('What would you like to learn about?', 2,40,12)
         w.pack(pady=10,padx=5)
@@ -357,6 +358,7 @@ class MadlibApp:
     def write_instructions_menu(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.hypno_header("Instructions")
+        self.head_btn("Reset", command=lambda: self.reset())
         #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         self.display= self.hypno_scroll(15,120)
         self.display.pack(pady=10, padx=5) #display widget spacing, horizontal and vertical
@@ -412,6 +414,7 @@ class MadlibApp:
     def end_instructions(self,content,lv):#generic window for instructions at the end of the instruction tree.
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.hypno_header("Instructions")
+        self.head_btn("Reset", command=lambda: self.reset())
         #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",fg="black", wrap=tk.WORD)
         self.display=self.hypno_scroll(10, 80)
         self.display.pack(pady=10, padx=5)
@@ -462,6 +465,7 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
         self.hypno_header("Load Input File")
+        self.head_btn("Reset", command=lambda: self.reset())
         self.load_mode = True #begin load mode
         #label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 12, "bold"),width=70, height=5, bg="#d0e7ff", fg="black")
         label = self.hypno_label("Select a file to load:",None,None,20)
@@ -574,6 +578,7 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
         self.hypno_header("Manual Input")
+        self.head_btn("Reset", command=lambda: self.reset())
         #l = tk.Label(self.root, text='Type your Madlib below!', font=("Arial", 12, "bold"), fg="black")
         l = self.hypno_label("Type your Madlib below",None,None,20)
         l.pack(pady=5)
@@ -652,6 +657,7 @@ class MadlibApp:
         for widget in self.root.winfo_children():
             widget.destroy()
         self.hypno_header("Title your Madlib")
+        self.head_btn("Reset", command=lambda: self.reset())
         # tk.Label(self.root, text="Would you like to title your Madlib?\n Type it here and click enter or \"skip\" to skip this step.", font=("Arial", 12, "bold")).pack()
         self.hypno_label("Would you like to title your Madlib?",None,None,12).pack()
         #self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
@@ -723,6 +729,7 @@ class MadlibApp:
     def file_choice(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.hypno_header("Madlib Preview")
+        self.head_btn("Reset", command=lambda: self.reset())
         w = self.hypno_label("What would you like to do?", None, None, 12)
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         self.hypno_label("Your Madlib is ready!",None, None, 20).pack(pady=5)
@@ -799,6 +806,8 @@ class MadlibApp:
 
     def play_window(self): #generates Madlib play/fill window
         for widget in self.root.winfo_children():widget.destroy()
+        self.hypno_header("Let's play!")
+        self.head_btn("Reset", command=lambda: self.reset())
         #tk.Label(self.root, text="Give us a/an:", font=("Arial", 12, "bold")).pack()
         self.hypno_label("Give us a/an:", None, None, 12).pack()
 
@@ -928,6 +937,8 @@ class MadlibApp:
     def filled_window(self):  #decide whether to save filled output
         for widget in self.root.winfo_children():
             widget.destroy()
+        self.hypno_header("Madlib Complete")
+        self.head_btn("Reset", command=lambda: self.reset())
         #display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         display = self.hypno_scroll(20,80)
         display.pack(pady=20)
@@ -966,6 +977,8 @@ class MadlibApp:
 
     def output_file_name(self,md): #output file namer
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        self.hypno_header("Output file name")
+        self.head_btn("Reset", command=lambda: self.reset())
         # w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)',font=("Arial", 12, "bold"), width=80, height=10,
         #              bg="#d0e7ff",
         #              fg="black")
@@ -992,6 +1005,8 @@ class MadlibApp:
     def save_file(self,md): # saving input and output
         base = self.input_entry.get().strip()
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        self.hypno_header("File Saved")
+        self.head_btn("Reset", command=lambda: self.reset())
         if md==0: #plain save
             if self.title:
                 self.filled = self.title + "\n\n" + self.filled
@@ -1179,6 +1194,8 @@ class MadlibApp:
     def invalid_html_window(self):
         for widget in self.root.winfo_children():
             widget.destroy()
+        self.hypno_header("Invalid Keyword")
+        self.head_btn("Reset", command=lambda: self.reset())
 
         # self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         self.display = self.hypno_scroll(10,80)
@@ -1202,7 +1219,6 @@ class MadlibApp:
         self. html_replace()
 
     def html_post_process(self):
-        for widget in self.root.winfo_children(): widget.destroy()
         self.html_out = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.htlist)) #join body with punctuation
         if self.title: #if title exists, place it in heading format string
             self.html_out = htmlhead.replace('heading', self.title, 1) + self.html_out + ' </p></body></html>'
@@ -1212,6 +1228,8 @@ class MadlibApp:
 
     def html_file_choice(self): #screen for deciding whether to save html output
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        self.hypno_header("Printing")
+        self.head_btn("Reset", command=lambda: self.reset())
         # w = tk.Label(self.root, text='Before we print your Madlib, would you like to save it?', width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
         w = self.hypno_label("Before we print your Madlib, would you like to save it?",None,None,12)
         w.pack(pady=10)
