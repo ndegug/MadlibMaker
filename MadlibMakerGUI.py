@@ -276,7 +276,7 @@ class MadlibApp:
         #     #pady=4
         # )
         # w.pack(padx=(10))
-        self.hypno_title("The Madlib")
+        self.hypno_title("The Madlib\nMaker!")
         # w = tk.Label(
         #     self.root,
         #     text='Maker',
@@ -289,7 +289,7 @@ class MadlibApp:
         #     #pady=4
         # )
         # w.pack(padx=(10))
-        self.hypno_title("Maker")
+        #self.hypno_title("Maker")
         #smaller label to prompt choice
         #w = tk.Label(self.root, text='What would you like to do\ntoday?', width=24,height=3, bg="#d0e7ff", fg="black")
         w = self.hypno_label('What would you like to do today?', None, None, 12)
@@ -450,6 +450,8 @@ class MadlibApp:
                  sticky="ew")  # defines the button's location on the grid
     def credits(self): #place for credits and special thanks
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        self.hypno_header("Credits")
+        self.head_btn("Reset", command=lambda: self.reset())
         self.display=self.hypno_scroll(10, 80)
         self.display.pack(pady=10, padx=5)
         self.display.insert(tk.END, credits)
@@ -939,12 +941,13 @@ class MadlibApp:
             widget.destroy()
         self.hypno_header("Madlib Complete")
         self.head_btn("Reset", command=lambda: self.reset())
+        self.hypno_label("Your Madlib is complete!", None, None, 20).pack(pady=5)
         #display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         display = self.hypno_scroll(20,80)
         display.pack(pady=20)
         self.filled = re.sub(r'\s([.,!?;:])', r'\1', ' '.join(self.outlist)) #rejoins output array without spacing between words and punctuation
 
-        display.insert(tk.END, "\nHere is your filled Madlib:")
+        # display.insert(tk.END, "\nHere is your filled Madlib:")
         if self.title: #display title if it exists
             display.insert(tk.END, "\n\n"+self.title)
         display.insert(tk.END, "\n\n"+self.filled)
@@ -977,7 +980,7 @@ class MadlibApp:
 
     def output_file_name(self,md): #output file namer
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-        self.hypno_header("Output file name")
+        self.hypno_header("Save file name")
         self.head_btn("Reset", command=lambda: self.reset())
         # w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)',font=("Arial", 12, "bold"), width=80, height=10,
         #              bg="#d0e7ff",
