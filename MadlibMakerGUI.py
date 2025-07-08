@@ -319,9 +319,8 @@ class MadlibApp:
 #INSTRUCTIONS
     def instruct_main(self): #Instructions top menu
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
-
+        self.hypno_header("Instructions")
         # Instructions text
-        #w = tk.Label(self.root, text='What would you like to learn about?', font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
         w = self.hypno_label('What would you like to learn about?', 2,40,12)
         w.pack(pady=10,padx=5)
         # buttons for instructions
@@ -357,6 +356,7 @@ class MadlibApp:
 
     def write_instructions_menu(self):
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        self.hypno_header("Instructions")
         #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         self.display= self.hypno_scroll(15,120)
         self.display.pack(pady=10, padx=5) #display widget spacing, horizontal and vertical
@@ -411,6 +411,7 @@ class MadlibApp:
 
     def end_instructions(self,content,lv):#generic window for instructions at the end of the instruction tree.
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
+        self.hypno_header("Instructions")
         #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",fg="black", wrap=tk.WORD)
         self.display=self.hypno_scroll(10, 80)
         self.display.pack(pady=10, padx=5)
@@ -460,6 +461,7 @@ class MadlibApp:
         # Clear existing widgets if necessary
         for widget in self.root.winfo_children():
             widget.destroy()
+        self.hypno_header("Load Input File")
         self.load_mode = True #begin load mode
         #label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 12, "bold"),width=70, height=5, bg="#d0e7ff", fg="black")
         label = self.hypno_label("Select a file to load:",None,None,20)
@@ -571,6 +573,7 @@ class MadlibApp:
     def setup_manual_window(self): #setup manual input window
         for widget in self.root.winfo_children():
             widget.destroy()
+        self.hypno_header("Manual Input")
         #l = tk.Label(self.root, text='Type your Madlib below!', font=("Arial", 12, "bold"), fg="black")
         l = self.hypno_label("Type your Madlib below",None,None,20)
         l.pack(pady=5)
@@ -648,6 +651,7 @@ class MadlibApp:
     def title_write(self): #write title
         for widget in self.root.winfo_children():
             widget.destroy()
+        self.hypno_header("Title your Madlib")
         # tk.Label(self.root, text="Would you like to title your Madlib?\n Type it here and click enter or \"skip\" to skip this step.", font=("Arial", 12, "bold")).pack()
         self.hypno_label("Would you like to title your Madlib?",None,None,12).pack()
         #self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
