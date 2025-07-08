@@ -97,6 +97,7 @@ class MadlibApp:
             # pady=4
         )
         w.pack(padx=(10))
+
     def hypno_button(self, frame, text, command=None,color: str="#aa8ddb"): #todo: fully comment
         # Define font
         btn_font = ("Courier New", 10, "bold")
@@ -471,16 +472,7 @@ class MadlibApp:
 
         files = [f for f in os.listdir(inputs_path) if f.endswith('.txt') or f.endswith('.docx')] #grabs all files in inputs
 
-        if not files: #edge case of no valid input files
-            #no_files_label = tk.Label(self.root, text="No input files found in the 'inputs' folder.\nPlace one into the folder and click \"Refresh\"", font=("Arial", 12))
-            no_files_label = self.hypno_label("No input files found in the 'inputs' folder.\nPlace one into the folder and click \"Refresh\" or Browse for it instead.",None,None,12)
-            no_files_label.pack(pady=10)
-        else:
-            #no_files_label = tk.Label(self.root,text="Don't see your file? Place it in the \"inputs\" folder  and click \"Refresh\"",font=("Arial", 12))
-            no_files_label = self.hypno_label(
-                "Don't see your file? Place it in the \"inputs\" folder  and click \"Refresh\" or Browse for it instead", None,
-                None, 12)
-            no_files_label.pack(pady=5)
+
 
             #return
 
@@ -504,6 +496,16 @@ class MadlibApp:
                 button_frame.pack()
                 col = 0
                 row += 1
+        if not files: #edge case of no valid input files
+            #no_files_label = tk.Label(self.root, text="No input files found in the 'inputs' folder.\nPlace one into the folder and click \"Refresh\"", font=("Arial", 12))
+            no_files_label = self.hypno_label("No input files found in the 'inputs' folder.\nPlace one into the folder and click \"Refresh\" or Browse for it instead.",None,None,12)
+            no_files_label.pack(pady=10)
+        else:
+            #no_files_label = tk.Label(self.root,text="Don't see your file? Place it in the \"inputs\" folder  and click \"Refresh\"",font=("Arial", 12))
+            no_files_label = self.hypno_label(
+                "Don't see your file?\nPlace it in the \"inputs\" folder and click \"Refresh\" or Browse for it instead", None,
+                None, 12)
+            no_files_label.pack(pady=5)
         #rfbtn = tk.Button(self.root, text="Refresh", command=lambda: self.load_input_file(), bg="#3b9dd3",fg="white")
         rfbtn = self.hypno_button(self.root, "refresh", command=lambda: self.load_input_file())
         rfbtn.pack(pady=10)
