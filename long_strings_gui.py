@@ -2,6 +2,10 @@ htmlhead = '<html><head></head><body><h1> heading </h1><style>h1 {text-align: ce
            '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
 htmlhead_notitle = '<html><head></head><body><style>h1 {text-align: center;}p.big {  line-height: ' \
            '2;}.tab { display: inline-block; margin-left: 80px;}  </style><p class="big"><span class="tab"></span>'
+htmlsample = '<span class="nowrap" style="display: none; display: inline-block; vertical-align: top; text-align: ' \
+             'center;"><span style="display: block; padding: 0 0.2em;">__________</span><span style="display: block; ' \
+             'font-size: 70%; line-height: 1em; padding: 0 0.2em;"><span style="position: relative; line-height: 1em; ' \
+             'margin-top: -.2em; top: -.2em;">underscript</span></span></span>'
 generic_words = { # reminder: do not add any keywords that are the same as ignored words
                  '/adj': 'Adjective', '/nou': 'Noun', '/pln': 'Plural noun',
                  '/ver': 'Verb', '/vng': 'Verb ending in \"ing\"', '/ved': 'Past tense verb',
@@ -14,6 +18,7 @@ generic_words = { # reminder: do not add any keywords that are the same as ignor
                  '/fam': 'Family member (title)', '/foo': 'Food', '/ani': 'Animal',
                  '/fic': 'Fictional Character', '/act': 'Activity', '/bod': 'Body Part', '/flu': 'Fluid',
                  '/emo': 'Emotion', '/noi': 'noise', '/eve': 'Event', '/fos': 'Plural food', '/fur': 'Furniture'}
+
 ignored_words = ['/her', '/she', '/She']  # words that resemble generic words that will be ignored
 #todo: insert return and tab characters where needed
 how_to_play_madlibs = """
@@ -134,3 +139,17 @@ printing_madlibs= """
     Whether you decide to save the file or not, the program will open your file into your default browser. Use said browser's print feature to print your Madlib. This is typically done by entering the menu on the top right and selecting "Print" 
     
     Enjoy the original, authentic experience of filling in a Madlib together with your friends!"""
+credits="""
+    This game was made by Nick DeGugs, but this is dedicated to those who inspired every piece of this program.
+    
+    Thank you to Ian and Anthony of Smosh for showing me how much fun it is to write my own Mad Libs. If by some miracle you see this and you’re still running your show, feel free to use this program to streamline the next episode of Smosh Libs!
+    
+    Thank you to my high school friend. Your pompous and toxically positive attitude towards life inspired me to write all sorts of Mad Libs in which you were thrown to the wolves for everyone else’s amusement. Before I knew it, I had so many ideas for Mad Libs that I needed to build a tool to streamline their production, which became the program you see today. May the knives of my jokes twist in your flesh forever more.
+    
+    Thank you to my brother who introduced me to Python. Had he not been there, I’d still be bashing my head, trying to get this to work in C++, the most needy and pretentious of all computer languages I’ve ever seen.
+    
+    Thank you to the artists at No More Robots for inspiring the visual style through their amazing game, Hypnospace Outlaw. I morn its canceled sequel, Dreamsettler, and the chance to promote it here. If you, dear player, have not played their games, show the team some love on their Steam page.
+    
+    Thank you to my amazing alpha tester, who inspired me to revamp this program for the pleasure of talented artists and authors like you. 
+
+"""
