@@ -631,11 +631,12 @@ class MadlibApp:
     def custom_configure_window(self): #custom word configure window
         for widget in self.root.winfo_children():
             widget.destroy()
-
-        #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+        self.hypno_header("Custom configurator")
+        self.head_btn("Reset", command=lambda: self.reset())
+        self.hypno_label("Custom words detected, please configure them.", None, None, 12).pack()
         self.display = self.hypno_scroll(10,80)
         self.display.pack(pady=10)
-        self.display.insert(tk.END, "Custom words detected, please configure them.\n")
+        # self.display.insert(tk.END, "Custom words detected, please configure them.\n")
 
         #self.custom_entry = tk.Entry(self.root, width=40,font=("Arial", 12), bg="#d0e7ff", fg="black")
         self.custom_entry = self.hypno_entry(40)
