@@ -321,7 +321,6 @@ class MadlibApp:
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.hypno_header("Instructions")
         self.head_btn("Reset", command=lambda: self.reset())
-        #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         self.display= self.hypno_scroll(15,120)
         self.display.pack(pady=10, padx=5) #display widget spacing, horizontal and vertical
         self.display.insert(tk.END, how_to_write_a_madlib) #inserts "write madlibs" basic tutorial
@@ -341,13 +340,11 @@ class MadlibApp:
         btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # Custom words
-        #btn = tk.Button(button_frame, command=lambda: self.end_instructions(custom_words_basics,True),text="Custom words basics",bg="#3b9dd3",fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame, 'Custom words basics',
                                 command=lambda: self.end_instructions(custom_words_basics,True))
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # numbered custom words
-        #btn = tk.Button(button_frame, command=lambda: self.end_instructions(numbered_custom_words,True),  text="Numbered custom words",  bg="#3b9dd3",fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame, 'Numbered Custom Words',
                                 command=lambda: self.end_instructions(numbered_custom_words,True))
         btn.grid(row=1, column=3, padx=2, pady=2,
@@ -449,7 +446,6 @@ class MadlibApp:
             no_files_label = self.hypno_label("No input files found in the 'inputs' folder.\nPlace one into the folder and click \"Refresh\" or Browse for it instead.",None,None,12)
             no_files_label.pack(pady=10)
         else:
-            #no_files_label = tk.Label(self.root,text="Don't see your file? Place it in the \"inputs\" folder  and click \"Refresh\"",font=("Arial", 12))
             no_files_label = self.hypno_label(
                 "Don't see your file?\nPlace it in the \"inputs\" folder and click \"Refresh\" or Browse for it instead", None,
                 None, 12)
@@ -520,16 +516,13 @@ class MadlibApp:
             widget.destroy()
         self.hypno_header("Manual Input")
         self.head_btn("Reset", command=lambda: self.reset())
-        #l = tk.Label(self.root, text='Type your Madlib below!', font=("Arial", 12, "bold"), fg="black")
         l = self.hypno_label("Type your Madlib below",None,None,20)
         l.pack(pady=5)
 
-
-        #self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black") #defines the text input field, size, color of font and background
         self.input_entry = self.hypno_entry(80)
         self.input_entry.pack(pady=10)# sets the verticle spacing given between the input field and other successive elements
         self.input_entry.focus_set()  # This sets focus so the cursor appears in the field
-        #l = tk.Label(self.root, text='Use these buttons to quick-drop a keyword!', font=("Arial", 12), fg="black")
+
         l = self.hypno_label("Use these buttons to drop a keyword",None,None,12)
         l.pack(pady=5)
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
@@ -546,11 +539,9 @@ class MadlibApp:
                 row += 1
 
         #define submit button, command to advance to next screen
-        #self.submit_btn = tk.Button(self.root, text="Submit", command=self.advance_from_manual, bg="#3b9dd3", fg="white")
         self.submit_btn = self.hypno_button(self.root,"Submit",command=self.advance_from_manual)
         self.submit_btn.pack(pady=10)
         #define display
-        #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         self.display = self.hypno_scroll(10,80,dark_purp,"#948c95")
         self.display.pack(pady=10)
         self.display.configure(state='disabled')#disables edits
@@ -599,9 +590,7 @@ class MadlibApp:
             widget.destroy()
         self.hypno_header("Title your Madlib")
         self.head_btn("Reset", command=lambda: self.reset())
-        # tk.Label(self.root, text="Would you like to title your Madlib?\n Type it here and click enter or \"skip\" to skip this step.", font=("Arial", 12, "bold")).pack()
         self.hypno_label("Would you like to title your Madlib?",None,None,12).pack()
-        #self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
         self.input_entry = self.hypno_entry(80)
         self.input_entry.bind("<Return>",
                               lambda event: self.title_saver()) #"enter" key submits title
@@ -610,15 +599,10 @@ class MadlibApp:
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Submit button to save title
-        # btn = tk.Button(button_frame, command=lambda: self.title_saver(), text="Submit", bg="#3b9dd3",
-        #                 fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame,"Submit",command=lambda: self.title_saver())
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # Skip button, go to input preview
-        # btn = tk.Button(button_frame, command=lambda: self.file_choice(), text="Skip",
-        #                 bg="#3b9dd3",
-        #                 fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame, "Skip", command=lambda: self.file_choice())
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")
@@ -636,14 +620,11 @@ class MadlibApp:
         self.hypno_label("Custom words detected, please configure them.", None, None, 12).pack()
         self.display = self.hypno_scroll(10,80)
         self.display.pack(pady=10)
-        # self.display.insert(tk.END, "Custom words detected, please configure them.\n")
 
-        #self.custom_entry = tk.Entry(self.root, width=40,font=("Arial", 12), bg="#d0e7ff", fg="black")
         self.custom_entry = self.hypno_entry(40)
         self.custom_entry.bind("<Return>",
                                lambda event: self.save_custom_word())  # allows the "enter" key to submit the custom word
         self.custom_entry.pack(pady=10)
-        #self.custom_button = tk.Button(self.root, text="Enter",bg="#3b9dd3", fg="white", command=self.save_custom_word)
         self.custom_button = self.hypno_button(self.root,"Enter",command=self.save_custom_word)
         self.custom_button.pack(pady=5)
 
@@ -679,13 +660,10 @@ class MadlibApp:
 
 
         if not self.load_mode: #manual input, show it, no hide needed
-            # self.hypno_label(
-            #     "Here is your Madlib",2, 60, 20, light_yellow).pack(pady=5)
-            # self.display = scrolledtext.ScrolledText(self.root, width=80, height=20, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
+
             self.display = self.hypno_scroll(20, 80)
             self.display.pack(pady=20, padx=5)
-            # w = tk.Label(self.root, text='What would you like to do?', width=40, height=5, bg="#d0e7ff", fg="black")
-            #w = self.hypno_label("What would you like to do?", 5, 40, 12)
+
             w.pack(pady=5)
             button_frame.pack(pady=5)  # for all button frames
             self.display.insert(tk.END, self.title + "\n\n"+self.raw_in)
@@ -693,9 +671,7 @@ class MadlibApp:
             btn = self.hypno_button(button_frame,"Save plain text input",command=lambda: self.output_file_name(3))
             btn.grid(row=1, column=0, padx=2, pady=2,
                      sticky="ew")  # defines the button's location on the grid
-            # btn = tk.Button(button_frame, command=lambda: self.output_file_name(4), text="Save Word doc input",
-            #                 bg="#3b9dd3",
-            #                 fg="white")  # defines each button with frame,
+
             btn = self.hypno_button(button_frame,"Save Word doc input",command=lambda: self.output_file_name(4))
             btn.grid(row=1, column=1, padx=2, pady=2,
                      sticky="ew")  # defines the button's location on the grid
@@ -705,15 +681,11 @@ class MadlibApp:
             self.display = self.hypno_scroll(None, 60)
             self.display.pack(pady=20)
             self.display.insert(tk.END,"???")
-            # w = tk.Label(self.root, text='What would you like to do?', width=40, height=5, bg="#d0e7ff", fg="black")
-            #w = self.hypno_label("What would you like to do?", 5, 40, 12)
+
             w.pack(pady=5)
             button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
             button_frame.pack(pady=5)  # for all button frames
-            # self.display.insert(tk.END, "\n   Your Madlib is ready to play. If you are the author, click \"SPOIL\" to preview it. Otherwise, we recommend you click \"Play\" to play it blind.")
-            # self.spbtn = tk.Button(button_frame, command=lambda: self.spoiler(), text="SPOIL",
-            #                 bg="#F23F3F",
-            #                 fg="white")  # defines each button with frame,
+
             self.spbtn = self.hypno_button(button_frame,"SPOIL",command=lambda: self.spoiler(),color="#F23F3F")
             self.spbtn.grid(row=1, column=4, padx=2, pady=2,
                      sticky="ew")
@@ -721,23 +693,17 @@ class MadlibApp:
 
 
         # play without saving button
-        # btn = tk.Button(button_frame, command=lambda: self.advance_to_play(), text="Play", bg="#3b9dd3",
-        #                 fg="white")  # defines each button with frame,
+
         btn = self.hypno_button(button_frame,"Play", command=lambda: self.advance_to_play())
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
-        # btn = tk.Button(button_frame, command=lambda: self.advance_to_html(), text="Print Physical",
-        #                 bg="#3b9dd3",
-        #                 fg="white")  # defines each button with frame,
+
         btn = self.hypno_button(button_frame,"Print Physical",command=lambda: self.advance_to_html())
         btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         self.root.mainloop()  # deploys the GUI screen till closed
 
     def spoiler(self): #inserts madlib input text to display if the user chooses to spoil a loaded madlib
-        # self.display.delete("1.0", tk.END) #clears warning message
-        # self.display.insert(tk.END, "\nHere is your Madlib:\n\n" + self.title + "\n\n"+self.raw_in)
-        # self.spbtn.destroy() #destroys spoiler button
         self.load_mode=False
         self.file_choice()
 
@@ -753,22 +719,17 @@ class MadlibApp:
         #tk.Label(self.root, text="Give us a/an:", font=("Arial", 12, "bold")).pack()
         self.hypno_label("Give us a/an:", None, None, 12).pack()
 
-        # self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",
-        #                                          fg="black", wrap=tk.WORD)
         self.display= self.hypno_scroll(10,80)
         self.display.pack(pady=10, padx=5)
-        #tk.Label(self.root, text="Your entry:", font=("Arial", 12)).pack()
+
         self.hypno_label("Your Entry",None,None,12).pack()
-        # define and create entry field for user's entry for a word
-        # self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=40, bg="#d0e7ff", fg="black")
+
         self.input_entry = self.hypno_entry(40)
         self.input_entry.bind("<Return>",
                               lambda event: self.process_next_keyword())  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
 
-        # self.submit_btn = tk.Button(self.root, text="Submit", command=self.process_next_keyword, bg="#3b9dd3",
-        #                             fg="white")
         self.submit_btn=self.hypno_button(self.root,"Submit",command=self.process_next_keyword)
         self.submit_btn.pack(pady=10)
 
@@ -899,14 +860,11 @@ class MadlibApp:
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Plain text
-        # btn = tk.Button(button_frame, command=lambda: self.output_file_name(0), text="Save plain text", bg="#3b9dd3",
-        #                 fg="white")  # defines each button with frame,
+
         btn = self.hypno_button(button_frame, "Save plain text", command=lambda: self.output_file_name(0))
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         #Word doc
-        # btn = tk.Button(button_frame, command=lambda: self.output_file_name(2), text="Save Word Doc", bg="#3b9dd3",
-        #                 fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame, "Save Word Doc", command=lambda: self.output_file_name(2))
         btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
@@ -922,25 +880,16 @@ class MadlibApp:
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.hypno_header("Save file name")
         self.head_btn("Reset", command=lambda: self.reset())
-        # w = tk.Label(self.root, text='Enter the filename you\'d like to save to (no extension)',font=("Arial", 12, "bold"), width=80, height=10,
-        #              bg="#d0e7ff",
-        #              fg="black")
+
         w = self.hypno_label("Enter the filename you\'d like to save to (no extension)",None,None,12)
         w.pack(pady=10)
-        # buttons for file naming menu selection
-        # button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
-        # button_frame.pack(pady=5)  # for all button frames
-        # buttons for file naming menu selection
 
-
-        # self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
         self.input_entry = self.hypno_entry(80)
         self.input_entry.bind("<Return>",
                                   lambda event: self.save_file(md))  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
-        # self.submit_btn = tk.Button(self.root, text="Submit", command=lambda: self.save_file(md), bg="#3b9dd3",
-        #                                 fg="white")
+
         self.submit_btn = self.hypno_button(self.root,"Submit",command=lambda: self.save_file(md))
         self.submit_btn.pack(pady=10)
 
@@ -954,21 +903,18 @@ class MadlibApp:
             if self.title:
                 self.filled = self.title + "\n\n" + self.filled
             self.file_write(self.normalize_quotes(self.filled), base, 'outputs', '.txt')
-            # w = tk.Label(self.root, text='Your filled madlib has been saved to: ' + str(base) + '.txt in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
-            #              width=80, height=10, bg="#d0e7ff",fg="black")
+
             w = self.hypno_label("Your filled madlib has been saved to:\n" + str(base) + ".txt\nin your \"outputs\" folder.\nWe hope you liked it!",None,None,12)
             w.pack(pady=10)
-            # self.submit_btn = tk.Button(self.root, text="Back to menu", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
-            # self.submit_btn.pack(pady=10)
+
             self.hypno_button(self.root,"Back to Menu",command=lambda: self.reset()).pack(pady=10)
         elif md==1: #html save
 
             self.file_write(self.html_out, base, 'outputs','.html')
-            # w = tk.Label(self.root, text='Your madlib has been saved to: ' + str(base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',
-            #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
+
             w= self.hypno_label('Your madlib has been saved to: ' + str(base) + '.html in your \"outputs\" folder.\nNow let\'s print it!',None,None,12)
             w.pack(pady=10)
-            #self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.html_view(), bg="#3b9dd3", fg="white")
+
             self.submit_btn = self.hypno_button(self.root, "Let's Go",command=lambda: self.html_view())#todo: add button grid and "back to menu" for file confirmations, beware of "aready has slaves" errors
             self.submit_btn.pack(pady=10)
         elif md==2: #word document outputs
@@ -996,17 +942,13 @@ class MadlibApp:
 
             # Save the document
             doc.save(full_path)
-            # w = tk.Label(self.root, text='Your filled madlib has been saved to: ' + str(
-            #     base) + '.docx in your \"outputs\" folder.\nWe hope you liked it!',font=("Arial", 12, "bold"),
-            #              width=80, height=10, bg="#d0e7ff",
-            #              fg="black")
+
             w = self.hypno_label('Your filled madlib has been saved to:\n' + str(base) + '.docx\nin your \"outputs\" folder.\nWe hope you liked it!',None,None,12)
             w.pack(pady=10)
             self.hypno_button(self.root,"Back to Menu",command=lambda: self.reset()).pack(pady=10)
         elif md==3: #save and play inputs plain text
             self.file_write('<t>'+self.title+'</t>\n'+self.raw_in + '\n' + '<C>' + str(self.custom), base, 'inputs', '.txt')
-            # w = tk.Label(self.root, text='Your madlib has been saved to: ' + str(base) + '.txt in your \"inputs\" folder.\nNow we can Play!',
-            #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
+
             w = self.hypno_label('Your madlib has been saved to:\n' + str(base) + '.txt\nin your \"inputs\" folder.\nNow we can Play!',None,None,12) #todo: consider unique frames for filename and message
             w.pack(pady=10,padx=5)
             self.submit_btn = self.hypno_button(self.root,"Let's go!", command=lambda: self.advance_to_play()).pack(pady=10)
@@ -1037,27 +979,22 @@ class MadlibApp:
 
             # Save the document
             doc.save(full_path)
-            # w = tk.Label(self.root, text='Your filled madlib has been saved to: ' + str(
-            #     base) + '.docx in your \"inputs\" folder.\nNow let\'s play it!',
-            #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"),
-            #              fg="black")
+
             w = self.hypno_label('Your filled madlib has been saved to:\n' + str(
                 base) + '.docx\nin your \"inputs\" folder.\nNow let\'s play it!',None,None,12)
             w.pack(pady=10)
-            # self.submit_btn = tk.Button(self.root, text="Let's Go", command=lambda: self.advance_to_play(),
-            #                             bg="#3b9dd3", fg="white")
+
             self.submit_btn = self.hypno_button(self.root,"Let's Go",command=lambda: self.advance_to_play())
             self.submit_btn.pack(pady=10)
         else: #all invalids
 
             self.file_write(self.html_out + self.normalize_quotes(self.filled), base, 'outputs',
                             '.txt')  #normalize quotes for text
-            # w = tk.Label(self.root, text='Invalid save case found, please contact the developer.\n In the meantime, your madlib has been saved to: ' + str(base) + '.txt in your \"outputs\" folder, but it won\'t be pretty.',
-            #              width=80, height=10, bg="#d0e7ff",font=("Arial", 12, "bold"), fg="black")
+
             w = self.hypno_label('Invalid save case found, please contact the developer.\n In the meantime, your madlib has been saved to:\n'+ str(
                 base)+'.txt\nin your \"outputs\" folder.',None,None,12)
             w.pack(pady=10)
-            # self.submit_btn = tk.Button(self.root, text="Ok", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
+
             self.submit_btn = self.hypno_button(self.root,"Ok",command=lambda: self.reset())
             self.submit_btn.pack(pady=10)
 
@@ -1140,17 +1077,14 @@ class MadlibApp:
         self.hypno_header("Invalid Keyword")
         self.head_btn("Reset", command=lambda: self.reset())
 
-        # self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0", fg="black", wrap=tk.WORD)
         self.display = self.hypno_scroll(10,80)
         self.display.pack(pady=10)
         # define and create entry field for user's entry for a word
-        # self.input_entry = tk.Entry(self.root, font=("Arial", 14), width=80, bg="#d0e7ff", fg="black")
         self.input_entry = self.hypno_entry(80)
         self.input_entry.bind("<Return>", lambda event: self.process_invalid_html())  # allows the "enter" key to submit the keyword
         self.input_entry.pack(pady=10)
         self.input_entry.focus_set()  # automatically puts the cursor into the entry field
 
-        # self.submit_btn = tk.Button(self.root, text="Submit", command=self.process_invalid_html, bg="#3b9dd3", fg="white")
         self.submit_btn = self.hypno_button(self.root,"Submit", command=self.process_invalid_html)
         self.submit_btn.pack(pady=10)
 
@@ -1180,13 +1114,10 @@ class MadlibApp:
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         #Save button
-        # btn = tk.Button(button_frame, command=lambda: self.output_file_name(1), text="Save", bg="#3b9dd3",
-        #                 fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame,"Save",command=lambda: self.output_file_name(1))
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # Print without save button
-        # btn = tk.Button(button_frame, command=lambda: self.html_view(), text="Print without saving", bg="#3b9dd3", fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame, "Print without Saving",command=lambda: self.html_view())
         btn.grid(row=1, column=2, padx=2, pady=2, sticky="ew")  # defines the button's location on the grid
         self.root.mainloop()  # deploys the GUI screen till closed
