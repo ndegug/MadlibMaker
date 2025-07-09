@@ -259,39 +259,11 @@ class MadlibApp:
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
 
         # welcome text
-        #w = tk.Label(self.root, text='Hello!\n Welcome to the Madlib Maker',font=("Arial", 12, "bold"), width=80, height=10, bg="#d0e7ff", fg="black")
-
         self.hypno_header("Welcome to...")
         self.head_btn("Reset",command=lambda: self.reset())
-        # w = self.hypno_label('The Madlib Maker',5,60, 14)
-        # w = tk.Label(
-        #     self.root,
-        #     text='The Madlib',
-        #     font=("Courier New", 40, "bold"),
-        #     fg=dark_red,
-        #     bg="#9bc7f5",
-        #     #height=5,
-        #     width=20,
-        #     padx=2,
-        #     #pady=4
-        # )
-        # w.pack(padx=(10))
+
         self.hypno_title("The Madlib\nMaker!")
-        # w = tk.Label(
-        #     self.root,
-        #     text='Maker',
-        #     font=("Courier New", 40, "bold"),
-        #     fg="#9e316e",
-        #     bg="#9bc7f5",  # pastel yellow
-        #     #height=5,
-        #     width=20,
-        #     padx=2,
-        #     #pady=4
-        # )
-        # w.pack(padx=(10))
-        #self.hypno_title("Maker")
-        #smaller label to prompt choice
-        #w = tk.Label(self.root, text='What would you like to do\ntoday?', width=24,height=3, bg="#d0e7ff", fg="black")
+
         w = self.hypno_label('What would you like to do today?', None, None, 12)
         w.pack(pady=10)
 
@@ -299,15 +271,12 @@ class MadlibApp:
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # manual input button
-        #btn = tk.Button(button_frame, command=lambda: self.setup_manual_window(), text="Manual Input", bg="#3b9dd3", fg="white")  # defines each button with frame
         btn= self.hypno_button(button_frame, "Manual Input", command=lambda: self.setup_manual_window())
         btn.grid(row=1, column=0, padx=2, pady=2, sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
         # Load inputs button
-        #btn = tk.Button(button_frame, command=lambda: self.load_input_file(), text="Load a Madlib", bg="#3b9dd3", fg="white")  # defines each button with frame
         btn = self.hypno_button(button_frame, "Load a Madlib", command=lambda: self.load_input_file())
         btn.grid(row=1, column=2, padx=2, pady=2, sticky="ew")
         # Instruction menu button
-        #btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="Instructions", bg="#3b9dd3", fg="white")  # defines each button with frame
         btn= self.hypno_button(button_frame, "Instructions", command=lambda: self.instruct_main())
         btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")
@@ -328,29 +297,22 @@ class MadlibApp:
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # How to play instruct
-        #btn = tk.Button(button_frame, command=lambda: self.end_instructions(how_to_play_madlibs, False), text="How to play Madlibs", bg="#3b9dd3",fg="white")  # defines each button with frame,
         btn= self.hypno_button(button_frame, 'How to play MadLibs',command=lambda: self.end_instructions(how_to_play_madlibs,False))
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # How to write instruct button
-        #btn = tk.Button(button_frame, command=lambda: self.write_instructions_menu(), text="How to write madlibs",bg="#3b9dd3",fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame, 'How to write madlibs',command=lambda: self.write_instructions_menu())
         btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # Loading madlib instruct button
-        #btn = tk.Button(button_frame, command=lambda: self.end_instructions(loading_a_madlib,False), text="Loading a madlib",bg="#3b9dd3",fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame, 'Loading a Madlib',command=lambda: self.end_instructions(loading_a_madlib,False))
         btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # printing madlib instruct button
-        #btn = tk.Button(button_frame, command=lambda: self.end_instructions(printing_madlibs,False), text="Printing madlibs", bg="#3b9dd3", fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame, 'Printing madlibs', command=lambda: self.end_instructions(printing_madlibs,False))
         btn.grid(row=1, column=4, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         #back to menu from instruct 1
-        #button_frame = tk.Frame(self.root, bg="#9bc7f5")  # RE-defines the button frame specifically for back-to-menu button
-        #button_frame.pack(pady=5)  # for all button frames
-        #btn= tk.Button(self.root, text="< Back to main menu", command=lambda: self.reset(), bg="#3b9dd3", fg="white")
         btn= self.hypno_button(button_frame, '< Back to main menu', command=lambda: self.reset())
         btn.grid(row=2,padx=2,pady=2,sticky="ew")
         self.root.mainloop()  # deploys the GUI screen till closed
@@ -368,14 +330,12 @@ class MadlibApp:
         button_frame = tk.Frame(self.root, bg="#9bc7f5")   # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
         # Generic words
-        #btn = tk.Button(button_frame, command=lambda: self.end_instructions(generic_words_list,True), text="Generic words",bg="#3b9dd3",fg="white")  # defines each button with frame
         btn = self.hypno_button(button_frame, 'Generic words',
                                 command=lambda: self.end_instructions(generic_words_list,True))
         btn.grid(row=1, column=0, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
-        #numbered words
-        #btn = tk.Button(button_frame, command=lambda: self.end_instructions(numbered_words,True), text="Numbered words", bg="#3b9dd3", fg="white")  # defines each button with frame,
 
+        #numbered words
         btn = self.hypno_button(button_frame, 'Numbered Words',
                                 command=lambda: self.end_instructions(numbered_words,True))
         btn.grid(row=1, column=1, padx=2, pady=2,
@@ -393,7 +353,6 @@ class MadlibApp:
         btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         # Custom dic
-        #btn = tk.Button(button_frame, command=lambda: self.end_instructions(prewriting_custom_configurations,True),text="Preconfiguring custom words",bg="#3b9dd3",fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame, 'Preconfiguring custom words',
                                 command=lambda: self.end_instructions(prewriting_custom_configurations,True))
         btn.grid(row=1, column=4, padx=2, pady=2,
@@ -401,13 +360,11 @@ class MadlibApp:
         # back button
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
         button_frame.pack(pady=5)  # for all button frames
-        #btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="< Back to Instructions",bg="#3b9dd3",fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame, '< Back to Instructions',
                                 command=lambda: self.instruct_main())
         btn.grid(row=2, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         #back to menu button
-        #btn = tk.Button(button_frame, command=lambda: self.reset(), text="<< Back to main menu",bg="#3b9dd3",fg="white")  # defines each button with frame,
         btn = self.hypno_button(button_frame, '<< Back to main menu', command=lambda: self.reset())
         btn.grid(row=2, column=3, padx=2, pady=2, sticky="ew")  # defines the button's location on the grid
 
@@ -415,7 +372,6 @@ class MadlibApp:
         for widget in self.root.winfo_children(): widget.destroy()  # removes pre-existing widgets
         self.hypno_header("Instructions")
         self.head_btn("Reset", command=lambda: self.reset())
-        #self.display = scrolledtext.ScrolledText(self.root, width=80, height=10, font=("Arial", 12), bg="#9cc9e0",fg="black", wrap=tk.WORD)
         self.display=self.hypno_scroll(10, 80)
         self.display.pack(pady=10, padx=5)
         self.display.insert(tk.END, content)
@@ -426,25 +382,20 @@ class MadlibApp:
 
         if lv: #second level of menus, currently only used in specifics of writing madlibs, change to an int if more are added
             # back to write instructions button
-            #btn = tk.Button(button_frame, command=lambda: self.write_instructions_menu(), text="< Back to writing madlibs", bg="#3b9dd3", fg="white")
             btn = self.hypno_button(button_frame, '< Back to writing Madlibs',command=lambda: self.write_instructions_menu())
             btn.grid(row=1, column=1, padx=2, pady=2, sticky="ew")
             #back to instructions from lv2 end instructions
-            #btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="<< Back to Instructions", bg="#3b9dd3", fg="white")  # defines each button with frame
             btn = self.hypno_button(button_frame, '<< Back to Instructions',  command=lambda: self.instruct_main())
             btn.grid(row=1, column=2, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
             #back to menu from lv2 end instructions
-            #btn = tk.Button(button_frame, command=lambda: self.reset(), text="<<< Back to main menu", bg="#3b9dd3", fg="white")  # defines each button with frame,
             btn = self.hypno_button(button_frame, '<<< Back to main menu', command=lambda: self.reset())
             btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
         else: #normal end instructions, only back to menu and back to instructions
-            #btn = tk.Button(button_frame, command=lambda: self.instruct_main(), text="< Back to Instructions", bg="#3b9dd3", fg="white")  # defines each button with frame,
             btn = self.hypno_button(button_frame, '< Back to Instructions', command=lambda: self.instruct_main())
             btn.grid(row=1, column=1, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
-            #btn = tk.Button(button_frame, command=lambda: self.reset(), text="<< Back to main menu", bg="#3b9dd3", fg="white")  # defines each button with frame,
             btn = self.hypno_button(button_frame, '<< Back to main menu', command=lambda: self.reset())
             btn.grid(row=1, column=3, padx=2, pady=2,
                  sticky="ew")  # defines the button's location on the grid
@@ -456,9 +407,6 @@ class MadlibApp:
         self.display.pack(pady=10, padx=5)
         self.display.insert(tk.END, credits)
         self.display.config(state='disabled')  # Make it read-only
-
-        # button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
-        # button_frame.pack(pady=5)  # for all button frames
         btn = self.hypno_button(self.root, '<< Back to main menu', command=lambda: self.reset())
         btn.pack()
 #READING FILES
@@ -469,7 +417,6 @@ class MadlibApp:
         self.hypno_header("Load Input File")
         self.head_btn("Reset", command=lambda: self.reset())
         self.load_mode = True #begin load mode
-        #label = tk.Label(self.root, text="Select a file to load:", font=("Arial", 12, "bold"),width=70, height=5, bg="#d0e7ff", fg="black")
         label = self.hypno_label("Select a file to load:",None,None,20)
         label.pack(pady=10)
 
@@ -480,11 +427,6 @@ class MadlibApp:
 
         files = [f for f in os.listdir(inputs_path) if f.endswith('.txt') or f.endswith('.docx')] #grabs all files in inputs
 
-
-
-            #return
-
-        #btn = tk.Button(self.root, text="Browse for File", command=self.browse_and_load_file, font=("Arial", 12), bg="#3b9dd3", fg="white")
         btn = self.hypno_button(self.root,"Browse for File",command=self.browse_and_load_file)
         btn.pack()
         button_frame = tk.Frame(self.root, bg="#9bc7f5")  # defines the button frame
@@ -495,7 +437,6 @@ class MadlibApp:
         col = 0
         for filename in files: #generate buttons for all files
             full_path = os.path.join(inputs_path, filename)
-            #btn = tk.Button(button_frame, text=filename, font=("Arial", 12),command=lambda path=full_path: self.process_input_file(path), bg="#3b9dd3",fg="white")
             btn = self.hypno_button(button_frame, filename, command=lambda path=full_path: self.process_input_file(path))
             btn.grid(row=row, column=col, sticky="ew")  # defines the button's location on the grid ("ew" centers all buttons to their grid position)
             col += 1
@@ -505,7 +446,6 @@ class MadlibApp:
                 col = 0
                 row += 1
         if not files: #edge case of no valid input files
-            #no_files_label = tk.Label(self.root, text="No input files found in the 'inputs' folder.\nPlace one into the folder and click \"Refresh\"", font=("Arial", 12))
             no_files_label = self.hypno_label("No input files found in the 'inputs' folder.\nPlace one into the folder and click \"Refresh\" or Browse for it instead.",None,None,12)
             no_files_label.pack(pady=10)
         else:
@@ -514,7 +454,6 @@ class MadlibApp:
                 "Don't see your file?\nPlace it in the \"inputs\" folder and click \"Refresh\" or Browse for it instead", None,
                 None, 12)
             no_files_label.pack(pady=5)
-        #rfbtn = tk.Button(self.root, text="Refresh", command=lambda: self.load_input_file(), bg="#3b9dd3",fg="white")
         rfbtn = self.hypno_button(self.root, "refresh", command=lambda: self.load_input_file())
         rfbtn.pack(pady=10)
 
